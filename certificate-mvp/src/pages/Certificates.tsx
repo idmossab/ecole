@@ -32,7 +32,8 @@ export default function Certificates() {
           {filtered.map((cert) => (
             <div key={cert.id} className="card cert-card">
               <h3>{cert.title}</h3>
-              <p>{cert.subtitle}</p>
+              <p>{cert.description}</p>
+              <div className="course-count">{cert.courses.length} courses</div>
               <Link className="btn btn-primary" to={`/certificates/${cert.id}`}>View</Link>
             </div>
           ))}

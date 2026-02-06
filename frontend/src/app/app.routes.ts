@@ -9,6 +9,8 @@ import { CertificateDetailsComponent } from './pages/certificate-details/certifi
 import { LoginRequiredComponent } from './pages/login-required/login-required.component';
 import { CertificatesComponent } from './pages/certificates/certificates.component';
 import { DiplomasComponent } from './pages/diplomas/diplomas.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 export const routes: Routes = [
   {
@@ -33,16 +35,24 @@ export const routes: Routes = [
     component: CertificatesComponent
   },
   {
+    path: 'certificate/:slug',
+    component: CertificateDetailsComponent
+  },
+  {
     path: 'diplomas',
     component: DiplomasComponent
   },
   {
-    path: 'diploma',
-    component: DiplomaDetailsComponent
+    path: 'dashboard',
+    component: DashboardComponent
   },
   {
-    path: 'certificate/:slug',
-    component: CertificateDetailsComponent
+    path: 'profile',
+    component: ProfileComponent
+  },
+  {
+    path: 'diploma',
+    component: DiplomaDetailsComponent
   },
   {
     path: 'login-required',

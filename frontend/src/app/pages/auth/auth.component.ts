@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { ApiService } from '../../core/api.service';
 import { AuthService } from '../../core/auth.service';
@@ -27,7 +27,19 @@ export class AuthComponent {
   registerError = '';
   registerLoading = false;
 
-  constructor(private api: ApiService, private auth: AuthService, private router: Router) {}
+  private returnTo = '/home';
+
+  constructor(
+    private api: ApiService,
+    private auth: AuthService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
+    const target = this.route.snapshot.queryParamMap.get('returnTo');
+    if (target) {
+      this.returnTo = target;
+    }
+  }
 
   submitLogin(): void {
     this.loginError = '';
@@ -35,7 +47,7 @@ export class AuthComponent {
     this.api.login({ emailOrUsername: this.loginEmailOrUsername, password: this.loginPassword }).subscribe({
       next: (res) => {
         this.auth.setSession(res.user, res.token);
-        this.router.navigateByUrl('/home');
+        this.router.navigateByUrl(this.returnTo);
       },
       error: (err) => {
         this.loginError = err?.error?.message || err?.error || 'Login failed';
@@ -56,7 +68,7 @@ export class AuthComponent {
     }).subscribe({
       next: (res) => {
         this.auth.setSession(res.user, res.token);
-        this.router.navigateByUrl('/home');
+        this.router.navigateByUrl(this.returnTo);
       },
       error: (err) => {
         this.registerError = err?.error?.message || err?.error || 'Registration failed';

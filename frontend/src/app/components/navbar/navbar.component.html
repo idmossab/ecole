@@ -5,6 +5,32 @@
     <button class="nav-link-btn" type="button" routerLink="/certificates">Certificates</button>
     <button class="nav-link-btn" type="button" routerLink="/diplomas">Diplomas</button>
     <button class="nav-link-btn" type="button" routerLink="/contact">Contact</button>
-    <button class="btn btn-dark btn-sm" type="button" routerLink="/login">Login</button>
+
+    <button
+      class="btn btn-outline-secondary btn-sm"
+      type="button"
+      routerLink="/dashboard"
+      *ngIf="isAdmin"
+    >
+      Dashboard
+    </button>
+
+    <button
+      class="btn btn-outline-secondary btn-sm"
+      type="button"
+      routerLink="/profile"
+      *ngIf="isUser"
+    >
+      Profile
+    </button>
+
+    <button
+      class="btn btn-dark btn-sm"
+      type="button"
+      routerLink="/login"
+      *ngIf="!user"
+    >
+      Login
+    </button>
   </div>
 </nav>

@@ -1,4 +1,4 @@
-<div class="container py-4">
+<div class="container py-4" *ngIf="certificate; else notFound">
   <div class="speciality-header">
     <span class="pill">Certificate</span>
     <h1 class="display-font">{{ certificate.title }}</h1>
@@ -8,11 +8,35 @@
   <div class="courses-card">
     <div>
       <h2 class="display-font">Courses</h2>
-      <p class="text-muted">Courses are not available yet</p>
+      <p class="text-muted" *ngIf="!isLoggedIn">Login to access courses</p>
+      <p class="text-muted" *ngIf="isLoggedIn && !certificate.courses.length">Content coming soon</p>
     </div>
-    <div class="cta-group">
-      <a class="btn btn-primary" routerLink="/login">Login to access courses</a>
-      <a class="btn btn-outline-secondary" routerLink="/login-required">View Course</a>
+
+    <div class="course-grid" *ngIf="isLoggedIn && certificate.courses.length">
+      <div class="course-card" *ngFor="let course of certificate.courses">
+        <h3>{{ course.title }}</h3>
+        <div class="meta">{{ course.durationMinutes }} min • {{ course.videoCount }} videos</div>
+        <button class="btn btn-dark btn-sm" type="button" (click)="handleStartCourse()">Start course</button>
+      </div>
+    </div>
+
+    <div class="cta" *ngIf="!isLoggedIn">
+      <a class="btn btn-dark btn-sm" [routerLink]="['/login']" [queryParams]="{ returnTo: '/certificate/' + certificate.id }">Login</a>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" *ngIf="showComingSoon" (click)="showComingSoon=false">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <h3>Content coming soon</h3>
+      <p>Courses are being prepared. Check back shortly.</p>
+      <button class="btn btn-dark btn-sm" type="button" (click)="showComingSoon=false">Okay</button>
     </div>
   </div>
 </div>
+
+<ng-template #notFound>
+  <div class="container py-4">
+    <h2>Certificate not found</h2>
+    <a class="btn btn-dark btn-sm" routerLink="/certificates">Back to certificates</a>
+  </div>
+</ng-template>

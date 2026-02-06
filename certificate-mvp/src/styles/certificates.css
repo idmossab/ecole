@@ -15,3 +15,8 @@
 .cert-card p {
   color: var(--muted);
 }
+
+.course-count {
+  color: var(--muted);
+  font-size: 0.9rem;
+}

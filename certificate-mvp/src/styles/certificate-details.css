@@ -39,6 +39,43 @@
   color: var(--muted);
 }
 
+.courses {
+  margin-top: 40px;
+}
+
+.course-card {
+  padding: 18px;
+  display: grid;
+  gap: 10px;
+}
+
+.course-meta {
+  display: flex;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.modal {
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 24px;
+  width: min(420px, 90vw);
+  box-shadow: var(--shadow);
+  display: grid;
+  gap: 12px;
+}
+
 @media (max-width: 900px) {
   .details {
     grid-template-columns: 1fr;

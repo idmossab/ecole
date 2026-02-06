@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { certificates } from '../data/certificates';
 import '../styles/certificate-details.css';
@@ -10,6 +10,7 @@ function isLoggedIn() {
 export default function CertificateDetails() {
   const navigate = useNavigate();
   const { id } = useParams();
+  const [showComingSoon, setShowComingSoon] = useState(false);
 
   const certificate = useMemo(() => certificates.find((item) => item.id === id), [id]);
 
@@ -24,10 +25,13 @@ export default function CertificateDetails() {
     );
   }
 
-  const hasContent = certificate.courses.length > 0;
+  const hasContent = certificate.courses.some((course) => course.videoCount > 0);
 
   const handleStartCourse = () => {
-    if (!hasContent) return;
+    if (!hasContent) {
+      setShowComingSoon(true);
+      return;
+    }
     if (!isLoggedIn()) {
       navigate(`/login?returnTo=/certificates/${certificate.id}`);
       return;
@@ -39,19 +43,16 @@ export default function CertificateDetails() {
     <main className="page">
       <section className="container details">
         <div className="details-card">
-          <div className="badge">{certificate.status}</div>
+          <div className="badge">Open to everyone</div>
           <h1>{certificate.title}</h1>
           <p className="description">{certificate.description}</p>
           <div className="empty">Content coming soon</div>
-          <button className="btn btn-primary" onClick={handleStartCourse} disabled={!hasContent}>
-            Start course
-          </button>
         </div>
 
         <aside className="details-side">
           <div className="card side-card">
-            <h3>What you will learn</h3>
-            <p className="muted">We will add courses and videos soon. Stay tuned for updates.</p>
+            <h3>Program notes</h3>
+            <p className="muted">Courses are listed below. Videos will be added soon.</p>
           </div>
           <div className="card side-card">
             <h3>Need access?</h3>
@@ -60,6 +61,34 @@ export default function CertificateDetails() {
           </div>
         </aside>
       </section>
+
+      <section className="container courses">
+        <h2 className="section-title">Courses</h2>
+        <div className="grid grid-3">
+          {certificate.courses.map((course) => (
+            <div key={course.id} className="card course-card">
+              <h3>{course.title}</h3>
+              <div className="course-meta">
+                <span>{course.durationMinutes} min</span>
+                <span>{course.videoCount} videos</span>
+              </div>
+              <button className="btn btn-primary" disabled={!hasContent} onClick={handleStartCourse}>
+                Start course
+              </button>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {showComingSoon && (
+        <div className="modal-backdrop" onClick={() => setShowComingSoon(false)}>
+          <div className="modal" onClick={(event) => event.stopPropagation()}>
+            <h3>Content coming soon</h3>
+            <p>Courses are being prepared. Check back shortly.</p>
+            <button className="btn btn-primary" onClick={() => setShowComingSoon(false)}>Okay</button>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
