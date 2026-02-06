@@ -1,13 +1,12 @@
 import { Routes } from '@angular/router';
 
-import { authGuard } from './core/auth.guard';
-import { guestGuard } from './core/guest.guard';
 import { HomeComponent } from './pages/home/home.component';
-import { LoginComponent } from './pages/login/login.component';
+import { AuthComponent } from './pages/auth/auth.component';
 import { RegisterComponent } from './pages/register/register.component';
-import { BlogDetailsComponent } from './pages/blog-details/blog-details.component';
-import { ProfileComponent } from './pages/profile/profile.component';
 import { ContactComponent } from './pages/contact/contact.component';
+import { DiplomaDetailsComponent } from './pages/diploma-details/diploma-details.component';
+import { SpecialityDetailsComponent } from './pages/speciality-details/speciality-details.component';
+import { LoginRequiredComponent } from './pages/login-required/login-required.component';
 
 export const routes: Routes = [
   {
@@ -17,31 +16,31 @@ export const routes: Routes = [
   },
   {
     path: 'login',
-    component: LoginComponent,
-    canMatch: [guestGuard]
+    component: AuthComponent
   },
   {
     path: 'register',
-    component: RegisterComponent,
-    canMatch: [guestGuard]
+    component: RegisterComponent
   },
   {
     path: 'home',
     component: HomeComponent
   },
   {
+    path: 'diploma',
+    component: DiplomaDetailsComponent
+  },
+  {
+    path: 'speciality/:slug',
+    component: SpecialityDetailsComponent
+  },
+  {
+    path: 'login-required',
+    component: LoginRequiredComponent
+  },
+  {
     path: 'contact',
     component: ContactComponent
-  },
-  {
-    path: 'blogs/:id',
-    component: BlogDetailsComponent,
-    canMatch: [authGuard]
-  },
-  {
-    path: 'profile',
-    component: ProfileComponent,
-    canMatch: [authGuard]
   },
   {
     path: '**',

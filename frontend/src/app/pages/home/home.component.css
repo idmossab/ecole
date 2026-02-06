@@ -2,40 +2,97 @@
   display: block;
 }
 
-.diploma-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
+.hero {
+  background: linear-gradient(180deg, #f4f6f9 0%, #ffffff 60%);
+  border-radius: 24px;
+  padding: 56px 32px 40px;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--border);
 }
 
-.diploma-card {
-  background: #fff;
-  border: 1px solid #e3e6ea;
-  border-radius: 16px;
-  padding: 18px;
-  box-shadow: 0 10px 24px rgba(16, 24, 40, 0.08);
+.hero-content h1 {
+  font-size: clamp(2.2rem, 3.4vw, 3.2rem);
+  margin-bottom: 12px;
+}
+
+.hero-content .lead {
+  color: var(--text-secondary);
+  max-width: 720px;
+  margin: 0 auto 12px;
+}
+
+.stats-row {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 24px;
+  text-align: center;
+}
+
+.stat-card {
   display: grid;
   gap: 8px;
+  justify-items: center;
 }
 
-.diploma-card .badge {
-  align-self: start;
-  width: fit-content;
-  font-size: 11px;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  padding: 4px 8px;
-  border-radius: 999px;
-  background: #f1f3f5;
-  color: #4b5563;
+.stat-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #eef2f7;
+  box-shadow: inset 0 0 0 1px #e2e8f0;
 }
 
-.diploma-card .title {
-  font-size: 18px;
-  margin: 0;
+.stat-value {
+  font-weight: 700;
+  font-size: 1.35rem;
 }
 
-.diploma-card .label {
-  color: #6c757d;
-  margin: 0 0 6px;
+.stat-label {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.featured {
+  padding: 56px 0 20px;
+}
+
+.featured-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  justify-content: center;
+}
+
+.featured-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 22px;
+  box-shadow: var(--shadow-soft);
+  display: grid;
+  gap: 10px;
+}
+
+.featured-card p {
+  color: var(--text-secondary);
+}
+
+.featured-card .meta {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+}
+
+.cta-band {
+  margin-top: 40px;
+  background: #0b0b1a;
+  color: #fff;
+  padding: 56px 0;
+  text-align: center;
+}
+
+.cta-band p {
+  color: #cbd5f5;
+  margin-bottom: 20px;
 }

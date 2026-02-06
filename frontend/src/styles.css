@@ -1,4 +1,32 @@
+:root {
+  --brand-primary: #2f6bff;
+  --brand-primary-dark: #1d4ed8;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --surface: #ffffff;
+  --surface-muted: #f5f7fb;
+  --border: #e2e8f0;
+  --shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.08);
+}
+
 body {
-  background: #f8f9fa;
-  padding-top: 76px;
+  background: #ffffff;
+  color: var(--text-primary);
+  font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+  padding-top: 88px;
+}
+
+h1, h2, h3, .display-font {
+  font-family: "Space Grotesk", "Plus Jakarta Sans", sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.btn-primary {
+  background: var(--brand-primary);
+  border-color: var(--brand-primary);
+}
+
+.btn-primary:hover {
+  background: var(--brand-primary-dark);
+  border-color: var(--brand-primary-dark);
 }

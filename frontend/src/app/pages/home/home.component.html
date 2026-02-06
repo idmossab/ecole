@@ -1,17 +1,39 @@
 <div class="container py-4">
-  <div class="d-flex align-items-center justify-content-between mb-3">
-    <div>
-      <h2 class="mb-1">Diplomas</h2>
-      <p class="text-muted mb-0">Browse available diplomas and programs.</p>
+  <section class="hero">
+    <div class="hero-content text-center">
+      <h1 class="display-font">{{ hero.title }}</h1>
+      <p class="lead">{{ hero.subtitle }}</p>
+      <a class="btn btn-dark btn-lg mt-2" routerLink="/login">{{ hero.cta }}</a>
     </div>
-  </div>
+    <div class="stats-row">
+      <div class="stat-card" *ngFor="let stat of stats">
+        <div class="stat-icon"></div>
+        <div class="stat-value">{{ stat.value }}</div>
+        <div class="stat-label">{{ stat.label }}</div>
+      </div>
+    </div>
+  </section>
 
-  <div class="diploma-grid">
-    <div class="diploma-card" *ngFor="let diploma of diplomas">
-      <div class="badge">Diploma</div>
-      <h3 class="title">{{ diploma.title }}</h3>
-      <p class="label">{{ diploma.label }}</p>
-      <button class="btn btn-dark btn-sm">View Details</button>
+  <section class="featured">
+    <div class="text-center mb-4">
+      <h2 class="display-font mb-1">Featured Diploma</h2>
+      <p class="text-muted mb-0">Choose from our comprehensive diploma programs and start building your future.</p>
     </div>
-  </div>
+    <div class="featured-grid">
+      <div class="featured-card">
+        <h3>{{ featured.title }}</h3>
+        <p>{{ featured.description }}</p>
+        <div class="meta">{{ featured.meta }}</div>
+        <a class="btn btn-dark w-100" routerLink="/diploma">View Diploma</a>
+      </div>
+    </div>
+  </section>
 </div>
+
+<section class="cta-band">
+  <div class="container">
+    <h2 class="display-font">Ready to Transform Your Career?</h2>
+    <p>Join thousands of students already learning on our platform.</p>
+    <a class="btn btn-light btn-lg" routerLink="/login">Start Learning Now</a>
+  </div>
+</section>
