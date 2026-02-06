@@ -40,8 +40,30 @@
         <option [ngValue]="null">Select course</option>
         <option *ngFor="let course of courses" [ngValue]="course.id">{{ course.title }}</option>
       </select>
+
       <label class="form-label mt">Videos</label>
-      <input class="form-control" type="file" multiple accept="video/*" (change)="onVideoFilesChange($event)" />
+      <input
+        class="d-none"
+        type="file"
+        multiple
+        accept="video/*"
+        #videoInput
+        (change)="onVideoFilesChange($event)"
+      />
+
+      <div class="media-grid">
+        <button class="media-tile add-tile" type="button" (click)="videoInput.click()">
+          <div class="plus">+</div>
+          <div class="label">Add videos</div>
+        </button>
+
+        <div class="media-tile preview-tile" *ngFor="let file of videoFiles; let i = index">
+          <div class="file-name">{{ file.name }}</div>
+          <div class="file-meta">{{ (file.size / 1024 / 1024) | number: '1.1-1' }} MB</div>
+          <button class="remove-btn" type="button" (click)="removeSelectedVideo(i)">Remove</button>
+        </div>
+      </div>
+
       <button class="btn btn-dark btn-sm mt full-btn" type="button" (click)="uploadVideos()">Upload</button>
 
       <div class="videos" *ngIf="videos.length">

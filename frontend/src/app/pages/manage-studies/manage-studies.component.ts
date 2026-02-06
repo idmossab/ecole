@@ -116,7 +116,14 @@ export class ManageStudiesComponent implements OnInit {
 
   onVideoFilesChange(event: Event): void {
     const input = event.target as HTMLInputElement;
-    this.videoFiles = Array.from(input.files || []);
+    const newFiles = Array.from(input.files || []);
+    if (!newFiles.length) return;
+    this.videoFiles = [...this.videoFiles, ...newFiles];
+    input.value = '';
+  }
+
+  removeSelectedVideo(index: number): void {
+    this.videoFiles.splice(index, 1);
   }
 
   uploadVideos(): void {
