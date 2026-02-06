@@ -1,81 +1,17 @@
 <div class="container py-4">
-  <div class="row g-4">
-    <div class="col-lg-4">
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <h5 class="card-title">Create a blog</h5>
-          <div class="mb-2">
-            <label class="form-label">Title</label>
-            <input class="form-control" type="text" [(ngModel)]="newBlog.title" />
-          </div>
-          <div class="mb-2">
-            <label class="form-label">Content</label>
-            <textarea class="form-control" rows="4" [(ngModel)]="newBlog.content"></textarea>
-          </div>
-          <div class="mb-2">
-            <label class="form-label">Upload images or video (max 5)</label>
-            <input
-              class="d-none"
-              type="file"
-              multiple
-              accept="image/*,video/*"
-              #mediaInput
-              (change)="onMediaChange($event)"
-            />
-          </div>
-          <div class="mb-3">
-            <div class="media-grid">
-              <button class="media-tile add-tile" type="button" (click)="triggerMediaPicker()">
-                <div class="plus">+</div>
-                <div class="label">Add media</div>
-              </button>
-
-              <div class="media-tile preview-tile" *ngFor="let media of mediaPreviews; let i = index">
-                <img *ngIf="media.kind === 'image'" [src]="media.url" alt="preview" />
-                <video *ngIf="media.kind === 'video'" [src]="media.url" muted controls></video>
-                <button class="remove-btn" type="button" (click)="removeMedia(i)">Remove</button>
-              </div>
-            </div>
-            <div class="text-muted small mt-2" *ngIf="mediaPreviews.length">
-              Total size: {{ totalMediaSize | number }} bytes
-            </div>
-          </div>
-          <button class="btn btn-dark w-100" (click)="createBlog()" [disabled]="!hasRequiredText()">Publish</button>
-          <div class="alert alert-danger mt-3" *ngIf="error">{{ error }}</div>
-        </div>
-      </div>
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+      <h2 class="mb-1">Diplomas</h2>
+      <p class="text-muted mb-0">Browse available diplomas and programs.</p>
     </div>
+  </div>
 
-    <div class="col-lg-5">
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <div class="d-flex align-items-center justify-content-between mb-2">
-            <h5 class="card-title mb-0">My blogs</h5>
-            <button class="btn btn-outline-secondary btn-sm" (click)="loadFeed()">Refresh</button>
-          </div>
-
-          <div class="list-group">
-            <app-blog-card
-              *ngFor="let blog of blogs"
-              [blog]="blog"
-              [authorName]="(user?.firstName || '') + ' ' + (user?.lastName || '')"
-              [thumbnail]="thumbnailByBlog[blog.idBlog || 0] || null"
-              [liked]="!!likedByBlog[blog.idBlog || 0]"
-              [likeCount]="likeCountByBlog[blog.idBlog || 0] ?? blog.likeCount ?? 0"
-              [commentCount]="blog.commentCount || 0"
-              [dateLabel]="formatRelative(blog.createdAt)"
-              (open)="openDetails(blog.idBlog)"
-              (like)="toggleLike(blog, $event)"
-              (comment)="openDetails(blog.idBlog)"
-            ></app-blog-card>
-            <div class="text-muted" *ngIf="!blogs.length && !loading">No blogs yet.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-lg-3">
-      <app-right-sidebar></app-right-sidebar>
+  <div class="diploma-grid">
+    <div class="diploma-card" *ngFor="let diploma of diplomas">
+      <div class="badge">Diploma</div>
+      <h3 class="title">{{ diploma.title }}</h3>
+      <p class="label">{{ diploma.label }}</p>
+      <button class="btn btn-dark btn-sm">View Details</button>
     </div>
   </div>
 </div>

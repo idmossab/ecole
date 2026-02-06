@@ -7,12 +7,13 @@ import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { BlogDetailsComponent } from './pages/blog-details/blog-details.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { ContactComponent } from './pages/contact/contact.component';
 
 export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'login'
+    redirectTo: 'home'
   },
   {
     path: 'login',
@@ -26,8 +27,11 @@ export const routes: Routes = [
   },
   {
     path: 'home',
-    component: HomeComponent,
-    canMatch: [authGuard]
+    component: HomeComponent
+  },
+  {
+    path: 'contact',
+    component: ContactComponent
   },
   {
     path: 'blogs/:id',
@@ -41,6 +45,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'login'
+    redirectTo: 'home'
   }
 ];

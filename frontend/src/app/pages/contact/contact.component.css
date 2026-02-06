@@ -1,0 +1,19 @@
+.contact-tile {
+  flex: 1 1 180px;
+  border: 1px solid #e3e6ea;
+  border-radius: 12px;
+  padding: 14px 16px;
+  background: #fff;
+}
+
+.contact-tile .label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #6c757d;
+}
+
+.contact-tile .value {
+  font-weight: 600;
+  margin-top: 4px;
+}
