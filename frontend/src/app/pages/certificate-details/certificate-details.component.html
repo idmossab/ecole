@@ -17,7 +17,7 @@
     <div class="course-grid" *ngIf="isLoggedIn && courses.length">
       <div class="course-card" *ngFor="let course of courses">
         <h3>{{ course.title }}</h3>
-        <div class="meta">0 min • 0 videos</div>
+        <div class="meta">0 min • {{ videoCounts[course.id] || 0 }} videos</div>
         <button class="btn btn-dark btn-sm" type="button" (click)="handleStartCourse()">Start course</button>
       </div>
     </div>

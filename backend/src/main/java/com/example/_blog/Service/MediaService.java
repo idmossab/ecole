@@ -58,6 +58,10 @@ public class MediaService {
         return saved;
     }
 
+    public List<Media> getCourseVideos(Long courseId) {
+        return mediaRepo.findByCourseId(courseId);
+    }
+
     private void ensureUploadDir() {
         try {
             if (!Files.exists(UPLOAD_DIR)) {

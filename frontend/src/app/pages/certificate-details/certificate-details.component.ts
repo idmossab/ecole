@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { forkJoin } from 'rxjs';
 
 import { AuthService } from '../../core/auth.service';
 import { ApiService } from '../../core/api.service';
@@ -16,6 +17,7 @@ import { Certificate, Course } from '../../core/certificates.data';
 export class CertificateDetailsComponent {
   certificate: Certificate | null = null;
   courses: Course[] = [];
+  videoCounts: Record<number, number> = {};
   loading = true;
   error = '';
   showComingSoon = false;
@@ -53,10 +55,29 @@ export class CertificateDetailsComponent {
     this.api.getCertificateCourses(id).subscribe({
       next: (data) => {
         this.courses = data || [];
-        this.loading = false;
+        this.loadVideoCounts();
       },
       error: (err) => {
         this.error = err?.error?.message || err?.error || 'Failed to load courses';
+        this.loading = false;
+      }
+    });
+  }
+
+  private loadVideoCounts(): void {
+    if (!this.courses.length) {
+      this.loading = false;
+      return;
+    }
+    forkJoin(this.courses.map((course) => this.api.getCourseMedia(course.id))).subscribe({
+      next: (lists) => {
+        lists.forEach((media, idx) => {
+          const course = this.courses[idx];
+          this.videoCounts[course.id] = media?.length || 0;
+        });
+        this.loading = false;
+      },
+      error: () => {
         this.loading = false;
       }
     });

@@ -11,4 +11,5 @@ import com.example._blog.Entity.Media;
 public interface MediaRepo extends JpaRepository<Media, Long> {
     List<Media> findByBlogIdBlog(Long blogId);
     Media findFirstByBlogIdBlogOrderByIdAsc(Long blogId);
+    List<Media> findByCourseId(Long courseId);
 }

@@ -52,5 +52,6 @@ public class Course {
 
     @Builder.Default
     @OneToMany(mappedBy = "course")
+    @JsonIgnore
     private Set<Media> media = new HashSet<>();
 }

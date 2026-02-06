@@ -199,6 +199,10 @@ export class ApiService {
     return this.http.get<Course[]>(`${this.baseUrl}/certificates/${id}/courses`);
   }
 
+  getCourseMedia(courseId: number) {
+    return this.http.get<Media[]>(`${this.baseUrl}/courses/${courseId}/media`);
+  }
+
   // ADMIN
   getAdminCertificates() {
     return this.http.get<AdminCertificate[]>(`${this.baseUrl}/admin/certificates`);
