@@ -34,6 +34,7 @@ public class SecurityConfig {
                     "/media/by-blog/**",
                     "/media/first/**"
                 ).permitAll()
+                .requestMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

@@ -1,24 +1,44 @@
-.coming-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 28px;
-  box-shadow: var(--shadow-soft);
-  max-width: 520px;
-  margin: 0 auto;
-  text-align: center;
-  display: grid;
-  gap: 12px;
+.dashboard-header {
+  margin-bottom: 20px;
 }
 
-.pill {
-  display: inline-block;
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: var(--surface-muted);
+.dashboard-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.panel {
+  padding: 20px;
+  display: grid;
+  gap: 10px;
+}
+
+.form-label {
+  font-size: 0.85rem;
   color: var(--text-secondary);
-  font-size: 0.75rem;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  margin: 0 auto;
+}
+
+.form-control {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: var(--surface);
+}
+
+.mt {
+  margin-top: 6px;
+}
+
+.alert {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #e8f0ff;
+  color: #1e3a8a;
+  margin-bottom: 12px;
+}
+
+.alert.error {
+  background: #fee2e2;
+  color: #991b1b;
 }

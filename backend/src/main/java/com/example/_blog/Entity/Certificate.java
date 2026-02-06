@@ -30,6 +30,9 @@ public class Certificate {
     @Column(nullable = false, unique = true)
     private String title;
 
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
     @Builder.Default
     @OneToMany(mappedBy = "certificate")
     private Set<Course> courses = new HashSet<>();

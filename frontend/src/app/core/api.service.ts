@@ -3,6 +3,18 @@ import { HttpClient } from '@angular/common/http';
 
 import { AuthResponse, Blog, Comment, FollowCounts, Like, LikeStatus, Media, UserResponse } from './models';
 
+export type AdminCertificate = {
+  id: number;
+  title: string;
+  description?: string | null;
+};
+
+export type AdminCourse = {
+  id: number;
+  title: string;
+  content?: string | null;
+};
+
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private readonly baseUrl = 'http://localhost:8080';
@@ -171,5 +183,24 @@ export class ApiService {
       `${this.baseUrl}/api/follows/${userId}`,
       {}
     );
+  }
+
+  // ADMIN
+  getAdminCertificates() {
+    return this.http.get<AdminCertificate[]>(`${this.baseUrl}/admin/certificates`);
+  }
+
+  createCertificate(payload: { title: string; description: string }) {
+    return this.http.post<AdminCertificate>(`${this.baseUrl}/admin/certificates`, payload);
+  }
+
+  createCourse(payload: { certificateId: number; title: string; content: string }) {
+    return this.http.post<AdminCourse>(`${this.baseUrl}/admin/courses`, payload);
+  }
+
+  uploadCourseVideos(courseId: number, files: File[]) {
+    const form = new FormData();
+    files.forEach((file) => form.append('files', file));
+    return this.http.post<Media[]>(`${this.baseUrl}/admin/courses/${courseId}/videos`, form);
   }
 }

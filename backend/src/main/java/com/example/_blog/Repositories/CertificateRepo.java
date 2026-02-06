@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.example._blog.Entity.Certificate;
 
 @Repository
-public interface CertificateRepo extends JpaRepository<Certificate, Long> {}
+public interface CertificateRepo extends JpaRepository<Certificate, Long> {
+    boolean existsByTitle(String title);
+}

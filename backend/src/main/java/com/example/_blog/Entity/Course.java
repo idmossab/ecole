@@ -41,7 +41,7 @@ public class Course {
     private Certificate certificate;
 
     @ManyToOne
-    @JoinColumn(name = "diplome_id", nullable = false)
+    @JoinColumn(name = "diplome_id")
     private Diplome diplome;
 
     @Column(name = "created_at")
