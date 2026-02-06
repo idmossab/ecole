@@ -4,5 +4,5 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/media")
-public class MediaCont {}
+@RequestMapping("/diplomes")
+public class DiplomeCont {}

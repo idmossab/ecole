@@ -1,15 +1,14 @@
 package com.example._blog.Entity;
 
-
-import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,23 +17,20 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "comments")
-@Getter @Setter @Builder
-@NoArgsConstructor
+@Table(name = "diplomes")
+@Getter @Setter
+@Builder
 @AllArgsConstructor
-public class Comment {
+@NoArgsConstructor
+public class Diplome {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false,length=10000)
-    private String content;
-    @ManyToOne
-    @JoinColumn(name = "blogId", nullable = false)
-    private Blog blog;
-    @ManyToOne
-    @JoinColumn(name = "userId", nullable = false)
-    private User user;
+
+    @Column(nullable = false, unique = true)
+    private String label;
+
     @Builder.Default
-    private Instant createdAt=Instant.now();
-    private Instant updatedAt;
+    @OneToMany(mappedBy = "diplome")
+    private Set<Course> courses = new HashSet<>();
 }

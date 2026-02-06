@@ -1,8 +1,11 @@
 package com.example._blog.Entity;
 
-import java.time.Instant;
+import com.example._blog.Entity.enums.MediaType;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -17,23 +20,20 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "media")
-@Getter
-@Setter
+@Getter @Setter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class Media {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "blogId", nullable = false)
-    private Blog blog;
+    @JoinColumn(name = "course_id", nullable = false)
+    private Course course;
 
-    private String url;
-    private String mediaType;
-
-    @Builder.Default
-    private Instant createdAt = Instant.now();
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private MediaType type;
 }

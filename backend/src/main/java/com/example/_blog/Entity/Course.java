@@ -1,18 +1,17 @@
 package com.example._blog.Entity;
 
 import java.time.Instant;
-
-import com.example._blog.Entity.enums.BlogStatus;
+import java.util.HashSet;
+import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,34 +20,35 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "blogs")
-@Getter
-@Setter
+@Table(name = "courses")
+@Getter @Setter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class Blog {
+@NoArgsConstructor
+public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idBlog;
+    private Long id;
+
     @Column(nullable = false)
     private String title;
-    @Column(nullable = false)
+
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
-    @Builder.Default
-    @Enumerated(EnumType.STRING)
-    private BlogStatus status = BlogStatus.ACTIVE;
+
     @ManyToOne
-    @JoinColumn(name = "userId", nullable = false)
-    private User user;
-    @Column(name = "media")
-    private String media;
-    @Builder.Default
-    private Long commentCount = 0L;
-    @Builder.Default
-    private Long likeCount = 0L;
+    @JoinColumn(name = "specialite_id", nullable = false)
+    private Specialite specialite;
+
+    @ManyToOne
+    @JoinColumn(name = "diplome_id", nullable = false)
+    private Diplome diplome;
+
+    @Column(name = "created_at")
     @Builder.Default
     private Instant createdAt = Instant.now();
-    private Instant updatedAt;
 
+    @Builder.Default
+    @OneToMany(mappedBy = "course")
+    private Set<Media> media = new HashSet<>();
 }
