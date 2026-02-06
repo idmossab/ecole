@@ -17,8 +17,12 @@ import { Media } from '../../core/models';
 export class CourseComponent {
   course: Course | null = null;
   videos: Media[] = [];
+  durationByUrl: Record<string, number> = {};
+  activeVideoUrl: string | null = null;
   loading = true;
   error = '';
+
+  private readonly apiBase = 'http://localhost:8080';
 
   constructor(
     private route: ActivatedRoute,
@@ -48,7 +52,14 @@ export class CourseComponent {
   private loadVideos(courseId: number): void {
     this.api.getCourseMedia(courseId).subscribe({
       next: (data) => {
-        this.videos = data || [];
+        this.videos = (data || []).map((v) => ({
+          ...v,
+          url: this.normalizeUrl(v.url)
+        }));
+        if (this.videos.length) {
+          this.activeVideoUrl = this.videos[0].url || null;
+          this.prefetchDurations();
+        }
         this.loading = false;
       },
       error: () => {
@@ -57,13 +68,51 @@ export class CourseComponent {
     });
   }
 
+  private normalizeUrl(url: string | undefined | null): string {
+    if (!url) return '';
+    if (url.startsWith('http://') || url.startsWith('https://')) return url;
+    if (url.startsWith('/')) return `${this.apiBase}${url}`;
+    return `${this.apiBase}/${url}`;
+  }
+
+  private prefetchDurations(): void {
+    this.videos.forEach((video) => {
+      if (!video.url || this.durationByUrl[video.url] != null) return;
+      const el = document.createElement('video');
+      el.preload = 'metadata';
+      el.src = video.url;
+      el.onloadedmetadata = () => {
+        this.durationByUrl[video.url] = Math.round(el.duration || 0);
+      };
+      el.onerror = () => {
+        this.durationByUrl[video.url] = 0;
+      };
+    });
+  }
+
   get isLoggedIn(): boolean {
     return this.auth.isLoggedIn();
+  }
+
+  get canWatch(): boolean {
+    return this.isLoggedIn;
   }
 
   loginToStart(): void {
     if (!this.course) return;
     this.router.navigateByUrl(`/login?returnTo=/course/${this.course.id}`);
+  }
+
+  selectVideo(url: string): void {
+    if (!this.canWatch) return;
+    this.activeVideoUrl = url;
+  }
+
+  formatDuration(seconds: number | undefined): string {
+    const total = seconds || 0;
+    const mins = Math.floor(total / 60);
+    const secs = total % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
   }
 
   get learnItems(): string[] {

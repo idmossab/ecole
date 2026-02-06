@@ -10,10 +10,16 @@
 
   <div class="course-layout">
     <div class="player-card">
-      <div class="player-placeholder">
+      <div class="player-placeholder" *ngIf="!canWatch">
         <div class="lock-icon">🔒</div>
         <div>Login to access this course</div>
       </div>
+
+      <div class="player" *ngIf="canWatch">
+        <video *ngIf="activeVideoUrl" [src]="activeVideoUrl" controls></video>
+        <div class="text-muted" *ngIf="!activeVideoUrl">No videos uploaded yet.</div>
+      </div>
+
       <button class="btn btn-dark btn-sm" type="button" (click)="loginToStart()" *ngIf="!isLoggedIn">
         Login to Start Course
       </button>
@@ -22,10 +28,15 @@
     <div class="content-card">
       <h3>Course Content</h3>
       <div class="content-list">
-        <div class="content-item" *ngFor="let video of videos; let i = index">
+        <div
+          class="content-item"
+          *ngFor="let video of videos; let i = index"
+          (click)="selectVideo(video.url)"
+        >
           <div class="index">{{ i + 1 }}</div>
           <div class="title">Video {{ i + 1 }}</div>
-          <div class="lock">🔒</div>
+          <div class="duration">{{ formatDuration(durationByUrl[video.url]) }}</div>
+          <div class="lock" *ngIf="!canWatch">🔒</div>
         </div>
         <div class="text-muted" *ngIf="!videos.length">No videos uploaded yet.</div>
       </div>
