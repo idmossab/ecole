@@ -2,12 +2,8 @@ package com.example._blog.Entity;
 
 import java.time.Instant;
 
-import com.example._blog.Entity.enums.MediaType;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,29 +17,23 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "media")
+@Table(name = "follows")
 @Getter @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Media {
+public class Follow {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "course_id")
-    private Course course;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "follower_id")
+    private User follower;
 
-    @ManyToOne
-    @JoinColumn(name = "blog_id")
-    private Blog blog;
-
-    @Column(nullable = false)
-    private String url;
-
-    @Enumerated(EnumType.STRING)
-    private MediaType type;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "following_id")
+    private User following;
 
     @Builder.Default
     @Column(name = "created_at")
