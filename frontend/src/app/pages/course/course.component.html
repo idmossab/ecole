@@ -1,0 +1,55 @@
+<div class="container py-4" *ngIf="course; else notFound">
+  <a class="back-link" routerLink="/certificates">← Back to Certificates</a>
+
+  <div class="course-header">
+    <h1 class="display-font">{{ course.title }}</h1>
+    <div class="course-meta">
+      <span>{{ videos.length }} video lessons</span>
+    </div>
+  </div>
+
+  <div class="course-layout">
+    <div class="player-card">
+      <div class="player-placeholder">
+        <div class="lock-icon">🔒</div>
+        <div>Login to access this course</div>
+      </div>
+      <button class="btn btn-dark btn-sm" type="button" (click)="loginToStart()" *ngIf="!isLoggedIn">
+        Login to Start Course
+      </button>
+    </div>
+
+    <div class="content-card">
+      <h3>Course Content</h3>
+      <div class="content-list">
+        <div class="content-item" *ngFor="let video of videos; let i = index">
+          <div class="index">{{ i + 1 }}</div>
+          <div class="title">Video {{ i + 1 }}</div>
+          <div class="lock">🔒</div>
+        </div>
+        <div class="text-muted" *ngIf="!videos.length">No videos uploaded yet.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="about-grid">
+    <div class="about-card">
+      <h3>About this course</h3>
+      <p>{{ course.content || 'Course description coming soon.' }}</p>
+    </div>
+    <div class="about-card">
+      <h3>What you'll learn</h3>
+      <ul>
+        <li *ngFor="let item of learnItems">{{ item }}</li>
+        <li *ngIf="!learnItems.length">Learning outcomes coming soon.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<ng-template #notFound>
+  <div class="container py-4">
+    <div class="alert error" *ngIf="error">{{ error }}</div>
+    <h2>Course not found</h2>
+  </div>
+</ng-template>

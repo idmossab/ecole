@@ -37,6 +37,9 @@ public class Course {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
+    @Column(name = "what_you_will_learn", columnDefinition = "TEXT")
+    private String whatYouWillLearn;
+
     @ManyToOne
     @JoinColumn(name = "certificate_id", nullable = false)
     @JsonIgnore

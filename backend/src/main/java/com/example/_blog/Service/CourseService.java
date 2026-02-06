@@ -22,12 +22,13 @@ public class CourseService {
         this.certificateRepo = certificateRepo;
     }
 
-    public Course create(Long certificateId, String title, String content) {
+    public Course create(Long certificateId, String title, String content, String whatYouWillLearn) {
         Certificate cert = certificateRepo.findById(certificateId)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Certificate not found"));
         Course course = Course.builder()
                 .title(title)
                 .content(content == null ? "" : content)
+                .whatYouWillLearn(whatYouWillLearn)
                 .certificate(cert)
                 .build();
         return courseRepo.save(course);
@@ -35,6 +36,11 @@ public class CourseService {
 
     public List<Course> getAll() {
         return courseRepo.findAll();
+    }
+
+    public Course getById(Long courseId) {
+        return courseRepo.findById(courseId)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Course not found"));
     }
 
     public List<Course> getByCertificate(Long certificateId) {

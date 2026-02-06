@@ -14,6 +14,7 @@ export type AdminCourse = {
   id: number;
   title: string;
   content?: string | null;
+  whatYouWillLearn?: string | null;
 };
 
 @Injectable({ providedIn: 'root' })
@@ -199,6 +200,10 @@ export class ApiService {
     return this.http.get<Course[]>(`${this.baseUrl}/certificates/${id}/courses`);
   }
 
+  getCourseById(courseId: number) {
+    return this.http.get<Course>(`${this.baseUrl}/courses/${courseId}`);
+  }
+
   getCourseMedia(courseId: number) {
     return this.http.get<Media[]>(`${this.baseUrl}/courses/${courseId}/media`);
   }
@@ -217,7 +222,7 @@ export class ApiService {
     return this.http.post<AdminCertificate>(`${this.baseUrl}/admin/certificates`, payload);
   }
 
-  createCourse(payload: { certificateId: number; title: string; content: string }) {
+  createCourse(payload: { certificateId: number; title: string; content: string; whatYouWillLearn: string }) {
     return this.http.post<AdminCourse>(`${this.baseUrl}/admin/courses`, payload);
   }
 

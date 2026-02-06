@@ -50,7 +50,12 @@ public class AdminCont {
 
     @PostMapping("/courses")
     public ResponseEntity<Course> createCourse(@RequestBody CourseCreateRequest req) {
-        return ResponseEntity.ok(courseService.create(req.certificateId(), req.title(), req.content()));
+        return ResponseEntity.ok(courseService.create(
+                req.certificateId(),
+                req.title(),
+                req.content(),
+                req.whatYouWillLearn()
+        ));
     }
 
     @GetMapping("/courses")
@@ -70,5 +75,5 @@ public class AdminCont {
     }
 
     public record CertificateCreateRequest(String title, String description) {}
-    public record CourseCreateRequest(Long certificateId, String title, String content) {}
+    public record CourseCreateRequest(Long certificateId, String title, String content, String whatYouWillLearn) {}
 }

@@ -14,24 +14,16 @@
       <p class="text-muted" *ngIf="isLoggedIn && !courses.length">Content coming soon</p>
     </div>
 
-    <div class="course-grid" *ngIf="isLoggedIn && courses.length">
+    <div class="course-grid" *ngIf="courses.length">
       <div class="course-card" *ngFor="let course of courses">
         <h3>{{ course.title }}</h3>
         <div class="meta">0 min • {{ videoCounts[course.id] || 0 }} videos</div>
-        <button class="btn btn-dark btn-sm" type="button" (click)="handleStartCourse()">Start course</button>
+        <button class="btn btn-dark btn-sm" type="button" (click)="openCourse(course.id)">Start course</button>
       </div>
     </div>
 
     <div class="cta" *ngIf="!isLoggedIn">
       <a class="btn btn-dark btn-sm" [routerLink]="['/login']" [queryParams]="{ returnTo: '/certificate/' + certificate.id }">Login</a>
-    </div>
-  </div>
-
-  <div class="modal-backdrop" *ngIf="showComingSoon" (click)="showComingSoon=false">
-    <div class="modal" (click)="$event.stopPropagation()">
-      <h3>Content coming soon</h3>
-      <p>Courses are being prepared. Check back shortly.</p>
-      <button class="btn btn-dark btn-sm" type="button" (click)="showComingSoon=false">Okay</button>
     </div>
   </div>
 </div>

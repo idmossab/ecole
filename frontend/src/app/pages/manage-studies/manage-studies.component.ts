@@ -21,6 +21,7 @@ export class ManageStudiesComponent implements OnInit {
   certDescription = '';
   courseTitle = '';
   courseContent = '';
+  courseLearn = '';
 
   selectedCertificateId: number | null = null;
   selectedCourseId: number | null = null;
@@ -100,11 +101,13 @@ export class ManageStudiesComponent implements OnInit {
     this.api.createCourse({
       certificateId: this.selectedCertificateId,
       title: this.courseTitle,
-      content: this.courseContent
+      content: this.courseContent,
+      whatYouWillLearn: this.courseLearn
     }).subscribe({
       next: () => {
         this.courseTitle = '';
         this.courseContent = '';
+        this.courseLearn = '';
         this.message = 'Course created';
         this.loadCourses(this.selectedCertificateId);
       },

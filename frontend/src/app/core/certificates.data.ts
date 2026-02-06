@@ -2,6 +2,7 @@ export type Course = {
   id: number;
   title: string;
   content?: string | null;
+  whatYouWillLearn?: string | null;
 };
 
 export type Certificate = {

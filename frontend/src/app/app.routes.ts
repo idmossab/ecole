@@ -12,6 +12,7 @@ import { DiplomasComponent } from './pages/diplomas/diplomas.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { ManageStudiesComponent } from './pages/manage-studies/manage-studies.component';
+import { CourseComponent } from './pages/course/course.component';
 
 export const routes: Routes = [
   {
@@ -38,6 +39,10 @@ export const routes: Routes = [
   {
     path: 'certificate/:slug',
     component: CertificateDetailsComponent
+  },
+  {
+    path: 'course/:id',
+    component: CourseComponent
   },
   {
     path: 'diplomas',

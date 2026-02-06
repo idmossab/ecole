@@ -30,6 +30,8 @@
       <input class="form-control" [(ngModel)]="courseTitle" />
       <label class="form-label mt">Content</label>
       <textarea class="form-control" rows="4" [(ngModel)]="courseContent"></textarea>
+      <label class="form-label mt">What you'll learn</label>
+      <textarea class="form-control" rows="4" [(ngModel)]="courseLearn" placeholder="One item per line"></textarea>
       <button class="btn btn-dark btn-sm mt full-btn" type="button" (click)="createCourse()">Create</button>
     </div>
 

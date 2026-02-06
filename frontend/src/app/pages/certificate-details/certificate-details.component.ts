@@ -20,7 +20,6 @@ export class CertificateDetailsComponent {
   videoCounts: Record<number, number> = {};
   loading = true;
   error = '';
-  showComingSoon = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -87,24 +86,7 @@ export class CertificateDetailsComponent {
     return this.auth.isLoggedIn();
   }
 
-  handleStartCourse(): void {
-    if (!this.certificate) return;
-
-    const hasContent = false;
-    if (!hasContent) {
-      if (!this.auth.isLoggedIn()) {
-        this.router.navigateByUrl(`/login?returnTo=/certificate/${this.certificate.id}`);
-        return;
-      }
-      this.showComingSoon = true;
-      return;
-    }
-
-    if (!this.auth.isLoggedIn()) {
-      this.router.navigateByUrl(`/login?returnTo=/certificate/${this.certificate.id}`);
-      return;
-    }
-
-    this.showComingSoon = true;
+  openCourse(courseId: number): void {
+    this.router.navigateByUrl(`/course/${courseId}`);
   }
 }
