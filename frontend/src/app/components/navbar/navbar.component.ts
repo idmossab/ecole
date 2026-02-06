@@ -41,4 +41,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
   get isUser(): boolean {
     return this.user?.role === 'USER';
   }
+
+  logout(): void {
+    this.auth.logout();
+    this.router.navigateByUrl('/login');
+  }
 }

@@ -32,5 +32,14 @@
     >
       Login
     </button>
+
+    <button
+      class="btn btn-outline-secondary btn-sm"
+      type="button"
+      (click)="logout()"
+      *ngIf="user"
+    >
+      Logout
+    </button>
   </div>
 </nav>

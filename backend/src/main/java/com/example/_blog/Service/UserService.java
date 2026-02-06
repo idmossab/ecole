@@ -15,6 +15,7 @@ import com.example._blog.Dto.UserLoginRequest;
 import com.example._blog.Dto.UserRegisterRequest;
 import com.example._blog.Dto.UserResponse;
 import com.example._blog.Entity.User;
+import com.example._blog.Entity.enums.UserRole;
 import com.example._blog.Repositories.UserRepo;
 import com.example._blog.Security.JwtService;
 
@@ -38,12 +39,14 @@ public class UserService {
             throw new ResponseStatusException(CONFLICT, "Username already used");
         }
 
+        boolean isFirstUser = repo.count() == 0;
         User user = User.builder()
                 .firstName(req.firstName())
                 .lastName(req.lastName())
                 .userName(req.userName())
                 .email(req.email())
                 .password(encoder.encode(req.password()))
+                .role(isFirstUser ? UserRole.ADMIN : UserRole.USER)
                 .build();
 
         // INSERT
