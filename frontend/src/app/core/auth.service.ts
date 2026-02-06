@@ -1,44 +1,49 @@
 import { Injectable } from '@angular/core';
 
-import { UserResponse } from './models';
-
-const USER_KEY = 'currentUser';
 const TOKEN_KEY = 'authToken';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  getCurrentUser(): UserResponse | null {
-    const raw = localStorage.getItem(USER_KEY);
-    return raw ? (JSON.parse(raw) as UserResponse) : null;
-  }
-
   getToken(): string | null {
     return localStorage.getItem(TOKEN_KEY);
   }
 
-  setSession(user: UserResponse, token: string): void {
-    localStorage.setItem(USER_KEY, JSON.stringify(user));
+  setToken(token: string): void {
     localStorage.setItem(TOKEN_KEY, token);
   }
 
-  clearSession(): void {
-    localStorage.removeItem(USER_KEY);
+  clearToken(): void {
     localStorage.removeItem(TOKEN_KEY);
   }
 
-  setCurrentUser(user: UserResponse | null): void {
-    if (user) {
-      localStorage.setItem(USER_KEY, JSON.stringify(user));
-    } else {
-      localStorage.removeItem(USER_KEY);
-    }
+  isLoggedIn(): boolean {
+    const token = this.getToken();
+    if (!token) return false;
+    const payload = this.decodeToken(token);
+    if (!payload?.exp) return true;
+    const nowSeconds = Math.floor(Date.now() / 1000);
+    return payload.exp > nowSeconds;
   }
 
-  isLoggedIn(): boolean {
-    return !!this.getCurrentUser();
+  getRole(): string | null {
+    const token = this.getToken();
+    if (!token) return null;
+    const payload = this.decodeToken(token);
+    return payload?.role || null;
   }
 
   logout(): void {
-    this.clearSession();
+    this.clearToken();
+  }
+
+  private decodeToken(token: string): any | null {
+    const parts = token.split('.');
+    if (parts.length !== 3) return null;
+    try {
+      const payload = atob(parts[1].replace(/-/g, '+').replace(/_/g, '/'));
+      return JSON.parse(payload);
+    } catch {
+      return null;
+    }
   }
 }

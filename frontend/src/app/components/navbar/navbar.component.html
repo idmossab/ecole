@@ -28,7 +28,7 @@
       class="btn btn-dark btn-sm"
       type="button"
       routerLink="/login"
-      *ngIf="!user"
+      *ngIf="!loggedIn"
     >
       Login
     </button>
@@ -37,7 +37,7 @@
       class="btn btn-outline-secondary btn-sm"
       type="button"
       (click)="logout()"
-      *ngIf="user"
+      *ngIf="loggedIn"
     >
       Logout
     </button>

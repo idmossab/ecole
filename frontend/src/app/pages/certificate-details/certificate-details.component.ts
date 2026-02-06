@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../core/auth.service';
-import { certificates, Certificate } from '../../core/certificates.data';
+import { ApiService } from '../../core/api.service';
+import { Certificate, Course } from '../../core/certificates.data';
 
 @Component({
   selector: 'app-certificate-details',
@@ -14,15 +15,51 @@ import { certificates, Certificate } from '../../core/certificates.data';
 })
 export class CertificateDetailsComponent {
   certificate: Certificate | null = null;
+  courses: Course[] = [];
+  loading = true;
+  error = '';
   showComingSoon = false;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private auth: AuthService
+    private auth: AuthService,
+    private api: ApiService
   ) {
     const slug = this.route.snapshot.paramMap.get('slug');
-    this.certificate = certificates.find((item) => item.id === slug) || null;
+    if (!slug) {
+      this.loading = false;
+      return;
+    }
+    const id = Number(slug);
+    if (Number.isNaN(id)) {
+      this.loading = false;
+      return;
+    }
+
+    this.api.getCertificateById(id).subscribe({
+      next: (cert) => {
+        this.certificate = cert;
+        this.loadCourses(id);
+      },
+      error: (err) => {
+        this.error = err?.error?.message || err?.error || 'Failed to load certificate';
+        this.loading = false;
+      }
+    });
+  }
+
+  private loadCourses(id: number): void {
+    this.api.getCertificateCourses(id).subscribe({
+      next: (data) => {
+        this.courses = data || [];
+        this.loading = false;
+      },
+      error: (err) => {
+        this.error = err?.error?.message || err?.error || 'Failed to load courses';
+        this.loading = false;
+      }
+    });
   }
 
   get isLoggedIn(): boolean {
@@ -32,7 +69,7 @@ export class CertificateDetailsComponent {
   handleStartCourse(): void {
     if (!this.certificate) return;
 
-    const hasContent = this.certificate.courses.some((course) => course.videoCount > 0);
+    const hasContent = false;
     if (!hasContent) {
       if (!this.auth.isLoggedIn()) {
         this.router.navigateByUrl(`/login?returnTo=/certificate/${this.certificate.id}`);

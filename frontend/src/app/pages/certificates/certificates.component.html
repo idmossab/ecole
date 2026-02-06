@@ -4,12 +4,16 @@
     <p class="text-muted">Short, focused programs to sharpen your skills.</p>
   </div>
 
-  <div class="cert-grid">
+  <div class="alert error" *ngIf="error">{{ error }}</div>
+
+  <div class="cert-grid" *ngIf="!loading">
     <div class="cert-card" *ngFor="let cert of certificates">
       <h3>{{ cert.title }}</h3>
-      <p>{{ cert.description }}</p>
-      <div class="meta">{{ cert.courses.length }} Courses</div>
+      <p>{{ cert.description || 'Certificate description coming soon.' }}</p>
+      <div class="meta">{{ cert.courses?.length || 0 }} Courses</div>
       <a class="btn btn-dark btn-sm" [routerLink]="['/certificate', cert.id]">View</a>
     </div>
   </div>
+
+  <div class="text-muted" *ngIf="loading">Loading certificates...</div>
 </div>

@@ -30,6 +30,7 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/users/register",
                     "/users/login",
+                    "/certificates/**",
                     "/uploads/**",
                     "/media/by-blog/**",
                     "/media/first/**"

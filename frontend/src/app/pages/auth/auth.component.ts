@@ -46,7 +46,7 @@ export class AuthComponent {
     this.loginLoading = true;
     this.api.login({ emailOrUsername: this.loginEmailOrUsername, password: this.loginPassword }).subscribe({
       next: (res) => {
-        this.auth.setSession(res.user, res.token);
+        this.auth.setToken(res.token);
         this.router.navigateByUrl(this.returnTo);
       },
       error: (err) => {
@@ -67,7 +67,7 @@ export class AuthComponent {
       password: this.password
     }).subscribe({
       next: (res) => {
-        this.auth.setSession(res.user, res.token);
+        this.auth.setToken(res.token);
         this.router.navigateByUrl(this.returnTo);
       },
       error: (err) => {

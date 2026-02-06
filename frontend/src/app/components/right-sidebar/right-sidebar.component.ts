@@ -45,11 +45,21 @@ export class RightSidebarComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    const user = this.auth.getCurrentUser();
-    this.currentUserId = user?.userId ?? null;
+    if (!this.auth.isLoggedIn()) {
+      this.loading = false;
+      return;
+    }
     this.loading = true;
-    this.loadFollowedIds();
-    this.setupSearch();
+    this.api.getMe().subscribe({
+      next: (me) => {
+        this.currentUserId = me.userId;
+        this.loadFollowedIds();
+        this.setupSearch();
+      },
+      error: () => {
+        this.loading = false;
+      }
+    });
   }
 
   ngAfterViewInit(): void {
@@ -140,10 +150,10 @@ export class RightSidebarComponent implements OnInit, AfterViewInit, OnDestroy {
     this.followLoadingIds.add(userId);
     this.api.followUser(userId).subscribe({
       next: () => {
-        this.followedIds.add(userId);
         this.followLoadingIds.delete(userId);
-        this.applyFilters();
         this.feedRefresh.trigger();
+        this.followedIds.add(userId);
+        this.applyFilters();
       },
       error: () => {
         this.followLoadingIds.delete(userId);

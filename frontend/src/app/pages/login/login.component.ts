@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 
 import { ApiService } from '../../core/api.service';
 import { AuthService } from '../../core/auth.service';
@@ -9,7 +9,7 @@ import { AuthService } from '../../core/auth.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -26,7 +26,7 @@ export class LoginComponent {
     this.loading = true;
     this.api.login({ emailOrUsername: this.emailOrUsername, password: this.password }).subscribe({
       next: (res) => {
-        this.auth.setSession(res.user, res.token);
+        this.auth.setToken(res.token);
         this.router.navigateByUrl('/home');
       },
       error: (err) => {

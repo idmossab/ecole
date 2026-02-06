@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { AuthService } from './core/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -8,5 +9,13 @@ import { NavbarComponent } from './components/navbar/navbar.component';
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
+export class App implements OnInit {
+  constructor(private auth: AuthService, private router: Router) {}
+
+  ngOnInit(): void {
+    if (this.auth.getToken() && !this.auth.isLoggedIn()) {
+      this.auth.logout();
+      this.router.navigateByUrl('/login');
+    }
+  }
 }

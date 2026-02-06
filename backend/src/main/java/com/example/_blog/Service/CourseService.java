@@ -2,6 +2,8 @@ package com.example._blog.Service;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -29,5 +31,9 @@ public class CourseService {
                 .certificate(cert)
                 .build();
         return courseRepo.save(course);
+    }
+
+    public List<Course> getByCertificate(Long certificateId) {
+        return courseRepo.findByCertificateId(certificateId);
     }
 }

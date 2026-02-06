@@ -17,4 +17,7 @@
       </div>
     </div>
   </div>
+
+  <div class="text-muted" *ngIf="loading">Loading profile...</div>
+  <div class="alert error" *ngIf="error">{{ error }}</div>
 </div>

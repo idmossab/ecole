@@ -4,7 +4,6 @@ import { RouterLink, NavigationEnd, Router } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 
 import { AuthService } from '../../core/auth.service';
-import { UserResponse } from '../../core/models';
 
 @Component({
   selector: 'app-navbar',
@@ -14,7 +13,8 @@ import { UserResponse } from '../../core/models';
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent implements OnInit, OnDestroy {
-  user: UserResponse | null = null;
+  role: string | null = null;
+  loggedIn = false;
   private navSub?: Subscription;
 
   constructor(private auth: AuthService, private router: Router) {}
@@ -31,15 +31,16 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   private syncState(): void {
-    this.user = this.auth.getCurrentUser();
+    this.loggedIn = this.auth.isLoggedIn();
+    this.role = this.auth.getRole();
   }
 
   get isAdmin(): boolean {
-    return this.user?.role === 'ADMIN';
+    return this.role === 'ADMIN';
   }
 
   get isUser(): boolean {
-    return this.user?.role === 'USER';
+    return this.role === 'USER';
   }
 
   logout(): void {

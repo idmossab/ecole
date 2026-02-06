@@ -2,20 +2,22 @@
   <div class="speciality-header">
     <span class="pill">Certificate</span>
     <h1 class="display-font">{{ certificate.title }}</h1>
-    <p class="lead">{{ certificate.description }}</p>
+    <p class="lead">{{ certificate.description || 'Certificate description coming soon.' }}</p>
   </div>
 
-  <div class="courses-card">
+  <div class="alert error" *ngIf="error">{{ error }}</div>
+
+  <div class="courses-card" *ngIf="!loading">
     <div>
       <h2 class="display-font">Courses</h2>
       <p class="text-muted" *ngIf="!isLoggedIn">Login to access courses</p>
-      <p class="text-muted" *ngIf="isLoggedIn && !certificate.courses.length">Content coming soon</p>
+      <p class="text-muted" *ngIf="isLoggedIn && !courses.length">Content coming soon</p>
     </div>
 
-    <div class="course-grid" *ngIf="isLoggedIn && certificate.courses.length">
-      <div class="course-card" *ngFor="let course of certificate.courses">
+    <div class="course-grid" *ngIf="isLoggedIn && courses.length">
+      <div class="course-card" *ngFor="let course of courses">
         <h3>{{ course.title }}</h3>
-        <div class="meta">{{ course.durationMinutes }} min • {{ course.videoCount }} videos</div>
+        <div class="meta">0 min • 0 videos</div>
         <button class="btn btn-dark btn-sm" type="button" (click)="handleStartCourse()">Start course</button>
       </div>
     </div>

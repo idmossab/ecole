@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { AuthResponse, Blog, Comment, FollowCounts, Like, LikeStatus, Media, UserResponse } from './models';
+import { Certificate, Course } from './certificates.data';
 
 export type AdminCertificate = {
   id: number;
@@ -183,6 +184,19 @@ export class ApiService {
       `${this.baseUrl}/api/follows/${userId}`,
       {}
     );
+  }
+
+  // PUBLIC CERTIFICATES
+  getCertificates() {
+    return this.http.get<Certificate[]>(`${this.baseUrl}/certificates`);
+  }
+
+  getCertificateById(id: number) {
+    return this.http.get<Certificate>(`${this.baseUrl}/certificates/${id}`);
+  }
+
+  getCertificateCourses(id: number) {
+    return this.http.get<Course[]>(`${this.baseUrl}/certificates/${id}/courses`);
   }
 
   // ADMIN
