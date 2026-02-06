@@ -2,11 +2,13 @@ run:
 	./mvnw spring-boot:run 
 db:      
 	docker rm -f courseonlinedb
+	docker volume create courseonlinedb_data
 	docker run --name courseonlinedb \
   	-e POSTGRES_USER=midbenke \
   	-e POSTGRES_PASSWORD=123456 \
   	-e POSTGRES_DB=blogdb \
   	-p 5432:5432 \
+	-v courseonlinedb_data:/var/lib/postgresql/data \
   	-d postgres:15
 db_bash:
 	docker exec -it courseonlinedb bash 
