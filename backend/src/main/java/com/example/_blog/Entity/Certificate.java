@@ -10,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,5 +36,6 @@ public class Certificate {
 
     @Builder.Default
     @OneToMany(mappedBy = "certificate")
+    @JsonIgnore
     private Set<Course> courses = new HashSet<>();
 }
