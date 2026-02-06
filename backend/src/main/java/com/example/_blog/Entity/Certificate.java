@@ -17,12 +17,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "specialites")
+@Table(name = "certificates")
 @Getter @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Specialite {
+public class Certificate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,6 +31,6 @@ public class Specialite {
     private String title;
 
     @Builder.Default
-    @OneToMany(mappedBy = "specialite")
+    @OneToMany(mappedBy = "certificate")
     private Set<Course> courses = new HashSet<>();
 }

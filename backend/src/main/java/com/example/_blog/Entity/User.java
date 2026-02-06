@@ -64,9 +64,9 @@ public class User {
     @Builder.Default
     @ManyToMany
     @JoinTable(
-            name = "users_specialites",
+            name = "users_certificates",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "specialite_id")
+            inverseJoinColumns = @JoinColumn(name = "certificate_id")
     )
-    private Set<Specialite> specialites = new HashSet<>();
+    private Set<Certificate> certificates = new HashSet<>();
 }

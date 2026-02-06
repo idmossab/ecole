@@ -37,8 +37,8 @@ public class Course {
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "specialite_id", nullable = false)
-    private Specialite specialite;
+    @JoinColumn(name = "certificate_id", nullable = false)
+    private Certificate certificate;
 
     @ManyToOne
     @JoinColumn(name = "diplome_id", nullable = false)

@@ -4,5 +4,5 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/specialites")
-public class SpecialiteCont {}
+@RequestMapping("/certificates")
+public class CertificateCont {}
