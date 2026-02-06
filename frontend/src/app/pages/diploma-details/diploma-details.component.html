@@ -10,14 +10,14 @@
 
   <div class="section">
     <div class="section-header">
-      <h2 class="display-font">Specialities</h2>
-      <p class="text-muted mb-0">Choose a path to explore.</p>
+      <h2 class="display-font">Certificates</h2>
+      <p class="text-muted mb-0">Choose a certificate to explore.</p>
     </div>
     <div class="speciality-grid">
-      <div class="speciality-card" *ngFor="let spec of specialities">
-        <h3>{{ spec.title }}</h3>
-        <p>{{ spec.description }}</p>
-        <a class="btn btn-outline-primary" [routerLink]="['/speciality', spec.slug]">View Speciality</a>
+      <div class="speciality-card" *ngFor="let cert of certificates">
+        <h3>{{ cert.title }}</h3>
+        <p>{{ cert.description }}</p>
+        <a class="btn btn-outline-primary" [routerLink]="['/certificate', cert.slug]">View Certificate</a>
       </div>
     </div>
   </div>

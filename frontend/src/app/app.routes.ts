@@ -5,8 +5,10 @@ import { AuthComponent } from './pages/auth/auth.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { ContactComponent } from './pages/contact/contact.component';
 import { DiplomaDetailsComponent } from './pages/diploma-details/diploma-details.component';
-import { SpecialityDetailsComponent } from './pages/speciality-details/speciality-details.component';
+import { CertificateDetailsComponent } from './pages/certificate-details/certificate-details.component';
 import { LoginRequiredComponent } from './pages/login-required/login-required.component';
+import { CertificatesComponent } from './pages/certificates/certificates.component';
+import { DiplomasComponent } from './pages/diplomas/diplomas.component';
 
 export const routes: Routes = [
   {
@@ -27,12 +29,20 @@ export const routes: Routes = [
     component: HomeComponent
   },
   {
+    path: 'certificates',
+    component: CertificatesComponent
+  },
+  {
+    path: 'diplomas',
+    component: DiplomasComponent
+  },
+  {
     path: 'diploma',
     component: DiplomaDetailsComponent
   },
   {
-    path: 'speciality/:slug',
-    component: SpecialityDetailsComponent
+    path: 'certificate/:slug',
+    component: CertificateDetailsComponent
   },
   {
     path: 'login-required',

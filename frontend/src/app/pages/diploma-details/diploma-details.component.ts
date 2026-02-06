@@ -17,7 +17,7 @@ export class DiplomaDetailsComponent {
     requirement: 'This diploma requires a Baccalaureate'
   };
 
-  specialities = [
+  certificates = [
     {
       title: 'Software Development',
       description: 'Design, build, and deploy modern applications using best practices.',
