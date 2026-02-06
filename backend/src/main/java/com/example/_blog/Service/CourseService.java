@@ -33,6 +33,10 @@ public class CourseService {
         return courseRepo.save(course);
     }
 
+    public List<Course> getAll() {
+        return courseRepo.findAll();
+    }
+
     public List<Course> getByCertificate(Long certificateId) {
         return courseRepo.findByCertificateId(certificateId);
     }

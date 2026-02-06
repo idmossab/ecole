@@ -208,6 +208,11 @@ export class ApiService {
     return this.http.get<AdminCertificate[]>(`${this.baseUrl}/admin/certificates`);
   }
 
+  getAdminCourses(certificateId?: number | null) {
+    const url = certificateId ? `${this.baseUrl}/admin/courses?certificateId=${certificateId}` : `${this.baseUrl}/admin/courses`;
+    return this.http.get<AdminCourse[]>(url);
+  }
+
   createCertificate(payload: { title: string; description: string }) {
     return this.http.post<AdminCertificate>(`${this.baseUrl}/admin/certificates`, payload);
   }

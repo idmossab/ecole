@@ -2,13 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { ApiService } from '../../core/api.service';
-
-type AdminCertificate = {
-  id: number;
-  title: string;
-  description?: string | null;
-};
+import { ApiService, AdminCourse, AdminCertificate } from '../../core/api.service';
+import { Media } from '../../core/models';
 
 @Component({
   selector: 'app-manage-studies',
@@ -19,13 +14,16 @@ type AdminCertificate = {
 })
 export class ManageStudiesComponent implements OnInit {
   certificates: AdminCertificate[] = [];
+  courses: AdminCourse[] = [];
+  videos: Media[] = [];
 
   certTitle = '';
   certDescription = '';
   courseTitle = '';
   courseContent = '';
+
   selectedCertificateId: number | null = null;
-  videoCourseId: number | null = null;
+  selectedCourseId: number | null = null;
   videoFiles: File[] = [];
 
   message = '';
@@ -35,6 +33,7 @@ export class ManageStudiesComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCertificates();
+    this.loadCourses();
   }
 
   loadCertificates(): void {
@@ -42,6 +41,35 @@ export class ManageStudiesComponent implements OnInit {
       next: (data) => (this.certificates = data || []),
       error: (err) => {
         this.error = err?.error?.message || err?.error || 'Failed to load certificates';
+      }
+    });
+  }
+
+  loadCourses(certificateId?: number | null): void {
+    this.api.getAdminCourses(certificateId).subscribe({
+      next: (data) => (this.courses = data || []),
+      error: (err) => {
+        this.error = err?.error?.message || err?.error || 'Failed to load courses';
+      }
+    });
+  }
+
+  onCertificateChange(): void {
+    this.selectedCourseId = null;
+    this.videos = [];
+    this.loadCourses(this.selectedCertificateId);
+  }
+
+  onCourseChange(): void {
+    this.videos = [];
+    if (!this.selectedCourseId) return;
+
+    this.api.getCourseMedia(this.selectedCourseId).subscribe({
+      next: (data) => {
+        this.videos = data || [];
+      },
+      error: (err) => {
+        this.error = err?.error?.message || err?.error || 'Failed to load videos';
       }
     });
   }
@@ -78,6 +106,7 @@ export class ManageStudiesComponent implements OnInit {
         this.courseTitle = '';
         this.courseContent = '';
         this.message = 'Course created';
+        this.loadCourses(this.selectedCertificateId);
       },
       error: (err) => {
         this.error = err?.error?.message || err?.error || 'Failed to create course';
@@ -91,8 +120,8 @@ export class ManageStudiesComponent implements OnInit {
   }
 
   uploadVideos(): void {
-    if (!this.videoCourseId) {
-      this.error = 'Enter a course ID';
+    if (!this.selectedCourseId) {
+      this.error = 'Select a course first';
       return;
     }
     if (!this.videoFiles.length) {
@@ -101,11 +130,11 @@ export class ManageStudiesComponent implements OnInit {
     }
     this.message = '';
     this.error = '';
-    this.api.uploadCourseVideos(this.videoCourseId, this.videoFiles).subscribe({
+    this.api.uploadCourseVideos(this.selectedCourseId, this.videoFiles).subscribe({
       next: () => {
         this.videoFiles = [];
-        this.videoCourseId = null;
         this.message = 'Videos uploaded';
+        this.onCourseChange();
       },
       error: (err) => {
         this.error = err?.error?.message || err?.error || 'Failed to upload videos';

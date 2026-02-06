@@ -22,7 +22,7 @@
     <div class="card panel">
       <h3>Create Course</h3>
       <label class="form-label">Certificate</label>
-      <select class="form-control" [(ngModel)]="selectedCertificateId">
+      <select class="form-control" [(ngModel)]="selectedCertificateId" (change)="onCertificateChange()">
         <option [ngValue]="null">Select certificate</option>
         <option *ngFor="let cert of certificates" [ngValue]="cert.id">{{ cert.title }}</option>
       </select>
@@ -35,11 +35,22 @@
 
     <div class="card panel">
       <h3>Upload Videos</h3>
-      <label class="form-label">Course ID</label>
-      <input class="form-control" type="number" [(ngModel)]="videoCourseId" />
+      <label class="form-label">Course</label>
+      <select class="form-control" [(ngModel)]="selectedCourseId" (change)="onCourseChange()">
+        <option [ngValue]="null">Select course</option>
+        <option *ngFor="let course of courses" [ngValue]="course.id">{{ course.title }}</option>
+      </select>
       <label class="form-label mt">Videos</label>
       <input class="form-control" type="file" multiple accept="video/*" (change)="onVideoFilesChange($event)" />
       <button class="btn btn-dark btn-sm mt full-btn" type="button" (click)="uploadVideos()">Upload</button>
+
+      <div class="videos" *ngIf="videos.length">
+        <div class="videos-title">Uploaded videos</div>
+        <ul>
+          <li *ngFor="let video of videos">{{ video.url }}</li>
+        </ul>
+      </div>
+      <div class="text-muted" *ngIf="selectedCourseId && !videos.length">No videos uploaded yet.</div>
     </div>
   </div>
 </div>
