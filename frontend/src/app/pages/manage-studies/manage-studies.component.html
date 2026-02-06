@@ -1,0 +1,45 @@
+<div class="container py-5">
+  <div class="manage-header">
+    <div>
+      <h1 class="display-font">Manage Studies</h1>
+      <p class="text-muted">Create certificates, courses, and upload course videos.</p>
+    </div>
+  </div>
+
+  <div class="alert" *ngIf="message">{{ message }}</div>
+  <div class="alert error" *ngIf="error">{{ error }}</div>
+
+  <div class="dashboard-grid manage-grid">
+    <div class="card panel">
+      <h3>Create Certificate</h3>
+      <label class="form-label">Title</label>
+      <input class="form-control" [(ngModel)]="certTitle" />
+      <label class="form-label mt">Description</label>
+      <textarea class="form-control" rows="4" [(ngModel)]="certDescription"></textarea>
+      <button class="btn btn-dark btn-sm mt full-btn" type="button" (click)="createCertificate()">Create</button>
+    </div>
+
+    <div class="card panel">
+      <h3>Create Course</h3>
+      <label class="form-label">Certificate</label>
+      <select class="form-control" [(ngModel)]="selectedCertificateId">
+        <option [ngValue]="null">Select certificate</option>
+        <option *ngFor="let cert of certificates" [ngValue]="cert.id">{{ cert.title }}</option>
+      </select>
+      <label class="form-label mt">Course title</label>
+      <input class="form-control" [(ngModel)]="courseTitle" />
+      <label class="form-label mt">Content</label>
+      <textarea class="form-control" rows="4" [(ngModel)]="courseContent"></textarea>
+      <button class="btn btn-dark btn-sm mt full-btn" type="button" (click)="createCourse()">Create</button>
+    </div>
+
+    <div class="card panel">
+      <h3>Upload Videos</h3>
+      <label class="form-label">Course ID</label>
+      <input class="form-control" type="number" [(ngModel)]="videoCourseId" />
+      <label class="form-label mt">Videos</label>
+      <input class="form-control" type="file" multiple accept="video/*" (change)="onVideoFilesChange($event)" />
+      <button class="btn btn-dark btn-sm mt full-btn" type="button" (click)="uploadVideos()">Upload</button>
+    </div>
+  </div>
+</div>

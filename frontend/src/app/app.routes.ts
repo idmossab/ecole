@@ -11,6 +11,7 @@ import { CertificatesComponent } from './pages/certificates/certificates.compone
 import { DiplomasComponent } from './pages/diplomas/diplomas.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { ManageStudiesComponent } from './pages/manage-studies/manage-studies.component';
 
 export const routes: Routes = [
   {
@@ -45,6 +46,10 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent
+  },
+  {
+    path: 'manage-studies',
+    component: ManageStudiesComponent
   },
   {
     path: 'profile',

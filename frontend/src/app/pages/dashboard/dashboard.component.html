@@ -2,44 +2,41 @@
   <div class="dashboard-header">
     <div>
       <h1 class="display-font">Admin Dashboard</h1>
-      <p class="text-muted">Create certificates, courses, and upload course videos.</p>
+      <p class="text-muted">Manage your platform and monitor performance.</p>
     </div>
+    <a class="btn btn-dark btn-sm" routerLink="/manage-studies">Manage Studies</a>
   </div>
 
-  <div class="alert" *ngIf="message">{{ message }}</div>
-  <div class="alert error" *ngIf="error">{{ error }}</div>
-
-  <div class="dashboard-grid">
-    <div class="card panel">
-      <h3>Create Certificate</h3>
-      <label class="form-label">Title</label>
-      <input class="form-control" [(ngModel)]="certTitle" />
-      <label class="form-label mt">Description</label>
-      <textarea class="form-control" rows="3" [(ngModel)]="certDescription"></textarea>
-      <button class="btn btn-dark btn-sm mt" type="button" (click)="createCertificate()">Create</button>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-title">Total Students</div>
+      <div class="stat-value">4</div>
+      <div class="stat-sub">3 active students</div>
     </div>
-
-    <div class="card panel">
-      <h3>Create Course</h3>
-      <label class="form-label">Certificate</label>
-      <select class="form-control" [(ngModel)]="selectedCertificateId">
-        <option [ngValue]="null">Select certificate</option>
-        <option *ngFor="let cert of certificates" [ngValue]="cert.id">{{ cert.title }}</option>
-      </select>
-      <label class="form-label mt">Course title</label>
-      <input class="form-control" [(ngModel)]="courseTitle" />
-      <label class="form-label mt">Content</label>
-      <textarea class="form-control" rows="3" [(ngModel)]="courseContent"></textarea>
-      <button class="btn btn-dark btn-sm mt" type="button" (click)="createCourse()">Create</button>
+    <div class="stat-card">
+      <div class="stat-title">Total Courses</div>
+      <div class="stat-value">6</div>
+      <div class="stat-sub">Across certificates</div>
     </div>
-
-    <div class="card panel">
-      <h3>Upload Videos</h3>
-      <label class="form-label">Course ID</label>
-      <input class="form-control" type="number" [(ngModel)]="videoCourseId" />
-      <label class="form-label mt">Videos</label>
-      <input class="form-control" type="file" multiple accept="video/*" (change)="onVideoFilesChange($event)" />
-      <button class="btn btn-dark btn-sm mt" type="button" (click)="uploadVideos()">Upload</button>
+    <div class="stat-card">
+      <div class="stat-title">Diplomas</div>
+      <div class="stat-value">3</div>
+      <div class="stat-sub">Available programs</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">Diplomas Issued</div>
+      <div class="stat-value">1</div>
+      <div class="stat-sub">To 1 students</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">Active Enrollments</div>
+      <div class="stat-value">8</div>
+      <div class="stat-sub">Total course enrollments</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">Completion Rate</div>
+      <div class="stat-value">63%</div>
+      <div class="stat-sub">Average course completion</div>
     </div>
   </div>
 </div>
