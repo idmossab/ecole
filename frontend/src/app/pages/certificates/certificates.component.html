@@ -8,6 +8,7 @@
     <div class="cert-card" *ngFor="let cert of certificates">
       <h3>{{ cert.title }}</h3>
       <p>{{ cert.description }}</p>
+      <div class="meta">{{ cert.courseCount }} Courses</div>
       <a class="btn btn-dark btn-sm" [routerLink]="cert.cta">View</a>
     </div>
   </div>

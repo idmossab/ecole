@@ -14,16 +14,19 @@ export class CertificatesComponent {
     {
       title: 'Software Development',
       description: 'Build modern applications with clean architecture and best practices.',
+      courseCount: 0,
       cta: '/login-required'
     },
     {
       title: 'Networking',
       description: 'Design and secure reliable network systems.',
+      courseCount: 0,
       cta: '/login-required'
     },
     {
       title: 'English Language',
       description: 'Boost your academic and professional communication skills.',
+      courseCount: 0,
       cta: '/login-required'
     }
   ];
