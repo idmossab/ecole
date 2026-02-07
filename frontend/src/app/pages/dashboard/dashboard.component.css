@@ -22,12 +22,6 @@
   display: grid;
   gap: 6px;
   text-align: left;
-  cursor: pointer;
-}
-
-.stat-card:hover {
-  transform: translateY(-2px);
-  transition: transform 120ms ease;
 }
 
 .stat-title {
