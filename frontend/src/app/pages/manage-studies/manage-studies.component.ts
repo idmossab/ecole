@@ -26,8 +26,8 @@ export class ManageStudiesComponent implements OnInit {
   selectedCertificateId: number | null = null;
   selectedCourseId: number | null = null;
   videoFiles: File[] = [];
-  activeTab: 'diplomas' | 'courses' | 'videos' = 'diplomas';
-  modalType: 'diploma' | 'course' | 'video' | null = null;
+  activeTab: 'certificates' | 'courses' | 'videos' = 'certificates';
+  modalType: 'certificate' | 'course' | 'video' | null = null;
 
   message = '';
   error = '';
@@ -169,7 +169,7 @@ export class ManageStudiesComponent implements OnInit {
     });
   }
 
-  openModal(type: 'diploma' | 'course' | 'video'): void {
+  openModal(type: 'certificate' | 'course' | 'video'): void {
     this.message = '';
     this.error = '';
     this.modalType = type;
@@ -191,7 +191,7 @@ export class ManageStudiesComponent implements OnInit {
     this.modalType = null;
   }
 
-  submitDiploma(): void {
+  submitCertificate(): void {
     this.createCertificate();
   }
 
@@ -203,7 +203,7 @@ export class ManageStudiesComponent implements OnInit {
     this.uploadVideos();
   }
 
-  setActiveTab(tab: 'diplomas' | 'courses' | 'videos'): void {
+  setActiveTab(tab: 'certificates' | 'courses' | 'videos'): void {
     this.activeTab = tab;
     this.message = '';
     this.error = '';
@@ -247,7 +247,7 @@ export class ManageStudiesComponent implements OnInit {
   }
 
   deleteCertificate(_certificate: AdminCertificate): void {
-    this.message = 'Delete diploma is coming soon';
+    this.message = 'Delete certificate is coming soon';
   }
 
   deleteVideo(_video: Media): void {
