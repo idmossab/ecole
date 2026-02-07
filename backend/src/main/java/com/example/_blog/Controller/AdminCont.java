@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example._blog.Entity.Certificate;
 import com.example._blog.Entity.Course;
 import com.example._blog.Entity.Media;
+import com.example._blog.Entity.enums.UserRole;
 import com.example._blog.Repositories.CertificateRepo;
 import com.example._blog.Repositories.CourseRepo;
 import com.example._blog.Repositories.DiplomeRepo;
@@ -55,7 +56,7 @@ public class AdminCont {
 
     @GetMapping("/stats")
     public ResponseEntity<AdminStatsResponse> getStats() {
-        long totalStudents = userRepo.count();
+        long totalStudents = userRepo.countByRole(UserRole.USER);
         long totalCourses = courseRepo.count();
         long totalCertificates = certificateRepo.count();
         long totalDiplomas = diplomeRepo.count();
