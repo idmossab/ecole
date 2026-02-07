@@ -41,6 +41,30 @@
     </div>
   </div>
 
+  <div class="profile-card my-certs" *ngIf="user">
+    <h2 class="display-font">My Diplomas</h2>
+    <p class="text-muted">Track diploma completion and claim status</p>
+
+    <div class="text-muted" *ngIf="diplomasLoading">Loading diplomas...</div>
+    <div class="text-muted" *ngIf="!diplomasLoading && !myDiplomas.length">No diploma progress yet.</div>
+
+    <div class="cert-grid" *ngIf="myDiplomas.length">
+      <article class="cert-card" *ngFor="let item of myDiplomas">
+        <h3>{{ item.title }}</h3>
+        <div class="status">{{ item.isClaimed ? 'Claimed' : (item.isCompleted ? 'Completed' : 'In progress') }}</div>
+        <div class="progress-row">
+          <span>{{ item.percentage }}%</span>
+          <span>{{ item.completedCount }}/{{ item.requiredCount }} certificates</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" [style.width.%]="item.percentage"></div>
+        </div>
+        <div class="text-muted" *ngIf="item.isClaimed">Serial: {{ item.serialNumber || '-' }}</div>
+        <a class="btn btn-dark btn-sm" [routerLink]="diplomaLink(item)">{{ diplomaActionLabel(item) }}</a>
+      </article>
+    </div>
+  </div>
+
   <div class="text-muted" *ngIf="loading">Loading profile...</div>
   <div class="alert error" *ngIf="error">{{ error }}</div>
 </div>

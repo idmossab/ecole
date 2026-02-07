@@ -4,7 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 
 import { ApiService } from '../../core/api.service';
 import { AuthService } from '../../core/auth.service';
-import { MyCertificateProgress, UserResponse } from '../../core/models';
+import { DiplomaProgress, MyCertificateProgress, UserResponse } from '../../core/models';
 
 @Component({
   selector: 'app-profile',
@@ -16,8 +16,10 @@ import { MyCertificateProgress, UserResponse } from '../../core/models';
 export class ProfileComponent implements OnInit {
   user: UserResponse | null = null;
   myCertificates: MyCertificateProgress[] = [];
+  myDiplomas: DiplomaProgress[] = [];
   loading = true;
   certificatesLoading = true;
+  diplomasLoading = true;
   error = '';
 
   constructor(private api: ApiService, private auth: AuthService, private router: Router) {}
@@ -47,6 +49,16 @@ export class ProfileComponent implements OnInit {
         this.certificatesLoading = false;
       }
     });
+
+    this.api.getDiplomasProgress().subscribe({
+      next: (items) => {
+        this.myDiplomas = items || [];
+        this.diplomasLoading = false;
+      },
+      error: () => {
+        this.diplomasLoading = false;
+      }
+    });
   }
 
   continueLink(item: MyCertificateProgress): string {
@@ -54,5 +66,15 @@ export class ProfileComponent implements OnInit {
       return `/course/${item.firstCourseId}`;
     }
     return `/certificate/${item.certificateId}`;
+  }
+
+  diplomaLink(item: DiplomaProgress): string {
+    return `/diplomas/${item.diplomaId}`;
+  }
+
+  diplomaActionLabel(item: DiplomaProgress): string {
+    if (item.isClaimed) return 'View Diploma';
+    if (item.isCompleted) return 'Get Diploma';
+    return 'Continue';
   }
 }
