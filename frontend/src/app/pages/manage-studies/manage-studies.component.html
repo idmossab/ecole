@@ -1,4 +1,11 @@
 <div class="container py-5 manage-page">
+  <a class="back-link" routerLink="/dashboard">&larr; Back to Dashboard</a>
+
+  <div class="manage-header">
+    <h1 class="display-font">Content Management</h1>
+    <p>Create and manage diplomas, certificates, courses, and videos</p>
+  </div>
+
   <div class="alert" *ngIf="message">{{ message }}</div>
   <div class="alert error" *ngIf="error">{{ error }}</div>
 

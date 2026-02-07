@@ -2,6 +2,30 @@
   padding-top: 32px;
 }
 
+.back-link {
+  display: inline-block;
+  text-decoration: none;
+  color: #111827;
+  font-weight: 700;
+  margin-bottom: 22px;
+}
+
+.manage-header {
+  margin-bottom: 30px;
+}
+
+.manage-header h1 {
+  font-size: 3rem;
+  margin: 0;
+}
+
+.manage-header p {
+  margin: 6px 0 0;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  max-width: 900px;
+}
+
 .tabs {
   display: inline-flex;
   gap: 4px;
@@ -219,6 +243,14 @@ tbody td {
 }
 
 @media (max-width: 900px) {
+  .manage-header h1 {
+    font-size: 2.2rem;
+  }
+
+  .manage-header p {
+    font-size: 1rem;
+  }
+
   .card-head {
     flex-direction: column;
     align-items: flex-start;

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
 import { ApiService, AdminCourse, AdminCertificate } from '../../core/api.service';
 import { Media } from '../../core/models';
@@ -8,7 +9,7 @@ import { Media } from '../../core/models';
 @Component({
   selector: 'app-manage-studies',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './manage-studies.component.html',
   styleUrl: './manage-studies.component.css'
 })
