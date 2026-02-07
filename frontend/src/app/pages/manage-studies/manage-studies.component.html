@@ -10,10 +10,41 @@
   <div class="alert error" *ngIf="error">{{ error }}</div>
 
   <div class="tabs">
+    <button type="button" [class.active]="activeTab === 'diplomas'" (click)="setActiveTab('diplomas')">Diplomas</button>
     <button type="button" [class.active]="activeTab === 'certificates'" (click)="setActiveTab('certificates')">Certificates</button>
     <button type="button" [class.active]="activeTab === 'courses'" (click)="setActiveTab('courses')">Courses</button>
     <button type="button" [class.active]="activeTab === 'videos'" (click)="setActiveTab('videos')">Videos</button>
   </div>
+
+  <section class="content-card" *ngIf="activeTab === 'diplomas'">
+    <div class="card-head">
+      <div>
+        <h2>Diplomas</h2>
+        <p>Create diplomas and define required certificates</p>
+      </div>
+      <button class="btn btn-dark add-course-btn" type="button" (click)="openModal('diploma')">+ Add Diploma</button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Diploma Title</th>
+            <th>Required Certificates</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let diploma of diplomas">
+            <td class="course-name">{{ diploma.title }}</td>
+            <td class="muted">{{ diploma.requiredCount }}</td>
+          </tr>
+          <tr *ngIf="!diplomas.length">
+            <td colspan="2" class="empty-row">No diplomas yet.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
 
   <section class="content-card" *ngIf="activeTab === 'certificates'">
     <div class="card-head">
@@ -141,6 +172,27 @@
 
 <div class="modal-overlay" *ngIf="modalType" (click)="closeModal()">
   <div class="course-modal" (click)="$event.stopPropagation()">
+    <div class="modal-head" *ngIf="modalType === 'diploma'">
+      <div>
+        <h3>Add Diploma</h3>
+        <p>Select required certificates</p>
+      </div>
+      <button type="button" class="close-btn" (click)="closeModal()">x</button>
+    </div>
+
+    <div class="simple-panel" *ngIf="modalType === 'diploma'">
+      <label class="form-label">Diploma title</label>
+      <input class="form-control" [(ngModel)]="diplomaTitle" />
+      <label class="form-label">Required certificates</label>
+      <select class="form-control" multiple size="6" [(ngModel)]="selectedDiplomaCertificateIds">
+        <option *ngFor="let cert of certificates" [ngValue]="cert.id">{{ cert.title }}</option>
+      </select>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline-secondary" (click)="closeModal()">Cancel</button>
+        <button type="button" class="btn btn-dark" (click)="submitDiploma()">Create Diploma</button>
+      </div>
+    </div>
+
     <div class="modal-head" *ngIf="modalType === 'certificate'">
       <div>
         <h3>Add Certificate</h3>

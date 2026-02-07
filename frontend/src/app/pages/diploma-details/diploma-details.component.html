@@ -1,24 +1,50 @@
 <div class="container py-4">
-  <div class="diploma-header">
+  <div class="diploma-header" *ngIf="diploma">
     <div>
       <span class="pill">Diploma</span>
       <h1 class="display-font">{{ diploma.title }}</h1>
-      <p class="lead">{{ diploma.description }}</p>
-      <div class="requirement">{{ diploma.requirement }}</div>
+      <p class="lead">Complete all required certificates to unlock diploma claim.</p>
+      <div class="requirement">Required certificates: {{ diploma.requiredCount }}</div>
+      <ng-container *ngIf="isLoggedIn && progress">
+        <div class="progress-meta">
+          <span>{{ progress.completedCount }}/{{ progress.requiredCount }} completed</span>
+          <span>{{ progress.percentage }}%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" [style.width.%]="progress.percentage"></div>
+        </div>
+        <div class="claim-wrap">
+          <button class="btn btn-dark btn-sm" type="button" [disabled]="claimLoading || !canClaim() || progress.isClaimed" (click)="claimDiploma()">
+            {{ progress.isClaimed ? 'Claimed' : 'Get Diploma' }}
+          </button>
+          <button
+            class="claim-overlay"
+            type="button"
+            *ngIf="!progress.isClaimed && !canClaim()"
+            (click)="claimDiploma()"
+            aria-label="Show claim requirement"
+          ></button>
+        </div>
+        <div class="text-muted" *ngIf="progress.isClaimed">Serial: {{ progress.serialNumber || '-' }}</div>
+      </ng-container>
     </div>
   </div>
 
-  <div class="section">
+  <div class="section" *ngIf="diploma">
     <div class="section-header">
-      <h2 class="display-font">Certificates</h2>
-      <p class="text-muted mb-0">Choose a certificate to explore.</p>
+      <h2 class="display-font">Required Certificates</h2>
+      <p class="text-muted mb-0">Done/Not done depends on claimed certificates.</p>
     </div>
     <div class="speciality-grid">
-      <div class="speciality-card" *ngFor="let cert of certificates">
+      <div class="speciality-card" *ngFor="let cert of displayCertificates">
         <h3>{{ cert.title }}</h3>
-        <p>{{ cert.description }}</p>
-        <a class="btn btn-outline-primary" [routerLink]="['/certificate', cert.slug]">View Certificate</a>
+        <p>{{ cert.done ? 'Done' : 'Not done' }}</p>
+        <a class="btn btn-outline-primary btn-sm" [routerLink]="['/certificate', cert.certificateId]">View Certificate</a>
       </div>
     </div>
   </div>
+
+  <div class="text-muted" *ngIf="loading">Loading diploma...</div>
+  <div class="alert error" *ngIf="error">{{ error }}</div>
+  <div class="text-muted" *ngIf="message">{{ message }}</div>
 </div>

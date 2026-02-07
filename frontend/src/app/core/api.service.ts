@@ -7,6 +7,10 @@ import {
   CertificateClaimResponse,
   CertificateProgress,
   Comment,
+  DiplomaCertificateStatus,
+  DiplomaClaimResponse,
+  DiplomaProgress,
+  DiplomaSummary,
   FollowCounts,
   Like,
   LikeStatus,
@@ -20,6 +24,12 @@ export type AdminCertificate = {
   id: number;
   title: string;
   description?: string | null;
+};
+
+export type AdminDiploma = {
+  id: number;
+  title: string;
+  requiredCount: number;
 };
 
 export type AdminCourse = {
@@ -211,6 +221,18 @@ export class ApiService {
     return this.http.get<Certificate[]>(`${this.baseUrl}/certificates`);
   }
 
+  getDiplomas() {
+    return this.http.get<DiplomaSummary[]>(`${this.baseUrl}/diplomas`);
+  }
+
+  getDiplomaById(id: number) {
+    return this.http.get<DiplomaSummary>(`${this.baseUrl}/diplomas/${id}`);
+  }
+
+  getDiplomaCertificates(id: number) {
+    return this.http.get<DiplomaCertificateStatus[]>(`${this.baseUrl}/diplomas/${id}/certificates`);
+  }
+
   getCertificateById(id: number) {
     return this.http.get<Certificate>(`${this.baseUrl}/certificates/${id}`);
   }
@@ -243,6 +265,18 @@ export class ApiService {
     return this.http.get<MyCertificateProgress[]>(`${this.baseUrl}/api/certificates/my-progress`);
   }
 
+  getDiplomasProgress() {
+    return this.http.get<DiplomaProgress[]>(`${this.baseUrl}/api/diplomas/progress`);
+  }
+
+  getDiplomaProgress(diplomaId: number) {
+    return this.http.get<DiplomaProgress>(`${this.baseUrl}/api/diplomas/${diplomaId}/progress`);
+  }
+
+  claimDiploma(diplomaId: number) {
+    return this.http.post<DiplomaClaimResponse>(`${this.baseUrl}/api/diplomas/${diplomaId}/claim`, {});
+  }
+
   // ADMIN
   getAdminStats() {
     return this.http.get<AdminStats>(`${this.baseUrl}/admin/stats`);
@@ -252,6 +286,10 @@ export class ApiService {
     return this.http.get<AdminCertificate[]>(`${this.baseUrl}/admin/certificates`);
   }
 
+  getAdminDiplomas() {
+    return this.http.get<AdminDiploma[]>(`${this.baseUrl}/admin/diplomas`);
+  }
+
   getAdminCourses(certificateId?: number | null) {
     const url = certificateId ? `${this.baseUrl}/admin/courses?certificateId=${certificateId}` : `${this.baseUrl}/admin/courses`;
     return this.http.get<AdminCourse[]>(url);
@@ -259,6 +297,10 @@ export class ApiService {
 
   createCertificate(payload: { title: string; description: string }) {
     return this.http.post<AdminCertificate>(`${this.baseUrl}/admin/certificates`, payload);
+  }
+
+  createDiploma(payload: { title: string; certificateIds: number[] }) {
+    return this.http.post<any>(`${this.baseUrl}/admin/diplomas`, payload);
   }
 
   createCourse(payload: { certificateId: number; title: string; content: string; whatYouWillLearn: string }) {

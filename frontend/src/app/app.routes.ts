@@ -50,6 +50,10 @@ export const routes: Routes = [
     component: DiplomasComponent
   },
   {
+    path: 'diplomas/:id',
+    component: DiplomaDetailsComponent
+  },
+  {
     path: 'dashboard',
     component: DashboardComponent
   },
@@ -68,10 +72,6 @@ export const routes: Routes = [
   {
     path: 'profile',
     component: ProfileComponent
-  },
-  {
-    path: 'diploma',
-    component: DiplomaDetailsComponent
   },
   {
     path: 'login-required',

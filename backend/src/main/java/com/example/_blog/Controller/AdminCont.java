@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example._blog.Entity.Certificate;
 import com.example._blog.Entity.Course;
+import com.example._blog.Entity.Diplome;
 import com.example._blog.Entity.Media;
 import com.example._blog.Entity.enums.UserRole;
 import com.example._blog.Repositories.CertificateRepo;
@@ -23,6 +24,7 @@ import com.example._blog.Repositories.DiplomeRepo;
 import com.example._blog.Repositories.UserRepo;
 import com.example._blog.Service.CertificateService;
 import com.example._blog.Service.CourseService;
+import com.example._blog.Service.DiplomeService;
 import com.example._blog.Service.MediaService;
 
 @RestController
@@ -31,6 +33,7 @@ public class AdminCont {
     private final CertificateService certificateService;
     private final CourseService courseService;
     private final MediaService mediaService;
+    private final DiplomeService diplomeService;
     private final CertificateRepo certificateRepo;
     private final CourseRepo courseRepo;
     private final DiplomeRepo diplomeRepo;
@@ -40,6 +43,7 @@ public class AdminCont {
             CertificateService certificateService,
             CourseService courseService,
             MediaService mediaService,
+            DiplomeService diplomeService,
             CertificateRepo certificateRepo,
             CourseRepo courseRepo,
             DiplomeRepo diplomeRepo,
@@ -48,6 +52,7 @@ public class AdminCont {
         this.certificateService = certificateService;
         this.courseService = courseService;
         this.mediaService = mediaService;
+        this.diplomeService = diplomeService;
         this.certificateRepo = certificateRepo;
         this.courseRepo = courseRepo;
         this.diplomeRepo = diplomeRepo;
@@ -73,9 +78,19 @@ public class AdminCont {
         return ResponseEntity.ok(certificateService.getAll());
     }
 
+    @GetMapping("/diplomas")
+    public ResponseEntity<List<com.example._blog.Dto.DiplomaSummaryResponse>> getDiplomas() {
+        return ResponseEntity.ok(diplomeService.getAllDiplomas());
+    }
+
     @PostMapping("/certificates")
     public ResponseEntity<Certificate> createCertificate(@RequestBody CertificateCreateRequest req) {
         return ResponseEntity.ok(certificateService.create(req.title(), req.description()));
+    }
+
+    @PostMapping("/diplomas")
+    public ResponseEntity<Diplome> createDiploma(@RequestBody DiplomaCreateRequest req) {
+        return ResponseEntity.ok(diplomeService.createDiploma(req.title(), req.certificateIds()));
     }
 
     @PostMapping("/courses")
@@ -105,6 +120,7 @@ public class AdminCont {
     }
 
     public record CertificateCreateRequest(String title, String description) {}
+    public record DiplomaCreateRequest(String title, List<Long> certificateIds) {}
     public record CourseCreateRequest(Long certificateId, String title, String content, String whatYouWillLearn) {}
     public record AdminStatsResponse(long totalStudents, long totalCourses, long totalCertificates, long totalDiplomas) {}
 }

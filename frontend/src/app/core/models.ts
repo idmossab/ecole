@@ -87,3 +87,36 @@ export interface MyCertificateProgress {
   status: 'In progress' | 'Completed' | 'Claimed' | string;
   firstCourseId?: number | null;
 }
+
+export interface DiplomaSummary {
+  id: number;
+  title: string;
+  requiredCount: number;
+}
+
+export interface DiplomaCertificateStatus {
+  certificateId: number;
+  title: string;
+  done: boolean;
+}
+
+export interface DiplomaProgress {
+  diplomaId: number;
+  title: string;
+  requiredCount: number;
+  completedCount: number;
+  percentage: number;
+  remainingCertificates: number;
+  isCompleted: boolean;
+  isClaimed: boolean;
+  serialNumber?: string | null;
+  claimedAt?: string | null;
+  requiredCertificates: DiplomaCertificateStatus[];
+}
+
+export interface DiplomaClaimResponse {
+  diplomaId: number;
+  message: string;
+  claimedAt: string;
+  serialNumber?: string | null;
+}

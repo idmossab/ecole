@@ -35,6 +35,7 @@ public class SecurityConfig {
                     "/users/register",
                     "/users/login",
                     "/certificates/**",
+                    "/diplomas/**",
                     "/courses/**",
                     "/uploads/**",
                     "/media/by-blog/**",

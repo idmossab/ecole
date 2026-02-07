@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
-import { ApiService, AdminCourse, AdminCertificate } from '../../core/api.service';
+import { ApiService, AdminCourse, AdminCertificate, AdminDiploma } from '../../core/api.service';
 import { Media } from '../../core/models';
 
 @Component({
@@ -15,6 +15,7 @@ import { Media } from '../../core/models';
 })
 export class ManageStudiesComponent implements OnInit {
   certificates: AdminCertificate[] = [];
+  diplomas: AdminDiploma[] = [];
   courses: AdminCourse[] = [];
   videos: Media[] = [];
 
@@ -23,12 +24,14 @@ export class ManageStudiesComponent implements OnInit {
   courseTitle = '';
   courseContent = '';
   courseLearn = '';
+  diplomaTitle = '';
+  selectedDiplomaCertificateIds: number[] = [];
 
   selectedCertificateId: number | null = null;
   selectedCourseId: number | null = null;
   videoFiles: File[] = [];
-  activeTab: 'certificates' | 'courses' | 'videos' = 'certificates';
-  modalType: 'certificate' | 'course' | 'video' | null = null;
+  activeTab: 'diplomas' | 'certificates' | 'courses' | 'videos' = 'diplomas';
+  modalType: 'diploma' | 'certificate' | 'course' | 'video' | null = null;
 
   message = '';
   error = '';
@@ -36,8 +39,18 @@ export class ManageStudiesComponent implements OnInit {
   constructor(private api: ApiService) {}
 
   ngOnInit(): void {
+    this.loadDiplomas();
     this.loadCertificates();
     this.loadCourses(this.selectedCertificateId);
+  }
+
+  loadDiplomas(): void {
+    this.api.getAdminDiplomas().subscribe({
+      next: (data) => (this.diplomas = data || []),
+      error: (err) => {
+        this.error = err?.error?.message || err?.error || 'Failed to load diplomas';
+      }
+    });
   }
 
   loadCertificates(): void {
@@ -107,6 +120,34 @@ export class ManageStudiesComponent implements OnInit {
     });
   }
 
+  createDiploma(): void {
+    if (!this.diplomaTitle.trim()) {
+      this.error = 'Diploma title is required';
+      return;
+    }
+    if (!this.selectedDiplomaCertificateIds.length) {
+      this.error = 'Select at least one certificate';
+      return;
+    }
+    this.message = '';
+    this.error = '';
+    this.api.createDiploma({
+      title: this.diplomaTitle.trim(),
+      certificateIds: this.selectedDiplomaCertificateIds
+    }).subscribe({
+      next: () => {
+        this.diplomaTitle = '';
+        this.selectedDiplomaCertificateIds = [];
+        this.message = 'Diploma created';
+        this.modalType = null;
+        this.loadDiplomas();
+      },
+      error: (err) => {
+        this.error = err?.error?.message || err?.error || 'Failed to create diploma';
+      }
+    });
+  }
+
   createCourse(): void {
     if (!this.selectedCertificateId) {
       this.error = 'Select a certificate first';
@@ -170,7 +211,7 @@ export class ManageStudiesComponent implements OnInit {
     });
   }
 
-  openModal(type: 'certificate' | 'course' | 'video'): void {
+  openModal(type: 'diploma' | 'certificate' | 'course' | 'video'): void {
     this.message = '';
     this.error = '';
     this.modalType = type;
@@ -196,6 +237,10 @@ export class ManageStudiesComponent implements OnInit {
     this.createCertificate();
   }
 
+  submitDiploma(): void {
+    this.createDiploma();
+  }
+
   submitCourse(): void {
     this.createCourse();
   }
@@ -204,7 +249,7 @@ export class ManageStudiesComponent implements OnInit {
     this.uploadVideos();
   }
 
-  setActiveTab(tab: 'certificates' | 'courses' | 'videos'): void {
+  setActiveTab(tab: 'diplomas' | 'certificates' | 'courses' | 'videos'): void {
     this.activeTab = tab;
     this.message = '';
     this.error = '';
