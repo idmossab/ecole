@@ -17,6 +17,13 @@ export type AdminCourse = {
   whatYouWillLearn?: string | null;
 };
 
+export type AdminStats = {
+  totalStudents: number;
+  totalCourses: number;
+  totalCertificates: number;
+  totalDiplomas: number;
+};
+
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private readonly baseUrl = 'http://localhost:8080';
@@ -209,6 +216,10 @@ export class ApiService {
   }
 
   // ADMIN
+  getAdminStats() {
+    return this.http.get<AdminStats>(`${this.baseUrl}/admin/stats`);
+  }
+
   getAdminCertificates() {
     return this.http.get<AdminCertificate[]>(`${this.baseUrl}/admin/certificates`);
   }

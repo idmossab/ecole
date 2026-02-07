@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +16,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example._blog.Entity.Certificate;
 import com.example._blog.Entity.Course;
 import com.example._blog.Entity.Media;
+import com.example._blog.Repositories.CertificateRepo;
+import com.example._blog.Repositories.CourseRepo;
+import com.example._blog.Repositories.DiplomeRepo;
+import com.example._blog.Repositories.UserRepo;
 import com.example._blog.Service.CertificateService;
 import com.example._blog.Service.CourseService;
 import com.example._blog.Service.MediaService;
@@ -27,15 +30,41 @@ public class AdminCont {
     private final CertificateService certificateService;
     private final CourseService courseService;
     private final MediaService mediaService;
+    private final CertificateRepo certificateRepo;
+    private final CourseRepo courseRepo;
+    private final DiplomeRepo diplomeRepo;
+    private final UserRepo userRepo;
 
     public AdminCont(
             CertificateService certificateService,
             CourseService courseService,
-            MediaService mediaService
+            MediaService mediaService,
+            CertificateRepo certificateRepo,
+            CourseRepo courseRepo,
+            DiplomeRepo diplomeRepo,
+            UserRepo userRepo
     ) {
         this.certificateService = certificateService;
         this.courseService = courseService;
         this.mediaService = mediaService;
+        this.certificateRepo = certificateRepo;
+        this.courseRepo = courseRepo;
+        this.diplomeRepo = diplomeRepo;
+        this.userRepo = userRepo;
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<AdminStatsResponse> getStats() {
+        long totalStudents = userRepo.count();
+        long totalCourses = courseRepo.count();
+        long totalCertificates = certificateRepo.count();
+        long totalDiplomas = diplomeRepo.count();
+        return ResponseEntity.ok(new AdminStatsResponse(
+                totalStudents,
+                totalCourses,
+                totalCertificates,
+                totalDiplomas
+        ));
     }
 
     @GetMapping("/certificates")
@@ -76,4 +105,5 @@ public class AdminCont {
 
     public record CertificateCreateRequest(String title, String description) {}
     public record CourseCreateRequest(Long certificateId, String title, String content, String whatYouWillLearn) {}
+    public record AdminStatsResponse(long totalStudents, long totalCourses, long totalCertificates, long totalDiplomas) {}
 }

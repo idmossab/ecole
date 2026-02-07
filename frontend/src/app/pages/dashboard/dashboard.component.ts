@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+
+import { ApiService } from '../../core/api.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,4 +11,26 @@ import { RouterLink } from '@angular/router';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
-export class DashboardComponent {}
+export class DashboardComponent implements OnInit {
+  stats = {
+    totalStudents: 0,
+    totalCourses: 0,
+    totalCertificates: 0,
+    totalDiplomas: 0
+  };
+
+  constructor(private api: ApiService, private router: Router) {}
+
+  ngOnInit(): void {
+    this.api.getAdminStats().subscribe({
+      next: (data) => {
+        this.stats = data;
+      },
+      error: () => {}
+    });
+  }
+
+  openStats(): void {
+    this.router.navigateByUrl('/stats-coming');
+  }
+}

@@ -13,6 +13,7 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { ManageStudiesComponent } from './pages/manage-studies/manage-studies.component';
 import { CourseComponent } from './pages/course/course.component';
+import { StatsComingComponent } from './pages/stats-coming/stats-coming.component';
 
 export const routes: Routes = [
   {
@@ -55,6 +56,10 @@ export const routes: Routes = [
   {
     path: 'manage-studies',
     component: ManageStudiesComponent
+  },
+  {
+    path: 'stats-coming',
+    component: StatsComingComponent
   },
   {
     path: 'profile',
