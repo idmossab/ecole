@@ -31,6 +31,80 @@
   gap: 16px;
 }
 
+.progress-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  display: grid;
+  gap: 10px;
+}
+
+.progress-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.progress-head h2 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.status-pill {
+  border-radius: 999px;
+  padding: 4px 10px;
+  background: #f3f4f6;
+  color: #4b5563;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.status-pill.done {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.progress-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  background: #e5e7eb;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #111827;
+}
+
+.claim-btn.is-disabled {
+  opacity: 0.45;
+}
+
+.claim-btn-wrap {
+  position: relative;
+  width: fit-content;
+}
+
+.claim-overlay {
+  position: absolute;
+  inset: 0;
+  border: none;
+  background: transparent;
+  cursor: not-allowed;
+}
+
 .course-grid {
   display: grid;
   gap: 16px;

@@ -1,5 +1,6 @@
 export type Course = {
   id: number;
+  certificateId?: number | null;
   title: string;
   content?: string | null;
   whatYouWillLearn?: string | null;

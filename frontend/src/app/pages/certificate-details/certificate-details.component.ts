@@ -6,6 +6,7 @@ import { forkJoin } from 'rxjs';
 import { AuthService } from '../../core/auth.service';
 import { ApiService } from '../../core/api.service';
 import { Certificate, Course } from '../../core/certificates.data';
+import { CertificateProgress } from '../../core/models';
 
 @Component({
   selector: 'app-certificate-details',
@@ -18,8 +19,13 @@ export class CertificateDetailsComponent {
   certificate: Certificate | null = null;
   courses: Course[] = [];
   videoCounts: Record<number, number> = {};
+  progress: CertificateProgress | null = null;
   loading = true;
+  progressLoading = false;
+  claimLoading = false;
   error = '';
+  claimError = '';
+  claimMessage = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -41,11 +47,26 @@ export class CertificateDetailsComponent {
     this.api.getCertificateById(id).subscribe({
       next: (cert) => {
         this.certificate = cert;
+        this.loadProgress(cert.id);
         this.loadCourses(id);
       },
       error: (err) => {
         this.error = err?.error?.message || err?.error || 'Failed to load certificate';
         this.loading = false;
+      }
+    });
+  }
+
+  private loadProgress(certificateId: number): void {
+    if (!this.isLoggedIn) return;
+    this.progressLoading = true;
+    this.api.getCertificateProgress(certificateId).subscribe({
+      next: (data) => {
+        this.progress = data;
+        this.progressLoading = false;
+      },
+      error: () => {
+        this.progressLoading = false;
       }
     });
   }
@@ -88,5 +109,49 @@ export class CertificateDetailsComponent {
 
   openCourse(courseId: number): void {
     this.router.navigateByUrl(`/course/${courseId}`);
+  }
+
+  get progressPercent(): number {
+    return this.progress?.percentage ?? 0;
+  }
+
+  get canClaim(): boolean {
+    if (!this.progress) return false;
+    return this.progress.isCompleted && !this.progress.isClaimed;
+  }
+
+  onGetCertificate(): void {
+    this.claimError = '';
+    this.claimMessage = '';
+    if (!this.isLoggedIn) {
+      this.router.navigateByUrl(`/login?returnTo=/certificate/${this.certificate?.id || ''}`);
+      return;
+    }
+    if (!this.certificate || !this.progress) return;
+    if (this.progress.isClaimed) {
+      this.claimMessage = 'Certificate already claimed.';
+      return;
+    }
+
+    this.claimLoading = true;
+    this.api.claimCertificate(this.certificate.id).subscribe({
+      next: (res) => {
+        this.claimMessage = res.message;
+        this.progress = {
+          ...this.progress!,
+          isClaimed: true
+        };
+        this.claimLoading = false;
+      },
+      error: (err) => {
+        this.claimError = err?.error?.message || err?.error || 'Failed to claim certificate';
+        this.claimLoading = false;
+      }
+    });
+  }
+
+  showIncompleteClaimMessage(): void {
+    this.claimMessage = '';
+    this.claimError = 'Finish all videos first to get this certificate.';
   }
 }

@@ -8,6 +8,16 @@
     </div>
   </div>
 
+  <div class="progress-box" *ngIf="isLoggedIn && progress">
+    <div class="progress-top">
+      <span>{{ progress.watchedVideos }}/{{ progress.totalVideos }} watched</span>
+      <span>{{ progress.remainingVideos }} remaining</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" [style.width.%]="progress.percentage"></div>
+    </div>
+  </div>
+
   <div class="course-layout">
     <div class="player-card">
       <div class="player-placeholder" *ngIf="!canWatch">
@@ -16,7 +26,7 @@
       </div>
 
       <div class="player" *ngIf="canWatch">
-        <video *ngIf="activeVideoUrl" [src]="activeVideoUrl" controls></video>
+        <video *ngIf="activeVideoUrl" [src]="activeVideoUrl" controls (ended)="onActiveVideoEnded()"></video>
         <div class="text-muted" *ngIf="!activeVideoUrl">No videos uploaded yet.</div>
       </div>
 
@@ -36,10 +46,20 @@
           <div class="index">{{ i + 1 }}</div>
           <div class="title">Video {{ i + 1 }}</div>
           <div class="duration">{{ formatDuration(durationByUrl[video.url]) }}</div>
+          <button
+            class="mark-btn"
+            type="button"
+            *ngIf="canWatch"
+            (click)="markAsWatched(video, $event)"
+          >
+            {{ isVideoWatched(video) ? 'Watched' : 'Mark as watched' }}
+          </button>
           <div class="lock" *ngIf="!canWatch">🔒</div>
         </div>
         <div class="text-muted" *ngIf="!videos.length">No videos uploaded yet.</div>
       </div>
+      <div class="text-muted" *ngIf="watchLoading">Saving progress...</div>
+      <div class="text-muted" *ngIf="watchMessage">{{ watchMessage }}</div>
     </div>
   </div>
 

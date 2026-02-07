@@ -1,7 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { AuthResponse, Blog, Comment, FollowCounts, Like, LikeStatus, Media, UserResponse } from './models';
+import {
+  AuthResponse,
+  Blog,
+  CertificateClaimResponse,
+  CertificateProgress,
+  Comment,
+  FollowCounts,
+  Like,
+  LikeStatus,
+  Media,
+  MyCertificateProgress,
+  UserResponse
+} from './models';
 import { Certificate, Course } from './certificates.data';
 
 export type AdminCertificate = {
@@ -213,6 +225,22 @@ export class ApiService {
 
   getCourseMedia(courseId: number) {
     return this.http.get<Media[]>(`${this.baseUrl}/courses/${courseId}/media`);
+  }
+
+  getCertificateProgress(certificateId: number) {
+    return this.http.get<CertificateProgress>(`${this.baseUrl}/api/certificates/${certificateId}/progress`);
+  }
+
+  markVideoWatched(videoId: number, watched = true) {
+    return this.http.post<CertificateProgress>(`${this.baseUrl}/api/videos/${videoId}/watched`, { watched });
+  }
+
+  claimCertificate(certificateId: number) {
+    return this.http.post<CertificateClaimResponse>(`${this.baseUrl}/api/certificates/${certificateId}/claim`, {});
+  }
+
+  getMyCertificatesProgress() {
+    return this.http.get<MyCertificateProgress[]>(`${this.baseUrl}/api/certificates/my-progress`);
   }
 
   // ADMIN

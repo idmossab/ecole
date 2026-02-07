@@ -45,6 +45,9 @@ public class Course {
     @JsonIgnore
     private Certificate certificate;
 
+    @Column(name = "certificate_id", insertable = false, updatable = false)
+    private Long certificateId;
+
     @ManyToOne
     @JoinColumn(name = "diplome_id")
     private Diplome diplome;

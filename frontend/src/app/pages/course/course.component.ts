@@ -5,7 +5,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ApiService } from '../../core/api.service';
 import { AuthService } from '../../core/auth.service';
 import { Course } from '../../core/certificates.data';
-import { Media } from '../../core/models';
+import { CertificateProgress, Media } from '../../core/models';
 
 @Component({
   selector: 'app-course',
@@ -19,8 +19,13 @@ export class CourseComponent {
   videos: Media[] = [];
   durationByUrl: Record<string, number> = {};
   activeVideoUrl: string | null = null;
+  activeVideoId: number | null = null;
+  watchedVideoIds = new Set<number>();
+  progress: CertificateProgress | null = null;
   loading = true;
+  watchLoading = false;
   error = '';
+  watchMessage = '';
 
   private readonly apiBase = 'http://localhost:8080';
 
@@ -40,6 +45,7 @@ export class CourseComponent {
     this.api.getCourseById(id).subscribe({
       next: (course) => {
         this.course = course;
+        this.loadProgress();
         this.loadVideos(id);
       },
       error: (err) => {
@@ -58,6 +64,7 @@ export class CourseComponent {
         }));
         if (this.videos.length) {
           this.activeVideoUrl = this.videos[0].url || null;
+          this.activeVideoId = this.videos[0].id || null;
           this.prefetchDurations();
         }
         this.loading = false;
@@ -98,6 +105,17 @@ export class CourseComponent {
     return this.isLoggedIn;
   }
 
+  private loadProgress(): void {
+    const certificateId = this.course?.certificateId;
+    if (!this.isLoggedIn || !certificateId) return;
+    this.api.getCertificateProgress(certificateId).subscribe({
+      next: (progress) => {
+        this.progress = progress;
+      },
+      error: () => {}
+    });
+  }
+
   loginToStart(): void {
     if (!this.course) return;
     this.router.navigateByUrl(`/login?returnTo=/course/${this.course.id}`);
@@ -106,6 +124,43 @@ export class CourseComponent {
   selectVideo(url: string): void {
     if (!this.canWatch) return;
     this.activeVideoUrl = url;
+    const selected = this.videos.find((v) => v.url === url);
+    this.activeVideoId = selected?.id || null;
+  }
+
+  markAsWatched(video: Media, event?: Event): void {
+    if (event) event.stopPropagation();
+    if (!this.isLoggedIn || !video.id) return;
+
+    this.watchMessage = '';
+    this.watchLoading = true;
+    this.api.markVideoWatched(video.id, true).subscribe({
+      next: (progress) => {
+        this.watchedVideoIds.add(video.id!);
+        this.progress = progress;
+        this.watchMessage = 'Video marked as watched.';
+        this.watchLoading = false;
+      },
+      error: (err) => {
+        this.error = err?.error?.message || err?.error || 'Failed to save watched progress';
+        this.watchLoading = false;
+      }
+    });
+  }
+
+  onActiveVideoEnded(): void {
+    if (!this.activeVideoId) return;
+    const active = this.videos.find((video) => video.id === this.activeVideoId);
+    if (active) {
+      this.markAsWatched(active);
+    }
+  }
+
+  isVideoWatched(video: Media): boolean {
+    if (!video.id) return false;
+    if (this.watchedVideoIds.has(video.id)) return true;
+    if (!this.progress) return false;
+    return this.progress.isCompleted;
   }
 
   formatDuration(seconds: number | undefined): string {

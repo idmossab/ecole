@@ -57,3 +57,33 @@ export interface FollowCounts {
   following: number;
   followers: number;
 }
+
+export interface CertificateProgress {
+  certificateId: number;
+  totalVideos: number;
+  watchedVideos: number;
+  percentage: number;
+  remainingVideos: number;
+  isCompleted: boolean;
+  isClaimed: boolean;
+}
+
+export interface CertificateClaimResponse {
+  certificateId: number;
+  message: string;
+  claimedAt: string;
+  serialNumber?: string | null;
+}
+
+export interface MyCertificateProgress {
+  certificateId: number;
+  title: string;
+  totalVideos: number;
+  watchedVideos: number;
+  percentage: number;
+  remainingVideos: number;
+  isCompleted: boolean;
+  isClaimed: boolean;
+  status: 'In progress' | 'Completed' | 'Claimed' | string;
+  firstCourseId?: number | null;
+}

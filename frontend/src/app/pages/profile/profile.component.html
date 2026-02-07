@@ -18,6 +18,29 @@
     </div>
   </div>
 
+  <div class="profile-card my-certs" *ngIf="user">
+    <h2 class="display-font">My Certificates</h2>
+    <p class="text-muted">Started or claimed certificates</p>
+
+    <div class="text-muted" *ngIf="certificatesLoading">Loading certificates...</div>
+    <div class="text-muted" *ngIf="!certificatesLoading && !myCertificates.length">No certificate progress yet.</div>
+
+    <div class="cert-grid" *ngIf="myCertificates.length">
+      <article class="cert-card" *ngFor="let item of myCertificates">
+        <h3>{{ item.title }}</h3>
+        <div class="status">{{ item.status }}</div>
+        <div class="progress-row">
+          <span>{{ item.percentage }}%</span>
+          <span>{{ item.remainingVideos }} videos remaining</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" [style.width.%]="item.percentage"></div>
+        </div>
+        <a class="btn btn-dark btn-sm" [routerLink]="continueLink(item)">Continue</a>
+      </article>
+    </div>
+  </div>
+
   <div class="text-muted" *ngIf="loading">Loading profile...</div>
   <div class="alert error" *ngIf="error">{{ error }}</div>
 </div>
