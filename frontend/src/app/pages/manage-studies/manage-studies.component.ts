@@ -26,6 +26,8 @@ export class ManageStudiesComponent implements OnInit {
   selectedCertificateId: number | null = null;
   selectedCourseId: number | null = null;
   videoFiles: File[] = [];
+  activeTab: 'diplomas' | 'courses' | 'videos' = 'diplomas';
+  modalType: 'diploma' | 'course' | 'video' | null = null;
 
   message = '';
   error = '';
@@ -34,7 +36,7 @@ export class ManageStudiesComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCertificates();
-    this.loadCourses();
+    this.loadCourses(this.selectedCertificateId);
   }
 
   loadCertificates(): void {
@@ -42,6 +44,12 @@ export class ManageStudiesComponent implements OnInit {
       next: (data) => (this.certificates = data || []),
       error: (err) => {
         this.error = err?.error?.message || err?.error || 'Failed to load certificates';
+      },
+      complete: () => {
+        if (!this.selectedCertificateId && this.certificates.length) {
+          this.selectedCertificateId = this.certificates[0].id;
+          this.loadCourses(this.selectedCertificateId);
+        }
       }
     });
   }
@@ -51,6 +59,12 @@ export class ManageStudiesComponent implements OnInit {
       next: (data) => (this.courses = data || []),
       error: (err) => {
         this.error = err?.error?.message || err?.error || 'Failed to load courses';
+      },
+      complete: () => {
+        if (!this.selectedCourseId && this.courses.length) {
+          this.selectedCourseId = this.courses[0].id;
+          this.onCourseChange();
+        }
       }
     });
   }
@@ -84,6 +98,7 @@ export class ManageStudiesComponent implements OnInit {
         this.certTitle = '';
         this.certDescription = '';
         this.message = 'Certificate created';
+        this.modalType = null;
       },
       error: (err) => {
         this.error = err?.error?.message || err?.error || 'Failed to create certificate';
@@ -109,6 +124,7 @@ export class ManageStudiesComponent implements OnInit {
         this.courseContent = '';
         this.courseLearn = '';
         this.message = 'Course created';
+        this.modalType = null;
         this.loadCourses(this.selectedCertificateId);
       },
       error: (err) => {
@@ -144,11 +160,97 @@ export class ManageStudiesComponent implements OnInit {
       next: () => {
         this.videoFiles = [];
         this.message = 'Videos uploaded';
+        this.modalType = null;
         this.onCourseChange();
       },
       error: (err) => {
         this.error = err?.error?.message || err?.error || 'Failed to upload videos';
       }
     });
+  }
+
+  openModal(type: 'diploma' | 'course' | 'video'): void {
+    this.message = '';
+    this.error = '';
+    this.modalType = type;
+
+    if (type === 'course') {
+      if (!this.selectedCertificateId && this.certificates.length) {
+        this.selectedCertificateId = this.certificates[0].id;
+      }
+    }
+
+    if (type === 'video') {
+      if (!this.selectedCourseId && this.courses.length) {
+        this.selectedCourseId = this.courses[0].id;
+      }
+    }
+  }
+
+  closeModal(): void {
+    this.modalType = null;
+  }
+
+  submitDiploma(): void {
+    this.createCertificate();
+  }
+
+  submitCourse(): void {
+    this.createCourse();
+  }
+
+  submitVideoUpload(): void {
+    this.uploadVideos();
+  }
+
+  setActiveTab(tab: 'diplomas' | 'courses' | 'videos'): void {
+    this.activeTab = tab;
+    this.message = '';
+    this.error = '';
+    if (tab === 'courses') {
+      this.loadCourses(this.selectedCertificateId);
+    }
+    if (tab === 'videos') {
+      if (this.selectedCourseId) {
+        this.onCourseChange();
+      } else if (this.courses.length) {
+        this.selectedCourseId = this.courses[0].id;
+        this.onCourseChange();
+      }
+    }
+  }
+
+  activeCertificateTitle(): string {
+    if (!this.selectedCertificateId) return '-';
+    const cert = this.certificates.find((item) => item.id === this.selectedCertificateId);
+    return cert?.title || '-';
+  }
+
+  displayVideoName(media: Media): string {
+    if (!media?.url) return 'Video';
+    const cleaned = media.url.split('/').pop() || media.url;
+    return cleaned.replace(/^[0-9a-f-]+_?/i, '');
+  }
+
+  selectedCourseTitle(): string {
+    if (!this.selectedCourseId) return '-';
+    const course = this.courses.find((item) => item.id === this.selectedCourseId);
+    return course?.title || '-';
+  }
+
+  editCourse(_course: AdminCourse): void {
+    this.message = 'Edit course is coming soon';
+  }
+
+  deleteCourse(_course: AdminCourse): void {
+    this.message = 'Delete course is coming soon';
+  }
+
+  deleteCertificate(_certificate: AdminCertificate): void {
+    this.message = 'Delete diploma is coming soon';
+  }
+
+  deleteVideo(_video: Media): void {
+    this.message = 'Delete video is coming soon';
   }
 }
