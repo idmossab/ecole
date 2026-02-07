@@ -20,6 +20,7 @@ import com.example._blog.Entity.Media;
 import com.example._blog.Entity.User;
 import com.example._blog.Entity.UserCertificate;
 import com.example._blog.Entity.UserVideoProgress;
+import com.example._blog.Entity.enums.UserRole;
 import com.example._blog.Repositories.CertificateRepo;
 import com.example._blog.Repositories.CourseRepo;
 import com.example._blog.Repositories.MediaRepo;
@@ -35,6 +36,7 @@ public class CertificateProgressService {
     private final UserRepo userRepo;
     private final UserVideoProgressRepo userVideoProgressRepo;
     private final UserCertificateRepo userCertificateRepo;
+    private final NotificationService notificationService;
 
     public CertificateProgressService(
             CertificateRepo certificateRepo,
@@ -42,7 +44,8 @@ public class CertificateProgressService {
             MediaRepo mediaRepo,
             UserRepo userRepo,
             UserVideoProgressRepo userVideoProgressRepo,
-            UserCertificateRepo userCertificateRepo
+            UserCertificateRepo userCertificateRepo,
+            NotificationService notificationService
     ) {
         this.certificateRepo = certificateRepo;
         this.courseRepo = courseRepo;
@@ -50,6 +53,7 @@ public class CertificateProgressService {
         this.userRepo = userRepo;
         this.userVideoProgressRepo = userVideoProgressRepo;
         this.userCertificateRepo = userCertificateRepo;
+        this.notificationService = notificationService;
     }
 
     public CertificateProgressResponse getProgress(Long userId, Long certificateId) {
@@ -105,6 +109,12 @@ public class CertificateProgressService {
                 .serialNumber(generateSerial(certificateId, userId))
                 .build();
         created = userCertificateRepo.save(created);
+        notificationService.notifyRole(
+                UserRole.ADMIN,
+                "Certificate Claimed",
+                user.getUserName() + " claimed certificate: " + certificate.getTitle(),
+                "CERTIFICATE_CLAIMED"
+        );
 
         return new CertificateClaimResponse(
                 certificateId,
@@ -185,4 +195,3 @@ public class CertificateProgressService {
         return "CERT-" + certificateId + "-" + userId + "-" + randomPart;
     }
 }
-

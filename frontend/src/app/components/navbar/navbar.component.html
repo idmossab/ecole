@@ -6,6 +6,26 @@
     <button class="nav-link-btn" type="button" routerLink="/diplomas">Diplomas</button>
     <button class="nav-link-btn" type="button" routerLink="/contact">Contact</button>
 
+    <div class="notif-wrap" *ngIf="loggedIn">
+      <button class="notif-btn" type="button" (click)="toggleNotifications()">
+        Notifications
+        <span class="notif-badge" *ngIf="unreadCount">{{ unreadCount }}</span>
+      </button>
+      <div class="notif-menu" *ngIf="showNotifications">
+        <div class="notif-empty" *ngIf="!notifications.length">No notifications</div>
+        <button
+          class="notif-item"
+          type="button"
+          *ngFor="let item of notifications"
+          [class.unread]="!item.isRead"
+          (click)="markRead(item)"
+        >
+          <div class="notif-title">{{ item.title }}</div>
+          <div class="notif-message">{{ item.message }}</div>
+        </button>
+      </div>
+    </div>
+
     <button
       class="btn btn-outline-secondary btn-sm"
       type="button"

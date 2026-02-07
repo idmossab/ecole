@@ -4,6 +4,8 @@ import { RouterLink, NavigationEnd, Router } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 
 import { AuthService } from '../../core/auth.service';
+import { ApiService } from '../../core/api.service';
+import { NotificationItem } from '../../core/models';
 
 @Component({
   selector: 'app-navbar',
@@ -15,9 +17,12 @@ import { AuthService } from '../../core/auth.service';
 export class NavbarComponent implements OnInit, OnDestroy {
   role: string | null = null;
   loggedIn = false;
+  notifications: NotificationItem[] = [];
+  unreadCount = 0;
+  showNotifications = false;
   private navSub?: Subscription;
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(private auth: AuthService, private router: Router, private api: ApiService) {}
 
   ngOnInit(): void {
     this.syncState();
@@ -33,6 +38,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
   private syncState(): void {
     this.loggedIn = this.auth.isLoggedIn();
     this.role = this.auth.getRole();
+    if (this.loggedIn) {
+      this.loadNotifications();
+    } else {
+      this.notifications = [];
+      this.unreadCount = 0;
+      this.showNotifications = false;
+    }
   }
 
   get isAdmin(): boolean {
@@ -46,5 +58,38 @@ export class NavbarComponent implements OnInit, OnDestroy {
   logout(): void {
     this.auth.logout();
     this.router.navigateByUrl('/login');
+  }
+
+  toggleNotifications(): void {
+    this.showNotifications = !this.showNotifications;
+    if (this.showNotifications) {
+      this.loadNotifications();
+    }
+  }
+
+  markRead(item: NotificationItem): void {
+    if (item.isRead) return;
+    this.api.markNotificationRead(item.id).subscribe({
+      next: () => {
+        item.isRead = true;
+        this.unreadCount = Math.max(0, this.unreadCount - 1);
+      },
+      error: () => {}
+    });
+  }
+
+  private loadNotifications(): void {
+    this.api.getNotifications().subscribe({
+      next: (items) => {
+        this.notifications = (items || []).slice(0, 10);
+      },
+      error: () => {}
+    });
+    this.api.getUnreadNotificationCount().subscribe({
+      next: (res) => {
+        this.unreadCount = res?.unreadCount || 0;
+      },
+      error: () => {}
+    });
   }
 }

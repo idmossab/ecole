@@ -26,6 +26,7 @@ import com.example._blog.Service.CertificateService;
 import com.example._blog.Service.CourseService;
 import com.example._blog.Service.DiplomeService;
 import com.example._blog.Service.MediaService;
+import com.example._blog.Service.NotificationService;
 
 @RestController
 @RequestMapping("/admin")
@@ -34,6 +35,7 @@ public class AdminCont {
     private final CourseService courseService;
     private final MediaService mediaService;
     private final DiplomeService diplomeService;
+    private final NotificationService notificationService;
     private final CertificateRepo certificateRepo;
     private final CourseRepo courseRepo;
     private final DiplomeRepo diplomeRepo;
@@ -44,6 +46,7 @@ public class AdminCont {
             CourseService courseService,
             MediaService mediaService,
             DiplomeService diplomeService,
+            NotificationService notificationService,
             CertificateRepo certificateRepo,
             CourseRepo courseRepo,
             DiplomeRepo diplomeRepo,
@@ -53,6 +56,7 @@ public class AdminCont {
         this.courseService = courseService;
         this.mediaService = mediaService;
         this.diplomeService = diplomeService;
+        this.notificationService = notificationService;
         this.certificateRepo = certificateRepo;
         this.courseRepo = courseRepo;
         this.diplomeRepo = diplomeRepo;
@@ -85,22 +89,43 @@ public class AdminCont {
 
     @PostMapping("/certificates")
     public ResponseEntity<Certificate> createCertificate(@RequestBody CertificateCreateRequest req) {
-        return ResponseEntity.ok(certificateService.create(req.title(), req.description()));
+        Certificate created = certificateService.create(req.title(), req.description());
+        notificationService.notifyRole(
+                UserRole.USER,
+                "New Certificate Available",
+                "A new certificate was added: " + created.getTitle(),
+                "NEW_CERTIFICATE"
+        );
+        return ResponseEntity.ok(created);
     }
 
     @PostMapping("/diplomas")
     public ResponseEntity<Diplome> createDiploma(@RequestBody DiplomaCreateRequest req) {
-        return ResponseEntity.ok(diplomeService.createDiploma(req.title(), req.certificateIds()));
+        Diplome created = diplomeService.createDiploma(req.title(), req.certificateIds());
+        notificationService.notifyRole(
+                UserRole.USER,
+                "New Diploma Available",
+                "A new diploma was added: " + created.getLabel(),
+                "NEW_DIPLOMA"
+        );
+        return ResponseEntity.ok(created);
     }
 
     @PostMapping("/courses")
     public ResponseEntity<Course> createCourse(@RequestBody CourseCreateRequest req) {
-        return ResponseEntity.ok(courseService.create(
+        Course created = courseService.create(
                 req.certificateId(),
                 req.title(),
                 req.content(),
                 req.whatYouWillLearn()
-        ));
+        );
+        notificationService.notifyRole(
+                UserRole.USER,
+                "New Course Available",
+                "A new course was added: " + created.getTitle(),
+                "NEW_COURSE"
+        );
+        return ResponseEntity.ok(created);
     }
 
     @GetMapping("/courses")

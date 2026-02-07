@@ -23,3 +23,72 @@
 .nav-link-btn:hover {
   color: #111827;
 }
+
+.notif-wrap {
+  position: relative;
+}
+
+.notif-btn {
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 0.85rem;
+}
+
+.notif-badge {
+  margin-left: 6px;
+  background: #111827;
+  color: #fff;
+  border-radius: 999px;
+  padding: 1px 7px;
+  font-size: 0.72rem;
+}
+
+.notif-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  width: 330px;
+  max-height: 360px;
+  overflow: auto;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-soft);
+  padding: 8px;
+  z-index: 1200;
+}
+
+.notif-empty {
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  padding: 8px;
+}
+
+.notif-item {
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: #fff;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.notif-item:hover {
+  background: #f8fafc;
+}
+
+.notif-item.unread {
+  background: #eef2ff;
+}
+
+.notif-title {
+  font-weight: 700;
+  font-size: 0.86rem;
+}
+
+.notif-message {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}

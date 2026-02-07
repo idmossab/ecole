@@ -23,6 +23,7 @@ import com.example._blog.Entity.Diplome;
 import com.example._blog.Entity.User;
 import com.example._blog.Entity.UserCertificate;
 import com.example._blog.Entity.UserDiploma;
+import com.example._blog.Entity.enums.UserRole;
 import com.example._blog.Repositories.CertificateRepo;
 import com.example._blog.Repositories.DiplomaRequirementRepo;
 import com.example._blog.Repositories.DiplomeRepo;
@@ -38,6 +39,7 @@ public class DiplomeService {
     private final UserCertificateRepo userCertificateRepo;
     private final UserDiplomaRepo userDiplomaRepo;
     private final UserRepo userRepo;
+    private final NotificationService notificationService;
 
     public DiplomeService(
             DiplomeRepo diplomeRepo,
@@ -45,7 +47,8 @@ public class DiplomeService {
             DiplomaRequirementRepo diplomaRequirementRepo,
             UserCertificateRepo userCertificateRepo,
             UserDiplomaRepo userDiplomaRepo,
-            UserRepo userRepo
+            UserRepo userRepo,
+            NotificationService notificationService
     ) {
         this.diplomeRepo = diplomeRepo;
         this.certificateRepo = certificateRepo;
@@ -53,6 +56,7 @@ public class DiplomeService {
         this.userCertificateRepo = userCertificateRepo;
         this.userDiplomaRepo = userDiplomaRepo;
         this.userRepo = userRepo;
+        this.notificationService = notificationService;
     }
 
     public Diplome createDiploma(String title, List<Long> certificateIds) {
@@ -177,6 +181,12 @@ public class DiplomeService {
                 .claimedAt(Instant.now())
                 .serialNumber(generateSerial(diplomaId, userId))
                 .build());
+        notificationService.notifyRole(
+                UserRole.ADMIN,
+                "Diploma Claimed",
+                user.getUserName() + " claimed diploma: " + diploma.getLabel(),
+                "DIPLOMA_CLAIMED"
+        );
         return new DiplomaClaimResponse(diplomaId, "Diploma claimed successfully", created.getClaimedAt(), created.getSerialNumber());
     }
 

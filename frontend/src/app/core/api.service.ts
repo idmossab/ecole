@@ -16,6 +16,8 @@ import {
   LikeStatus,
   Media,
   MyCertificateProgress,
+  NotificationItem,
+  UnreadNotificationCount,
   UserResponse
 } from './models';
 import { Certificate, Course } from './certificates.data';
@@ -214,6 +216,18 @@ export class ApiService {
       `${this.baseUrl}/api/follows/${userId}`,
       {}
     );
+  }
+
+  getNotifications() {
+    return this.http.get<NotificationItem[]>(`${this.baseUrl}/api/notifications`);
+  }
+
+  getUnreadNotificationCount() {
+    return this.http.get<UnreadNotificationCount>(`${this.baseUrl}/api/notifications/unread-count`);
+  }
+
+  markNotificationRead(id: number) {
+    return this.http.post<NotificationItem>(`${this.baseUrl}/api/notifications/${id}/read`, {});
   }
 
   // PUBLIC CERTIFICATES
