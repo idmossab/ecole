@@ -1,7 +1,7 @@
 .dashboard-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 16px;
   margin-bottom: 24px;
 }
@@ -43,4 +43,38 @@
 .stat-sub {
   font-size: 0.85rem;
   color: var(--text-secondary);
+}
+
+.quick-actions-title {
+  margin: 10px 0 18px;
+}
+
+.quick-actions-grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
+.quick-action-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-soft);
+  padding: 22px 24px;
+  display: grid;
+  gap: 10px;
+}
+
+.quick-action-card h3 {
+  font-size: 1.45rem;
+  margin: 0;
+}
+
+.quick-action-card p {
+  margin: 0 0 8px;
+  color: var(--text-secondary);
+}
+
+.quick-action-card .btn {
+  width: fit-content;
 }

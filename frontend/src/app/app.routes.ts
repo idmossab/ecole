@@ -58,6 +58,10 @@ export const routes: Routes = [
     component: ManageStudiesComponent
   },
   {
+    path: 'manage-students',
+    component: StatsComingComponent
+  },
+  {
     path: 'stats-coming',
     component: StatsComingComponent
   },

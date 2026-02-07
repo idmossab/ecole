@@ -4,7 +4,6 @@
       <h1 class="display-font">Admin Dashboard</h1>
       <p class="text-muted">Manage your platform and monitor performance.</p>
     </div>
-    <a class="btn btn-dark btn-sm" routerLink="/manage-studies">Manage Studies</a>
   </div>
 
   <div class="stats-grid">
@@ -38,5 +37,20 @@
       <div class="stat-value">0%</div>
       <div class="stat-sub">Average course completion</div>
     </button>
+  </div>
+
+  <h2 class="quick-actions-title display-font">Quick Actions</h2>
+  <div class="quick-actions-grid">
+    <article class="quick-action-card">
+      <h3>Manage Students</h3>
+      <p>View, edit, ban, or delete student accounts.</p>
+      <a class="btn btn-dark" routerLink="/manage-students">Go to Students</a>
+    </article>
+
+    <article class="quick-action-card">
+      <h3>Manage Studies</h3>
+      <p>Create and edit diplomas, certificates, and courses.</p>
+      <a class="btn btn-dark" routerLink="/manage-studies">Go to Content</a>
+    </article>
   </div>
 </div>
