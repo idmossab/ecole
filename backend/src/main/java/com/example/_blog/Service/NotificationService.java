@@ -55,8 +55,9 @@ public class NotificationService {
     public NotificationResponse markAsRead(User user, Long id) {
         Notification notification = notificationRepo.findVisibleForUser(id, user.getUserId(), user.getRole())
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Notification not found"));
-        notification.setRead(true);
-        return toDto(notificationRepo.save(notification));
+        NotificationResponse response = toDto(notification);
+        notificationRepo.delete(notification);
+        return response;
     }
 
     private NotificationResponse toDto(Notification n) {
@@ -70,4 +71,3 @@ public class NotificationService {
         );
     }
 }
-

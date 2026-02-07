@@ -68,11 +68,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   markRead(item: NotificationItem): void {
-    if (item.isRead) return;
     this.api.markNotificationRead(item.id).subscribe({
       next: () => {
-        item.isRead = true;
-        this.unreadCount = Math.max(0, this.unreadCount - 1);
+        const wasUnread = !item.isRead;
+        this.notifications = this.notifications.filter((n) => n.id !== item.id);
+        if (wasUnread) {
+          this.unreadCount = Math.max(0, this.unreadCount - 1);
+        }
       },
       error: () => {}
     });
