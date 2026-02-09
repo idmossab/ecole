@@ -23,7 +23,7 @@ export class AdminCoursesComponent implements OnInit {
     title: '',
     description: '',
     imageUrl: '',
-    mode: 'ONLINE' as 'ONLINE' | 'ONSITE',
+    mode: 'ONLINE' as 'ONLINE' | 'IN_PERSON' | 'HYBRID',
     teacherName: '',
     teacherBio: '',
     durationText: '',

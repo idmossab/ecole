@@ -1,4 +1,4 @@
-export type CourseMode = 'ONLINE' | 'ONSITE';
+export type CourseMode = 'ONLINE' | 'IN_PERSON' | 'HYBRID';
 
 export type Course = {
   id: number;

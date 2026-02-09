@@ -30,7 +30,7 @@ export type AdminCourse = {
   title: string;
   description?: string | null;
   imageUrl?: string | null;
-  mode: 'ONLINE' | 'ONSITE';
+  mode: 'ONLINE' | 'IN_PERSON' | 'HYBRID';
   teacherName?: string | null;
   teacherBio?: string | null;
   durationText?: string | null;
@@ -190,7 +190,7 @@ export class ApiService {
     title: string;
     description: string;
     imageUrl: string;
-    mode: 'ONLINE' | 'ONSITE';
+    mode: 'ONLINE' | 'IN_PERSON' | 'HYBRID';
     teacherName: string;
     teacherBio: string;
     durationText: string;
@@ -203,7 +203,7 @@ export class ApiService {
     title: string;
     description: string;
     imageUrl: string;
-    mode: 'ONLINE' | 'ONSITE';
+    mode: 'ONLINE' | 'IN_PERSON' | 'HYBRID';
     teacherName: string;
     teacherBio: string;
     durationText: string;
