@@ -1,30 +1,81 @@
-<div class="container py-4" *ngIf="certificate; else notFound">
-  <div class="speciality-header">
-    <span class="pill">Certificate</span>
-    <h1 class="display-font">{{ certificate.title }}</h1>
-    <p class="lead">{{ certificate.description || 'Certificate description coming soon.' }}</p>
-  </div>
-
+<div class="container py-4 cert-details-page" *ngIf="certificate; else notFound">
+  <a class="back-link" routerLink="/certificates">&larr; Back to Certificates</a>
   <div class="alert error" *ngIf="error">{{ error }}</div>
 
-  <div class="courses-card" *ngIf="!loading">
-    <div>
-      <h2 class="display-font">Courses</h2>
-      <p class="text-muted" *ngIf="!isLoggedIn">Login to access course details</p>
-      <p class="text-muted" *ngIf="isLoggedIn && !courses.length">Content coming soon</p>
-    </div>
+  <div class="details-layout">
+    <main class="left-col">
+      <section class="cert-header">
+        <div class="header-copy">
+          <span class="pill">Certificate</span>
+          <h1 class="display-font">{{ certificate.title }}</h1>
+          <p class="lead">{{ certificate.description || 'Certificate description coming soon.' }}</p>
 
-    <div class="course-grid" *ngIf="courses.length">
-      <div class="course-card" *ngFor="let course of courses">
-        <h3>{{ course.title }}</h3>
-        <div class="meta">{{ course.mode || 'ONLINE' }}<span *ngIf="course.durationText"> • {{ course.durationText }}</span></div>
-        <button class="btn btn-dark btn-sm" type="button" (click)="openCourse(course.id)">View class</button>
-      </div>
-    </div>
+          <div class="header-meta">
+            <div class="meta-box">
+              <div class="meta-label">Courses</div>
+              <div class="meta-value">{{ courses.length }}</div>
+            </div>
+            <div class="meta-box">
+              <div class="meta-label">Selected Mode</div>
+              <div class="meta-value">{{ modeBadge(selectedCourse?.mode) }}</div>
+            </div>
+          </div>
+        </div>
 
-    <div class="cta" *ngIf="!isLoggedIn">
-      <a class="btn btn-dark btn-sm" [routerLink]="['/login']" [queryParams]="{ returnTo: '/certificate/' + certificate.id }">Login</a>
-    </div>
+        <div class="header-image-wrap">
+          <img [src]="certificateImageUrl()" [alt]="certificate.title" class="header-image" />
+        </div>
+      </section>
+
+      <section class="courses-section" *ngIf="!loading">
+        <h2 class="display-font">Certificate Courses</h2>
+        <p class="text-muted" *ngIf="!courses.length">No courses available yet.</p>
+
+        <div class="course-grid" *ngIf="courses.length">
+          <article
+            class="course-card"
+            [class.selected]="isSelected(course)"
+            *ngFor="let course of courses"
+            (click)="selectCourse(course)"
+            (keydown.enter)="selectCourse(course)"
+            role="button"
+            tabindex="0"
+          >
+            <div class="course-head">
+              <h3>{{ course.title }}</h3>
+              <span class="mode-badge">{{ modeBadge(course.mode) }}</span>
+            </div>
+            <p>{{ course.description || 'Course description coming soon.' }}</p>
+            <div class="mode-note">{{ modeDescription(course.mode) }}</div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <aside class="contact-panel">
+      <h3>Ready to Start?</h3>
+      <p class="intro">Contact the school to learn about class schedules and enrollment.</p>
+
+      <ng-container *ngIf="selectedCourse; else noSelection">
+        <div class="contact-item">
+          <span class="label">Phone</span>
+          <span class="value">{{ phoneNumber(selectedCourse) }}</span>
+        </div>
+        <div class="contact-item">
+          <span class="label">Teacher</span>
+          <span class="value">{{ teacherName(selectedCourse) }}</span>
+        </div>
+        <div class="contact-item">
+          <span class="label">Mode</span>
+          <span class="value">{{ modeBadge(selectedCourse.mode) }} ({{ modeDescription(selectedCourse.mode) }})</span>
+        </div>
+        <p class="contact-note">Contact the school to know when classes start.</p>
+      </ng-container>
+
+      <ng-template #noSelection>
+        <p class="placeholder">Select a course to see contact details.</p>
+      </ng-template>
+    </aside>
   </div>
 </div>
 

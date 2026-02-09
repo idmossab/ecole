@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../core/auth.service';
 import { ApiService } from '../../core/api.service';
@@ -16,12 +16,15 @@ import { Certificate, Course } from '../../core/certificates.data';
 export class CertificateDetailsComponent {
   certificate: Certificate | null = null;
   courses: Course[] = [];
+  selectedCourse: Course | null = null;
   loading = true;
   error = '';
+  readonly fallbackPhone = '+1 (555) 123-4567';
+  private readonly fallbackBanner =
+    'https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=1400&q=80';
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private auth: AuthService,
     private api: ApiService
   ) {
@@ -52,6 +55,7 @@ export class CertificateDetailsComponent {
     this.api.getCertificateCourses(id).subscribe({
       next: (data) => {
         this.courses = data || [];
+        this.selectedCourse = this.courses.length ? this.courses[0] : null;
         this.loading = false;
       },
       error: (err) => {
@@ -65,7 +69,39 @@ export class CertificateDetailsComponent {
     return this.auth.isLoggedIn();
   }
 
-  openCourse(courseId: number): void {
-    this.router.navigateByUrl(`/course/${courseId}`);
+  selectCourse(course: Course): void {
+    this.selectedCourse = course;
+  }
+
+  isSelected(course: Course): boolean {
+    return !!this.selectedCourse && this.selectedCourse.id === course.id;
+  }
+
+  modeBadge(mode?: string | null): string {
+    if (!mode) return 'ONLINE';
+    const value = mode.toUpperCase();
+    if (value === 'ONLINE') return 'ONLINE';
+    return 'ONSITE';
+  }
+
+  modeDescription(mode?: string | null): string {
+    return this.modeBadge(mode) === 'ONLINE'
+      ? 'Live via Zoom/Teams'
+      : 'In-person';
+  }
+
+  certificateImageUrl(): string {
+    const source = this.certificate?.imageUrl;
+    if (!source) return this.fallbackBanner;
+    if (source.startsWith('http://') || source.startsWith('https://')) return source;
+    return `http://localhost:8080${source}`;
+  }
+
+  teacherName(course: Course | null): string {
+    return course?.teacherName?.trim() || 'Teacher not assigned';
+  }
+
+  phoneNumber(course: Course | null): string {
+    return course?.phoneContact?.trim() || this.fallbackPhone;
   }
 }
