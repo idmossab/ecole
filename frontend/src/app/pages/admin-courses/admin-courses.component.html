@@ -1,0 +1,86 @@
+<div class="container py-5 admin-page">
+  <a class="back-link" routerLink="/dashboard">&larr; Back to Dashboard</a>
+  <h1 class="display-font">Courses</h1>
+
+  <div class="alert" *ngIf="toast">{{ toast }}</div>
+  <div class="alert error" *ngIf="error">{{ error }}</div>
+
+  <section class="card-box">
+    <label class="form-label">Certificate</label>
+    <select class="form-control" [(ngModel)]="selectedCertificateId" (change)="loadCourses()">
+      <option [ngValue]="null">Select certificate</option>
+      <option *ngFor="let cert of certificates" [ngValue]="cert.id">{{ cert.title }}</option>
+    </select>
+
+    <h2 class="mt-3">{{ editingId ? 'Edit Course' : 'New Course' }}</h2>
+
+    <label class="form-label">Title</label>
+    <input class="form-control" [(ngModel)]="form.title" maxlength="255" />
+
+    <label class="form-label">Description</label>
+    <textarea class="form-control" rows="2" [(ngModel)]="form.description"></textarea>
+
+    <label class="form-label">Image URL</label>
+    <input class="form-control" [(ngModel)]="form.imageUrl" />
+
+    <label class="form-label">Mode</label>
+    <select class="form-control" [(ngModel)]="form.mode">
+      <option value="ONLINE">ONLINE</option>
+      <option value="ONSITE">ONSITE</option>
+    </select>
+
+    <label class="form-label">Teacher Name</label>
+    <input class="form-control" [(ngModel)]="form.teacherName" />
+
+    <label class="form-label">Teacher Bio</label>
+    <textarea class="form-control" rows="2" [(ngModel)]="form.teacherBio"></textarea>
+
+    <label class="form-label">Duration Text</label>
+    <input class="form-control" [(ngModel)]="form.durationText" placeholder="8 sessions" />
+
+    <label class="form-label">Phone Contact</label>
+    <input class="form-control" [(ngModel)]="form.phoneContact" />
+
+    <label class="checkbox-row">
+      <input type="checkbox" [(ngModel)]="form.isPublished" />
+      Published
+    </label>
+
+    <div class="actions">
+      <button class="btn btn-dark" type="button" (click)="submit()">{{ editingId ? 'Update' : 'Create' }}</button>
+      <button class="btn btn-outline-secondary" *ngIf="editingId" type="button" (click)="cancelEdit()">Cancel</button>
+    </div>
+  </section>
+
+  <section class="card-box">
+    <h2>Courses For Selected Certificate</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Mode</th>
+            <th>Teacher</th>
+            <th>Published</th>
+            <th class="actions-col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let course of courses">
+            <td>{{ course.title }}</td>
+            <td>{{ course.mode }}</td>
+            <td>{{ course.teacherName || '-' }}</td>
+            <td>{{ course.isPublished ? 'Yes' : 'No' }}</td>
+            <td class="actions-col">
+              <button type="button" class="action-btn" (click)="edit(course)">Edit</button>
+              <button type="button" class="action-btn danger" (click)="remove(course)">Delete</button>
+            </td>
+          </tr>
+          <tr *ngIf="!courses.length">
+            <td colspan="5" class="empty-row">No courses yet.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>

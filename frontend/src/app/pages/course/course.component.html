@@ -4,76 +4,26 @@
   <div class="course-header">
     <h1 class="display-font">{{ course.title }}</h1>
     <div class="course-meta">
-      <span>{{ videos.length }} video lessons</span>
-    </div>
-  </div>
-
-  <div class="progress-box" *ngIf="isLoggedIn && progress">
-    <div class="progress-top">
-      <span>{{ progress.watchedVideos }}/{{ progress.totalVideos }} watched</span>
-      <span>{{ progress.remainingVideos }} remaining</span>
-    </div>
-    <div class="progress-bar">
-      <div class="progress-fill" [style.width.%]="progress.percentage"></div>
-    </div>
-  </div>
-
-  <div class="course-layout">
-    <div class="player-card">
-      <div class="player-placeholder" *ngIf="!canWatch">
-        <div class="lock-icon">🔒</div>
-        <div>Login to access this course</div>
-      </div>
-
-      <div class="player" *ngIf="canWatch">
-        <video *ngIf="activeVideoUrl" [src]="activeVideoUrl" controls (ended)="onActiveVideoEnded()"></video>
-        <div class="text-muted" *ngIf="!activeVideoUrl">No videos uploaded yet.</div>
-      </div>
-
-      <button class="btn btn-dark btn-sm" type="button" (click)="loginToStart()" *ngIf="!isLoggedIn">
-        Login to Start Course
-      </button>
-    </div>
-
-    <div class="content-card">
-      <h3>Course Content</h3>
-      <div class="content-list">
-        <div
-          class="content-item"
-          *ngFor="let video of videos; let i = index"
-          (click)="selectVideo(video.url)"
-        >
-          <div class="index">{{ i + 1 }}</div>
-          <div class="title">Video {{ i + 1 }}</div>
-          <div class="duration">{{ formatDuration(durationByUrl[video.url]) }}</div>
-          <button
-            class="mark-btn"
-            type="button"
-            *ngIf="canWatch"
-            (click)="markAsWatched(video, $event)"
-          >
-            {{ isVideoWatched(video) ? 'Watched' : 'Mark as watched' }}
-          </button>
-          <div class="lock" *ngIf="!canWatch">🔒</div>
-        </div>
-        <div class="text-muted" *ngIf="!videos.length">No videos uploaded yet.</div>
-      </div>
-      <div class="text-muted" *ngIf="watchLoading">Saving progress...</div>
-      <div class="text-muted" *ngIf="watchMessage">{{ watchMessage }}</div>
+      <span>{{ course.mode || 'ONLINE' }}</span>
+      <span *ngIf="course.durationText">• {{ course.durationText }}</span>
     </div>
   </div>
 
   <div class="about-grid">
     <div class="about-card">
-      <h3>About this course</h3>
-      <p>{{ course.content || 'Course description coming soon.' }}</p>
+      <h3>About this class</h3>
+      <p>{{ course.description || 'Class description coming soon.' }}</p>
     </div>
+
     <div class="about-card">
-      <h3>What you'll learn</h3>
-      <ul>
-        <li *ngFor="let item of learnItems">{{ item }}</li>
-        <li *ngIf="!learnItems.length">Learning outcomes coming soon.</li>
-      </ul>
+      <h3>Instructor</h3>
+      <p><strong>{{ course.teacherName || 'TBA' }}</strong></p>
+      <p>{{ course.teacherBio || 'Instructor details coming soon.' }}</p>
+    </div>
+
+    <div class="about-card" *ngIf="course.phoneContact">
+      <h3>Contact</h3>
+      <p>{{ course.phoneContact }}</p>
     </div>
   </div>
 </div>

@@ -1,0 +1,59 @@
+<div class="container py-5 admin-page">
+  <a class="back-link" routerLink="/dashboard">&larr; Back to Dashboard</a>
+  <h1 class="display-font">Certificates</h1>
+
+  <div class="alert" *ngIf="toast">{{ toast }}</div>
+  <div class="alert error" *ngIf="error">{{ error }}</div>
+
+  <section class="card-box">
+    <h2>{{ editingId ? 'Edit Certificate' : 'New Certificate' }}</h2>
+
+    <label class="form-label">Title</label>
+    <input class="form-control" [(ngModel)]="form.title" maxlength="255" />
+
+    <label class="form-label">Description</label>
+    <textarea class="form-control" rows="3" [(ngModel)]="form.description"></textarea>
+
+    <label class="checkbox-row">
+      <input type="checkbox" [(ngModel)]="form.isPublished" />
+      Published
+    </label>
+
+    <div class="actions">
+      <button class="btn btn-dark" type="button" (click)="submit()">
+        {{ editingId ? 'Update' : 'Create' }}
+      </button>
+      <button class="btn btn-outline-secondary" *ngIf="editingId" type="button" (click)="cancelEdit()">Cancel</button>
+    </div>
+  </section>
+
+  <section class="card-box">
+    <h2>All Certificates</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Published</th>
+            <th class="actions-col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cert of certificates">
+            <td>{{ cert.title }}</td>
+            <td>{{ cert.description || '-' }}</td>
+            <td>{{ cert.isPublished ? 'Yes' : 'No' }}</td>
+            <td class="actions-col">
+              <button type="button" class="action-btn" (click)="edit(cert)">Edit</button>
+              <button type="button" class="action-btn danger" (click)="remove(cert)">Delete</button>
+            </td>
+          </tr>
+          <tr *ngIf="!certificates.length">
+            <td colspan="4" class="empty-row">No certificates yet.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>

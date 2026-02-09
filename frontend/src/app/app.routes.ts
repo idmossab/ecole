@@ -11,9 +11,10 @@ import { CertificatesComponent } from './pages/certificates/certificates.compone
 import { DiplomasComponent } from './pages/diplomas/diplomas.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ProfileComponent } from './pages/profile/profile.component';
-import { ManageStudiesComponent } from './pages/manage-studies/manage-studies.component';
 import { CourseComponent } from './pages/course/course.component';
 import { StatsComingComponent } from './pages/stats-coming/stats-coming.component';
+import { AdminCertificatesComponent } from './pages/admin-certificates/admin-certificates.component';
+import { AdminCoursesComponent } from './pages/admin-courses/admin-courses.component';
 
 export const routes: Routes = [
   {
@@ -58,8 +59,12 @@ export const routes: Routes = [
     component: DashboardComponent
   },
   {
-    path: 'manage-studies',
-    component: ManageStudiesComponent
+    path: 'admin/certificates',
+    component: AdminCertificatesComponent
+  },
+  {
+    path: 'admin/courses',
+    component: AdminCoursesComponent
   },
   {
     path: 'manage-students',

@@ -8,54 +8,17 @@
   <div class="alert error" *ngIf="error">{{ error }}</div>
 
   <div class="courses-card" *ngIf="!loading">
-    <div class="progress-panel" *ngIf="isLoggedIn && progress">
-      <div class="progress-head">
-        <h2 class="display-font">Certificate Progress</h2>
-        <span class="status-pill" [class.done]="progress.isCompleted">
-          {{ progress.isClaimed ? 'Claimed' : (progress.isCompleted ? 'Completed' : 'In progress') }}
-        </span>
-      </div>
-      <div class="progress-meta">
-        <span>{{ progress.watchedVideos }}/{{ progress.totalVideos }} videos watched</span>
-        <span>{{ progress.remainingVideos }} remaining</span>
-      </div>
-      <div class="progress-bar">
-        <div class="progress-fill" [style.width.%]="progressPercent"></div>
-      </div>
-      <div class="claim-btn-wrap">
-        <button
-          class="btn btn-dark btn-sm claim-btn"
-          type="button"
-          [class.is-disabled]="!canClaim"
-          [disabled]="claimLoading || !progress.isCompleted || progress.isClaimed"
-          (click)="onGetCertificate()"
-        >
-          {{ progress.isClaimed ? 'Certificate Claimed' : 'Get Certificate' }}
-        </button>
-        <button
-          class="claim-overlay"
-          type="button"
-          *ngIf="!progress.isCompleted && !progress.isClaimed"
-          (click)="showIncompleteClaimMessage()"
-          aria-label="Why disabled"
-        ></button>
-      </div>
-      <div class="text-muted" *ngIf="progressLoading">Loading progress...</div>
-      <div class="alert error" *ngIf="claimError">{{ claimError }}</div>
-      <div class="alert" *ngIf="claimMessage">{{ claimMessage }}</div>
-    </div>
-
     <div>
       <h2 class="display-font">Courses</h2>
-      <p class="text-muted" *ngIf="!isLoggedIn">Login to access courses</p>
+      <p class="text-muted" *ngIf="!isLoggedIn">Login to access course details</p>
       <p class="text-muted" *ngIf="isLoggedIn && !courses.length">Content coming soon</p>
     </div>
 
     <div class="course-grid" *ngIf="courses.length">
       <div class="course-card" *ngFor="let course of courses">
         <h3>{{ course.title }}</h3>
-        <div class="meta">0 min • {{ videoCounts[course.id] || 0 }} videos</div>
-        <button class="btn btn-dark btn-sm" type="button" (click)="openCourse(course.id)">Start course</button>
+        <div class="meta">{{ course.mode || 'ONLINE' }}<span *ngIf="course.durationText"> • {{ course.durationText }}</span></div>
+        <button class="btn btn-dark btn-sm" type="button" (click)="openCourse(course.id)">View class</button>
       </div>
     </div>
 

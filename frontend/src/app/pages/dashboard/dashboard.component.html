@@ -23,11 +23,6 @@
       <div class="stat-sub">Available programs</div>
     </div>
     <div class="stat-card">
-      <div class="stat-title">Diplomas</div>
-      <div class="stat-value">{{ stats.totalDiplomas }}</div>
-      <div class="stat-sub">Available programs</div>
-    </div>
-    <div class="stat-card">
       <div class="stat-title">Completion Rate</div>
       <div class="stat-value">0%</div>
       <div class="stat-sub">Average course completion</div>
@@ -43,9 +38,15 @@
     </article>
 
     <article class="quick-action-card">
-      <h3>Manage Studies</h3>
-      <p>Create and edit certificates and courses.</p>
-      <a class="btn btn-dark" routerLink="/manage-studies">Go to Content</a>
+      <h3>Certificates</h3>
+      <p>Create, edit, and publish certificates.</p>
+      <a class="btn btn-dark" routerLink="/admin/certificates">Go to Certificates</a>
+    </article>
+
+    <article class="quick-action-card">
+      <h3>Courses</h3>
+      <p>Manage live class course information.</p>
+      <a class="btn btn-dark" routerLink="/admin/courses">Go to Courses</a>
     </article>
   </div>
 </div>

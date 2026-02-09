@@ -26,26 +26,31 @@ export type AdminCertificate = {
   id: number;
   title: string;
   description?: string | null;
-};
-
-export type AdminDiploma = {
-  id: number;
-  title: string;
-  requiredCount: number;
+  isPublished: boolean;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type AdminCourse = {
   id: number;
+  certificateId: number;
   title: string;
-  content?: string | null;
-  whatYouWillLearn?: string | null;
+  description?: string | null;
+  imageUrl?: string | null;
+  mode: 'ONLINE' | 'ONSITE';
+  teacherName?: string | null;
+  teacherBio?: string | null;
+  durationText?: string | null;
+  phoneContact?: string | null;
+  isPublished: boolean;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type AdminStats = {
   totalStudents: number;
   totalCourses: number;
   totalCertificates: number;
-  totalDiplomas: number;
 };
 
 @Injectable({ providedIn: 'root' })
@@ -259,10 +264,6 @@ export class ApiService {
     return this.http.get<Course>(`${this.baseUrl}/courses/${courseId}`);
   }
 
-  getCourseMedia(courseId: number) {
-    return this.http.get<Media[]>(`${this.baseUrl}/courses/${courseId}/media`);
-  }
-
   getCertificateProgress(certificateId: number) {
     return this.http.get<CertificateProgress>(`${this.baseUrl}/api/certificates/${certificateId}/progress`);
   }
@@ -293,37 +294,58 @@ export class ApiService {
 
   // ADMIN
   getAdminStats() {
-    return this.http.get<AdminStats>(`${this.baseUrl}/admin/stats`);
+    return this.http.get<AdminStats>(`${this.baseUrl}/api/admin/stats`);
   }
 
   getAdminCertificates() {
-    return this.http.get<AdminCertificate[]>(`${this.baseUrl}/admin/certificates`);
+    return this.http.get<AdminCertificate[]>(`${this.baseUrl}/api/admin/certificates`);
   }
 
-  getAdminDiplomas() {
-    return this.http.get<AdminDiploma[]>(`${this.baseUrl}/admin/diplomas`);
+  getAdminCourses(certificateId: number) {
+    return this.http.get<AdminCourse[]>(`${this.baseUrl}/api/admin/certificates/${certificateId}/courses`);
   }
 
-  getAdminCourses(certificateId?: number | null) {
-    const url = certificateId ? `${this.baseUrl}/admin/courses?certificateId=${certificateId}` : `${this.baseUrl}/admin/courses`;
-    return this.http.get<AdminCourse[]>(url);
+  createCertificate(payload: { title: string; description: string; isPublished: boolean }) {
+    return this.http.post<AdminCertificate>(`${this.baseUrl}/api/admin/certificates`, payload);
   }
 
-  createCertificate(payload: { title: string; description: string }) {
-    return this.http.post<AdminCertificate>(`${this.baseUrl}/admin/certificates`, payload);
+  updateCertificate(id: number, payload: { title: string; description: string; isPublished: boolean }) {
+    return this.http.put<AdminCertificate>(`${this.baseUrl}/api/admin/certificates/${id}`, payload);
   }
 
-  createDiploma(payload: { title: string; certificateIds: number[] }) {
-    return this.http.post<any>(`${this.baseUrl}/admin/diplomas`, payload);
+  deleteCertificate(id: number) {
+    return this.http.delete<void>(`${this.baseUrl}/api/admin/certificates/${id}`);
   }
 
-  createCourse(payload: { certificateId: number; title: string; content: string; whatYouWillLearn: string }) {
-    return this.http.post<AdminCourse>(`${this.baseUrl}/admin/courses`, payload);
+  createCourse(certificateId: number, payload: {
+    title: string;
+    description: string;
+    imageUrl: string;
+    mode: 'ONLINE' | 'ONSITE';
+    teacherName: string;
+    teacherBio: string;
+    durationText: string;
+    phoneContact: string;
+    isPublished: boolean;
+  }) {
+    return this.http.post<AdminCourse>(`${this.baseUrl}/api/admin/certificates/${certificateId}/courses`, payload);
   }
 
-  uploadCourseVideos(courseId: number, files: File[]) {
-    const form = new FormData();
-    files.forEach((file) => form.append('files', file));
-    return this.http.post<Media[]>(`${this.baseUrl}/admin/courses/${courseId}/videos`, form);
+  updateCourse(courseId: number, payload: {
+    title: string;
+    description: string;
+    imageUrl: string;
+    mode: 'ONLINE' | 'ONSITE';
+    teacherName: string;
+    teacherBio: string;
+    durationText: string;
+    phoneContact: string;
+    isPublished: boolean;
+  }) {
+    return this.http.put<AdminCourse>(`${this.baseUrl}/api/admin/courses/${courseId}`, payload);
+  }
+
+  deleteCourse(courseId: number) {
+    return this.http.delete<void>(`${this.baseUrl}/api/admin/courses/${courseId}`);
   }
 }
