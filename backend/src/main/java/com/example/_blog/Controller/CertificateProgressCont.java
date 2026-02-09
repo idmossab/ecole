@@ -7,7 +7,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,17 +34,6 @@ public class CertificateProgressCont {
         return ResponseEntity.ok(certificateProgressService.getProgress(userId, certificateId));
     }
 
-    @PostMapping("/videos/{videoId}/watched")
-    public ResponseEntity<CertificateProgressResponse> markVideoWatched(
-            @PathVariable Long videoId,
-            @RequestBody(required = false) MarkWatchedRequest request,
-            @AuthenticationPrincipal UserPrincipal principal
-    ) {
-        Long userId = principal.getUser().getUserId();
-        boolean watched = request == null || request.watched() == null || request.watched();
-        return ResponseEntity.ok(certificateProgressService.markVideoWatched(userId, videoId, watched));
-    }
-
     @PostMapping("/certificates/{certificateId}/claim")
     public ResponseEntity<CertificateClaimResponse> claimCertificate(
             @PathVariable Long certificateId,
@@ -62,7 +50,4 @@ public class CertificateProgressCont {
         Long userId = principal.getUser().getUserId();
         return ResponseEntity.ok(certificateProgressService.getMyCertificatesProgress(userId));
     }
-
-    public record MarkWatchedRequest(Boolean watched) {}
 }
-

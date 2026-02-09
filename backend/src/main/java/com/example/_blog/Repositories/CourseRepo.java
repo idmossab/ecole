@@ -9,5 +9,7 @@ import com.example._blog.Entity.Course;
 
 @Repository
 public interface CourseRepo extends JpaRepository<Course, Long> {
-    List<Course> findByCertificateId(Long certificateId);
+    List<Course> findByCertificateIdOrderByCreatedAtDesc(Long certificateId);
+    boolean existsByCertificateIdAndTitleIgnoreCase(Long certificateId, String title);
+    boolean existsByCertificateIdAndTitleIgnoreCaseAndIdNot(Long certificateId, String title, Long id);
 }

@@ -26,7 +26,7 @@ public class CertificateCont {
 
     @GetMapping
     public ResponseEntity<List<Certificate>> getAll() {
-        return ResponseEntity.ok(certificateService.getAll());
+        return ResponseEntity.ok(certificateService.getAllPublic());
     }
 
     @GetMapping("/{id}")
@@ -36,6 +36,6 @@ public class CertificateCont {
 
     @GetMapping("/{id}/courses")
     public ResponseEntity<List<Course>> getCourses(@PathVariable Long id) {
-        return ResponseEntity.ok(courseService.getByCertificate(id));
+        return ResponseEntity.ok(courseService.getByCertificatePublic(id));
     }
 }
