@@ -1,24 +1,145 @@
+.certificates-page {
+  max-width: 1320px;
+}
+
+.certificates-hero h1 {
+  color: #26408b;
+  font-size: clamp(2rem, 3.6vw, 3.25rem);
+  margin-bottom: 0.5rem;
+}
+
+.certificates-hero p {
+  color: #4a5568;
+  font-size: 1.05rem;
+  max-width: 900px;
+  margin: 0;
+}
+
 .cert-grid {
   display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.4rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 2rem;
 }
 
 .cert-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
+  border: 1px solid #cfd5df;
   border-radius: 18px;
-  padding: 20px;
-  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+  background: #fff;
+}
+
+.card-media {
+  position: relative;
+  height: 255px;
+  overflow: hidden;
+}
+
+.card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.tag {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: #2b50d9;
+  color: #fff;
+  border-radius: 999px;
+  font-size: 0.86rem;
+  padding: 0.22rem 0.72rem;
+}
+
+.card-content {
+  padding: 1.1rem 1.45rem 1.4rem;
+}
+
+.card-content h3 {
+  margin: 0;
+  color: #26408b;
+  font-size: clamp(1.55rem, 2.1vw, 2.9rem);
+  line-height: 1.13;
+}
+
+.card-content p {
+  margin: 0.5rem 0 0;
+  color: #4b5568;
+  min-height: 76px;
+}
+
+.meta-row {
+  display: flex;
+  gap: 1.1rem;
+  color: #5b6475;
+  margin-top: 0.35rem;
+  font-size: 1.04rem;
+}
+
+.details-btn {
+  display: block;
+  width: 100%;
+  margin-top: 0.9rem;
+  background: #2b50d9;
+  color: #fff;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 12px;
+  padding: 0.72rem 0.8rem;
+  font-size: 1.04rem;
+}
+
+.how-it-works {
+  margin-top: 2.4rem;
+  background: #dce5f1;
+  border: 1px solid #c7d4ea;
+  border-radius: 16px;
+  padding: 1.7rem 2rem;
+}
+
+.how-it-works h2 {
+  color: #2b488f;
+  margin: 0 0 0.8rem;
+  font-size: clamp(1.8rem, 3vw, 3rem);
+}
+
+.info-grid {
   display: grid;
-  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 2rem;
 }
 
-.cert-card p {
-  color: var(--text-secondary);
+.info-grid h3 {
+  margin: 0;
+  font-size: 2rem;
+  line-height: 1.1;
+  color: #39455b;
 }
 
-.cert-card .meta {
-  color: var(--text-secondary);
-  font-size: 0.9rem;
+.info-grid p {
+  margin: 0.3rem 0 0;
+  color: #3f4a5d;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 1120px) {
+  .cert-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .cert-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .how-it-works {
+    padding: 1.2rem;
+  }
 }

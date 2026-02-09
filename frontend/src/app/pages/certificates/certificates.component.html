@@ -1,19 +1,52 @@
-<div class="container py-4">
-  <div class="text-center mb-4">
-    <h1 class="display-font">Certificates</h1>
-    <p class="text-muted">Short, focused programs to sharpen your skills.</p>
-  </div>
+<div class="container py-5 certificates-page">
+  <header class="certificates-hero">
+    <h1 class="display-font">Professional Certificates</h1>
+    <p>Advance your career with our industry-recognized certificate programs. Each certificate includes multiple courses taught by expert instructors in live, interactive sessions.</p>
+  </header>
 
   <div class="alert error" *ngIf="error">{{ error }}</div>
-
-  <div class="cert-grid" *ngIf="!loading">
-    <div class="cert-card" *ngFor="let cert of certificates">
-      <h3>{{ cert.title }}</h3>
-      <p>{{ cert.description || 'Certificate description coming soon.' }}</p>
-      <div class="meta">{{ cert.courses?.length || 0 }} Courses</div>
-      <a class="btn btn-dark btn-sm" [routerLink]="['/certificate', cert.id]">View</a>
-    </div>
-  </div>
-
   <div class="text-muted" *ngIf="loading">Loading certificates...</div>
+
+  <section class="cert-grid" *ngIf="!loading">
+    <article class="cert-card" *ngFor="let cert of certificates; let i = index">
+      <div class="card-media">
+        <img [src]="cardImage(cert, i)" [alt]="cert.title" />
+        <span class="tag">{{ cardTag(cert) }}</span>
+      </div>
+
+      <div class="card-content">
+        <h3>{{ cert.title }}</h3>
+        <p>{{ cert.description || 'Certificate description coming soon.' }}</p>
+
+        <div class="meta-row">
+          <span>{{ cert.courses?.length || 0 }} Courses</span>
+          <span>{{ durationLabel(cert) }}</span>
+        </div>
+
+        <a class="details-btn" [routerLink]="['/certificate', cert.id]">View Details</a>
+      </div>
+    </article>
+  </section>
+
+  <section class="how-it-works" *ngIf="!loading && certificates.length">
+    <h2>How Certificate Programs Work</h2>
+    <div class="info-grid">
+      <article>
+        <h3>Live Interactive Learning</h3>
+        <p>All courses are taught live by qualified teachers through Zoom/Teams or in-person. No pre-recorded videos - only real-time instruction and engagement.</p>
+      </article>
+      <article>
+        <h3>Official Certification</h3>
+        <p>Upon successful completion, receive an official certificate issued by our accredited institution. Each certificate includes verification and can be shared with employers.</p>
+      </article>
+      <article>
+        <h3>Flexible Schedule</h3>
+        <p>Choose between online classes that fit your schedule or on-campus sessions for hands-on learning. Multiple class times available.</p>
+      </article>
+      <article>
+        <h3>Expert Instructors</h3>
+        <p>Learn from industry professionals with years of teaching and practical experience. Get personalized feedback and guidance throughout your journey.</p>
+      </article>
+    </div>
+  </section>
 </div>

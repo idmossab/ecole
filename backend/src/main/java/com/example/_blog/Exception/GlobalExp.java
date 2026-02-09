@@ -3,6 +3,7 @@ package com.example._blog.Exception;
 import java.time.Instant;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -53,6 +54,12 @@ public class GlobalExp {
         System.err.println("Malformed request body: " + ex.getMessage());
         return ResponseEntity.badRequest()
                 .body(new ErrorResponse(Instant.now(), 400, "Invalid request body. Please check input fields.", req.getRequestURI()));
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNoResourceFoundException(NoResourceFoundException ex, HttpServletRequest req) {
+        return ResponseEntity.status(404)
+                .body(new ErrorResponse(Instant.now(), 404, "Resource not found", req.getRequestURI()));
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
