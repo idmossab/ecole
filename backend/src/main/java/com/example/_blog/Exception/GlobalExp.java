@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
@@ -45,6 +46,13 @@ public class GlobalExp {
         System.err.println(ex.getClass().getName());
         return ResponseEntity.badRequest()
                 .body(new ErrorResponse(Instant.now(), 400, "you have provided invalid input. Please check and try again.", req.getRequestURI()));
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex, HttpServletRequest req) {
+        System.err.println("Malformed request body: " + ex.getMessage());
+        return ResponseEntity.badRequest()
+                .body(new ErrorResponse(Instant.now(), 400, "Invalid request body. Please check input fields.", req.getRequestURI()));
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)

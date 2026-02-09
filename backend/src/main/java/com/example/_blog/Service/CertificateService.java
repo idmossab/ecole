@@ -30,6 +30,7 @@ public class CertificateService {
         Certificate cert = Certificate.builder()
                 .title(title)
                 .description(request.description())
+                .published(request.isPublished() == null ? true : request.isPublished())
                 .build();
         return toResponse(repo.save(cert));
     }
@@ -57,6 +58,7 @@ public class CertificateService {
         }
         cert.setTitle(title);
         cert.setDescription(request.description());
+        cert.setPublished(request.isPublished() == null ? cert.isPublished() : request.isPublished());
         return toResponse(repo.save(cert));
     }
 
