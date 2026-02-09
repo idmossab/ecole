@@ -20,7 +20,6 @@ export type AdminCertificate = {
   id: number;
   title: string;
   description?: string | null;
-  isPublished: boolean;
   createdAt: string;
   updatedAt: string;
 };
@@ -175,11 +174,11 @@ export class ApiService {
     return this.http.get<AdminCourse[]>(`${this.baseUrl}/api/admin/certificates/${certificateId}/courses`);
   }
 
-  createCertificate(payload: { title: string; description: string; isPublished: boolean }) {
+  createCertificate(payload: { title: string; description: string }) {
     return this.http.post<AdminCertificate>(`${this.baseUrl}/api/admin/certificates`, payload);
   }
 
-  updateCertificate(id: number, payload: { title: string; description: string; isPublished: boolean }) {
+  updateCertificate(id: number, payload: { title: string; description: string }) {
     return this.http.put<AdminCertificate>(`${this.baseUrl}/api/admin/certificates/${id}`, payload);
   }
 
@@ -196,7 +195,6 @@ export class ApiService {
     teacherBio: string;
     durationText: string;
     phoneContact: string;
-    isPublished: boolean;
   }) {
     return this.http.post<AdminCourse>(`${this.baseUrl}/api/admin/certificates/${certificateId}/courses`, payload);
   }
@@ -210,7 +208,6 @@ export class ApiService {
     teacherBio: string;
     durationText: string;
     phoneContact: string;
-    isPublished: boolean;
   }) {
     return this.http.put<AdminCourse>(`${this.baseUrl}/api/admin/courses/${courseId}`, payload);
   }

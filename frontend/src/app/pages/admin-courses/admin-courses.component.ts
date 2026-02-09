@@ -27,8 +27,7 @@ export class AdminCoursesComponent implements OnInit {
     teacherName: '',
     teacherBio: '',
     durationText: '',
-    phoneContact: '',
-    isPublished: true
+    phoneContact: ''
   };
 
   toast = '';
@@ -91,8 +90,7 @@ export class AdminCoursesComponent implements OnInit {
       teacherName: this.form.teacherName.trim(),
       teacherBio: this.form.teacherBio.trim(),
       durationText: this.form.durationText.trim(),
-      phoneContact: this.form.phoneContact.trim(),
-      isPublished: this.form.isPublished
+      phoneContact: this.form.phoneContact.trim()
     };
 
     if (this.editingId) {
@@ -131,7 +129,6 @@ export class AdminCoursesComponent implements OnInit {
     this.form.teacherBio = item.teacherBio || '';
     this.form.durationText = item.durationText || '';
     this.form.phoneContact = item.phoneContact || '';
-    this.form.isPublished = item.isPublished;
     this.toast = '';
     this.error = '';
   }
@@ -167,8 +164,7 @@ export class AdminCoursesComponent implements OnInit {
       teacherName: '',
       teacherBio: '',
       durationText: '',
-      phoneContact: '',
-      isPublished: true
+      phoneContact: ''
     };
   }
 }

@@ -18,8 +18,7 @@ export class AdminCertificatesComponent implements OnInit {
 
   form = {
     title: '',
-    description: '',
-    isPublished: true
+    description: ''
   };
 
   toast = '';
@@ -53,8 +52,7 @@ export class AdminCertificatesComponent implements OnInit {
 
     const payload = {
       title: this.form.title.trim(),
-      description: this.form.description.trim(),
-      isPublished: this.form.isPublished
+      description: this.form.description.trim()
     };
 
     if (this.editingId) {
@@ -87,7 +85,6 @@ export class AdminCertificatesComponent implements OnInit {
     this.editingId = item.id;
     this.form.title = item.title;
     this.form.description = item.description || '';
-    this.form.isPublished = item.isPublished;
     this.toast = '';
     this.error = '';
   }
@@ -117,8 +114,7 @@ export class AdminCertificatesComponent implements OnInit {
     this.editingId = null;
     this.form = {
       title: '',
-      description: '',
-      isPublished: true
+      description: ''
     };
   }
 }

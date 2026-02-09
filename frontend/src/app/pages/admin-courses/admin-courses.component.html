@@ -41,11 +41,6 @@
     <label class="form-label">Phone Contact</label>
     <input class="form-control" [(ngModel)]="form.phoneContact" />
 
-    <label class="checkbox-row">
-      <input type="checkbox" [(ngModel)]="form.isPublished" />
-      Published
-    </label>
-
     <div class="actions">
       <button class="btn btn-dark" type="button" (click)="submit()">{{ editingId ? 'Update' : 'Create' }}</button>
       <button class="btn btn-outline-secondary" *ngIf="editingId" type="button" (click)="cancelEdit()">Cancel</button>

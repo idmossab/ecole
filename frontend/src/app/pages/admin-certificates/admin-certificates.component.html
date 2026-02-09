@@ -14,11 +14,6 @@
     <label class="form-label">Description</label>
     <textarea class="form-control" rows="3" [(ngModel)]="form.description"></textarea>
 
-    <label class="checkbox-row">
-      <input type="checkbox" [(ngModel)]="form.isPublished" />
-      Published
-    </label>
-
     <div class="actions">
       <button class="btn btn-dark" type="button" (click)="submit()">
         {{ editingId ? 'Update' : 'Create' }}
@@ -35,7 +30,6 @@
           <tr>
             <th>Title</th>
             <th>Description</th>
-            <th>Published</th>
             <th class="actions-col">Actions</th>
           </tr>
         </thead>
@@ -43,14 +37,13 @@
           <tr *ngFor="let cert of certificates">
             <td>{{ cert.title }}</td>
             <td>{{ cert.description || '-' }}</td>
-            <td>{{ cert.isPublished ? 'Yes' : 'No' }}</td>
             <td class="actions-col">
               <button type="button" class="action-btn" (click)="edit(cert)">Edit</button>
               <button type="button" class="action-btn danger" (click)="remove(cert)">Delete</button>
             </td>
           </tr>
           <tr *ngIf="!certificates.length">
-            <td colspan="4" class="empty-row">No certificates yet.</td>
+            <td colspan="3" class="empty-row">No certificates yet.</td>
           </tr>
         </tbody>
       </table>
