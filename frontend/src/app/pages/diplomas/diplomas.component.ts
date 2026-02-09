@@ -3,8 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
 import { ApiService } from '../../core/api.service';
-import { AuthService } from '../../core/auth.service';
-import { DiplomaProgress, DiplomasMode, DiplomaSummary } from '../../core/models';
+import { DiplomasMode, DiplomaSummary } from '../../core/models';
 
 @Component({
   selector: 'app-diplomas',
@@ -15,22 +14,21 @@ import { DiplomaProgress, DiplomasMode, DiplomaSummary } from '../../core/models
 })
 export class DiplomasComponent implements OnInit {
   diplomas: DiplomaSummary[] = [];
-  progressById: Record<number, DiplomaProgress> = {};
-  claimLoadingById: Record<number, boolean> = {};
-  messageById: Record<number, string> = {};
   error = '';
   loading = true;
+  private readonly fallbackImages = [
+    'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1544531586-fde5298cdd40?auto=format&fit=crop&w=1200&q=80'
+  ];
 
-  constructor(private api: ApiService, private auth: AuthService) {}
+  constructor(private api: ApiService) {}
 
   ngOnInit(): void {
     this.api.getDiplomas().subscribe({
       next: (data) => {
         this.diplomas = data || [];
         this.loading = false;
-        if (this.isLoggedIn) {
-          this.loadProgress();
-        }
       },
       error: (err) => {
         this.error = err?.error?.message || err?.error || 'Failed to load diplomas';
@@ -39,62 +37,34 @@ export class DiplomasComponent implements OnInit {
     });
   }
 
-  private loadProgress(): void {
-    this.api.getDiplomasProgress().subscribe({
-      next: (items) => {
-        (items || []).forEach((item) => {
-          this.progressById[item.diplomaId] = item;
-        });
-      },
-      error: () => {}
-    });
-  }
-
-  get isLoggedIn(): boolean {
-    return this.auth.isLoggedIn();
-  }
-
-  isClaimEnabled(diplomaId: number): boolean {
-    const progress = this.progressById[diplomaId];
-    if (!progress) return false;
-    return progress.isCompleted && !progress.isClaimed;
-  }
-
-  onTryClaim(diplomaId: number): void {
-    const progress = this.progressById[diplomaId];
-    if (!progress) return;
-
-    if (!this.isClaimEnabled(diplomaId)) {
-      this.messageById[diplomaId] = 'Complete required certificates first to get this diploma.';
-      return;
-    }
-
-    this.claimLoadingById[diplomaId] = true;
-    this.messageById[diplomaId] = '';
-    this.api.claimDiploma(diplomaId).subscribe({
-      next: (res) => {
-        this.claimLoadingById[diplomaId] = false;
-        this.messageById[diplomaId] = res.message;
-        const current = this.progressById[diplomaId];
-        if (current) {
-          this.progressById[diplomaId] = {
-            ...current,
-            isClaimed: true,
-            serialNumber: res.serialNumber || null,
-            claimedAt: res.claimedAt
-          };
-        }
-      },
-      error: (err) => {
-        this.claimLoadingById[diplomaId] = false;
-        this.messageById[diplomaId] = err?.error?.message || err?.error || 'Failed to claim diploma';
-      }
-    });
-  }
-
   modeLabel(mode: DiplomasMode): string {
     if (mode === 'SPECIALIZED_TECHNICIAN') return 'Specialized Technician';
     if (mode === 'TECHNICIAN') return 'Technician';
     return 'Qualification';
+  }
+
+  modeBadge(mode: DiplomasMode): string {
+    if (mode === 'SPECIALIZED_TECHNICIAN') return 'Specialized';
+    if (mode === 'TECHNICIAN') return 'Technician';
+    return 'Qualification';
+  }
+
+  cardImage(item: DiplomaSummary, index: number): string {
+    const source = item.imageUrl;
+    if (!source) return this.fallbackImages[index % this.fallbackImages.length];
+    if (source.startsWith('http://') || source.startsWith('https://')) return source;
+    return `http://localhost:8080${source}`;
+  }
+
+  durationLabel(mode: DiplomasMode): string {
+    if (mode === 'SPECIALIZED_TECHNICIAN') return '18-24 months';
+    if (mode === 'TECHNICIAN') return '12-18 months';
+    return '24-30 months';
+  }
+
+  certificateLabel(mode: DiplomasMode): string {
+    if (mode === 'SPECIALIZED_TECHNICIAN') return 'Specialized Software Developer';
+    if (mode === 'TECHNICIAN') return 'Certified IT Technician';
+    return 'Professional Qualification Certificate';
   }
 }

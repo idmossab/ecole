@@ -16,10 +16,12 @@ import { DiplomasMode } from '../../core/models';
 export class AdminDiplomasComponent implements OnInit {
   diplomas: AdminDiploma[] = [];
   editingId: number | null = null;
+  uploading = false;
   readonly modes: DiplomasMode[] = ['SPECIALIZED_TECHNICIAN', 'TECHNICIAN', 'QUALIFICATION'];
 
   form = {
     title: '',
+    imageUrl: '',
     mode: 'TECHNICIAN' as DiplomasMode
   };
 
@@ -54,6 +56,7 @@ export class AdminDiplomasComponent implements OnInit {
 
     const payload = {
       title: this.form.title.trim(),
+      imageUrl: this.form.imageUrl.trim(),
       mode: this.form.mode
     };
 
@@ -86,6 +89,7 @@ export class AdminDiplomasComponent implements OnInit {
   edit(item: AdminDiploma): void {
     this.editingId = item.id;
     this.form.title = item.title;
+    this.form.imageUrl = item.imageUrl || '';
     this.form.mode = item.mode;
     this.toast = '';
     this.error = '';
@@ -118,10 +122,50 @@ export class AdminDiplomasComponent implements OnInit {
     this.resetForm();
   }
 
+  onImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files && input.files[0];
+    if (!file) return;
+
+    this.toast = '';
+    this.error = '';
+
+    if (!file.type.startsWith('image/')) {
+      this.error = 'Please select an image file';
+      input.value = '';
+      return;
+    }
+
+    this.uploading = true;
+    this.api.uploadAdminImage(file).subscribe({
+      next: (res) => {
+        this.form.imageUrl = res.url || '';
+        this.uploading = false;
+        input.value = '';
+      },
+      error: (err) => {
+        this.error = err?.error?.message || err?.error || 'Failed to upload image';
+        this.uploading = false;
+        input.value = '';
+      }
+    });
+  }
+
+  removeImage(): void {
+    this.form.imageUrl = '';
+  }
+
+  imagePreviewUrl(path?: string | null): string {
+    if (!path) return '';
+    if (path.startsWith('http://') || path.startsWith('https://')) return path;
+    return `http://localhost:8080${path}`;
+  }
+
   private resetForm(): void {
     this.editingId = null;
     this.form = {
       title: '',
+      imageUrl: '',
       mode: 'TECHNICIAN'
     };
   }

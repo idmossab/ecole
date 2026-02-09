@@ -1,50 +1,35 @@
-<div class="container py-5">
-  <div class="text-center mb-4">
-    <h1 class="display-font">Diplomas</h1>
-    <p class="text-muted">Complete required certificates to claim your diploma.</p>
+<div class="container py-5 diplomas-page">
+  <div class="hero mb-4">
+    <h1 class="display-font">Diploma Programs</h1>
+    <p>Comprehensive diploma programs that prepare you for professional success. Each program combines theoretical knowledge with practical skills, taught by expert instructors in live, interactive sessions.</p>
   </div>
 
   <div class="alert error" *ngIf="error">{{ error }}</div>
   <div class="text-muted" *ngIf="loading">Loading diplomas...</div>
 
   <div class="diploma-grid" *ngIf="!loading">
-    <article class="diploma-card" *ngFor="let diploma of diplomas">
-      <h3>{{ diploma.title }}</h3>
-      <p class="text-muted">Mode: {{ modeLabel(diploma.mode) }}</p>
-      <p class="text-muted">{{ diploma.requiredCount }} required certificates</p>
+    <article class="diploma-card" *ngFor="let diploma of diplomas; let i = index">
+      <div class="card-media">
+        <img [src]="cardImage(diploma, i)" [alt]="diploma.title" />
+        <span class="mode-pill">{{ modeBadge(diploma.mode) }}</span>
+      </div>
 
-      <ng-container *ngIf="isLoggedIn && progressById[diploma.id] as progress">
-        <div class="progress-row">
-          <span>{{ progress.completedCount }}/{{ progress.requiredCount }} completed</span>
-          <span>{{ progress.percentage }}%</span>
-        </div>
-        <div class="progress-track">
-          <div class="progress-fill" [style.width.%]="progress.percentage"></div>
-        </div>
-        <div class="serial" *ngIf="progress.isClaimed">
-          Claimed • {{ progress.serialNumber || '-' }}
-        </div>
-        <div class="claim-wrap">
-          <button
-            class="btn btn-dark btn-sm"
-            type="button"
-            [disabled]="claimLoadingById[diploma.id] || progress.isClaimed || !isClaimEnabled(diploma.id)"
-            (click)="onTryClaim(diploma.id)"
-          >
-            {{ progress.isClaimed ? 'Claimed' : 'Get Diploma' }}
-          </button>
-          <button
-            class="claim-overlay"
-            type="button"
-            *ngIf="!progress.isClaimed && !isClaimEnabled(diploma.id)"
-            (click)="onTryClaim(diploma.id)"
-            aria-label="Show claim requirement"
-          ></button>
-        </div>
-        <div class="text-muted small" *ngIf="messageById[diploma.id]">{{ messageById[diploma.id] }}</div>
-      </ng-container>
+      <div class="card-content">
+        <h3>{{ diploma.title }}</h3>
+        <p class="summary">{{ modeLabel(diploma.mode) }} diploma program with practical training and certification.</p>
 
-      <a class="btn btn-outline-secondary btn-sm" [routerLink]="['/diplomas', diploma.id]">View Details</a>
+        <div class="meta-line">
+          <span>{{ durationLabel(diploma.mode) }}</span>
+        </div>
+        <div class="meta-line">
+          <span>{{ certificateLabel(diploma.mode) }}</span>
+        </div>
+        <div class="meta-line">
+          <span>{{ diploma.requiredCount }} Specializations</span>
+        </div>
+
+        <a class="program-btn" [routerLink]="['/diplomas', diploma.id]">View Program</a>
+      </div>
     </article>
   </div>
 </div>

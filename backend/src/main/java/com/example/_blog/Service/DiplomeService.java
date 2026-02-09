@@ -73,7 +73,8 @@ public class DiplomeService {
                         diploma.getId(),
                         diploma.getLabel(),
                         certificateRepo.count(),
-                        diploma.getMode()
+                        diploma.getMode(),
+                        diploma.getImageUrl()
                 ))
                 .toList();
     }
@@ -82,7 +83,13 @@ public class DiplomeService {
         Diplome diploma = diplomeRepo.findById(diplomaId)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Diploma not found"));
         long requiredCount = certificateRepo.count();
-        return new DiplomaSummaryResponse(diploma.getId(), diploma.getLabel(), requiredCount, diploma.getMode());
+        return new DiplomaSummaryResponse(
+                diploma.getId(),
+                diploma.getLabel(),
+                requiredCount,
+                diploma.getMode(),
+                diploma.getImageUrl()
+        );
     }
 
     public List<AdminDiplomaResponse> getAllAdmin() {
@@ -99,6 +106,7 @@ public class DiplomeService {
         }
         Diplome diploma = Diplome.builder()
                 .label(title)
+                .imageUrl(request.imageUrl())
                 .mode(request.mode())
                 .build();
         long requiredCount = certificateRepo.count();
@@ -112,6 +120,7 @@ public class DiplomeService {
             throw new ResponseStatusException(CONFLICT, "Diploma title already exists");
         }
         diploma.setLabel(title);
+        diploma.setImageUrl(request.imageUrl());
         diploma.setMode(request.mode());
         long requiredCount = certificateRepo.count();
         return toAdminResponse(diplomeRepo.save(diploma), requiredCount);
@@ -202,6 +211,7 @@ public class DiplomeService {
         return new AdminDiplomaResponse(
                 diploma.getId(),
                 diploma.getLabel(),
+                diploma.getImageUrl(),
                 diploma.getMode(),
                 requiredCount
         );

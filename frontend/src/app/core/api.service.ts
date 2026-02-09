@@ -51,6 +51,7 @@ export type AdminStats = {
 export type AdminDiploma = {
   id: number;
   title: string;
+  imageUrl?: string | null;
   mode: DiplomasMode;
   requiredCount: number;
 };
@@ -201,11 +202,11 @@ export class ApiService {
     return this.http.get<AdminDiploma[]>(`${this.baseUrl}/api/admin/diplomas`);
   }
 
-  createAdminDiploma(payload: { title: string; mode: DiplomasMode }) {
+  createAdminDiploma(payload: { title: string; imageUrl: string; mode: DiplomasMode }) {
     return this.http.post<AdminDiploma>(`${this.baseUrl}/api/admin/diplomas`, payload);
   }
 
-  updateAdminDiploma(id: number, payload: { title: string; mode: DiplomasMode }) {
+  updateAdminDiploma(id: number, payload: { title: string; imageUrl: string; mode: DiplomasMode }) {
     return this.http.put<AdminDiploma>(`${this.baseUrl}/api/admin/diplomas/${id}`, payload);
   }
 

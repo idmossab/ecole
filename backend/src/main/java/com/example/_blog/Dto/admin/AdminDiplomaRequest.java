@@ -10,6 +10,7 @@ public record AdminDiplomaRequest(
         @NotBlank(message = "title is required")
         @Size(max = 255, message = "title must be at most 255 characters")
         String title,
+        String imageUrl,
         @NotNull(message = "mode is required")
         DiplomasMode mode
 ) {}

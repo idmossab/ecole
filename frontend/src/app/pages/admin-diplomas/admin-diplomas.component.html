@@ -11,6 +11,26 @@
     <label class="form-label">Title</label>
     <input class="form-control" [(ngModel)]="form.title" maxlength="255" />
 
+    <label class="form-label">Image</label>
+    <div class="image-upload-box">
+      <input #imageInput type="file" accept="image/*" (change)="onImageSelected($event)" hidden />
+
+      <button
+        class="upload-tile"
+        type="button"
+        (click)="imageInput.click()"
+        [disabled]="uploading || !!form.imageUrl"
+      >
+        <span class="plus">+</span>
+      </button>
+
+      <div class="preview-wrap" *ngIf="form.imageUrl">
+        <img [src]="imagePreviewUrl(form.imageUrl)" alt="Diploma image" />
+        <button type="button" class="action-btn danger" (click)="removeImage()">Remove</button>
+      </div>
+    </div>
+    <div class="text-muted small" *ngIf="uploading">Uploading image...</div>
+
     <label class="form-label">Mode</label>
     <select class="form-control" [(ngModel)]="form.mode">
       <option *ngFor="let mode of modes" [ngValue]="mode">{{ modeLabel(mode) }}</option>
@@ -31,6 +51,7 @@
         <thead>
           <tr>
             <th>Title</th>
+            <th>Image</th>
             <th>Mode</th>
             <th>Required Certificates</th>
             <th class="actions-col">Actions</th>
@@ -39,6 +60,7 @@
         <tbody>
           <tr *ngFor="let diploma of diplomas">
             <td>{{ diploma.title }}</td>
+            <td>{{ diploma.imageUrl ? 'Yes' : 'No' }}</td>
             <td>{{ modeLabel(diploma.mode) }}</td>
             <td>{{ diploma.requiredCount }}</td>
             <td class="actions-col">
@@ -47,7 +69,7 @@
             </td>
           </tr>
           <tr *ngIf="!diplomas.length">
-            <td colspan="4" class="empty-row">No diplomas yet.</td>
+            <td colspan="5" class="empty-row">No diplomas yet.</td>
           </tr>
         </tbody>
       </table>

@@ -1,58 +1,99 @@
+.diplomas-page {
+  max-width: 1320px;
+}
+
+.hero h1 {
+  color: #26408b;
+  font-size: clamp(2rem, 3.6vw, 3.25rem);
+  margin-bottom: 0.45rem;
+}
+
+.hero p {
+  max-width: 860px;
+  color: #4b5568;
+  font-size: 1.05rem;
+  margin: 0;
+}
+
 .diploma-grid {
   display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.3rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .diploma-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
+  border: 1px solid #d2d9e4;
   border-radius: 18px;
-  padding: 20px;
-  box-shadow: var(--shadow-soft);
-  display: grid;
-  gap: 10px;
-}
-
-.progress-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  color: var(--text-secondary);
-  font-size: 0.85rem;
-}
-
-.progress-track {
-  width: 100%;
-  height: 8px;
-  background: #e5e7eb;
-  border-radius: 999px;
   overflow: hidden;
+  background: #fff;
 }
 
-.progress-fill {
-  height: 100%;
-  background: #111827;
-}
-
-.serial {
-  font-size: 0.82rem;
-  color: var(--text-secondary);
-}
-
-.small {
-  font-size: 0.82rem;
-}
-
-.claim-wrap {
+.card-media {
   position: relative;
-  width: fit-content;
+  height: 225px;
 }
 
-.claim-overlay {
+.card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.mode-pill {
   position: absolute;
-  inset: 0;
-  border: none;
-  background: transparent;
-  cursor: not-allowed;
+  top: 0.85rem;
+  left: 0.85rem;
+  border-radius: 999px;
+  padding: 0.25rem 0.68rem;
+  background: #dff5e7;
+  color: #166534;
+  font-size: 0.84rem;
+}
+
+.card-content {
+  padding: 1rem 1.2rem 1.15rem;
+}
+
+.card-content h3 {
+  margin: 0;
+  color: #26408b;
+  font-size: clamp(1.6rem, 2.5vw, 3rem);
+  line-height: 1.15;
+}
+
+.summary {
+  margin: 0.42rem 0 0.6rem;
+  color: #4b5568;
+  min-height: 68px;
+}
+
+.meta-line {
+  color: #3f4a5d;
+  margin-top: 0.35rem;
+}
+
+.program-btn {
+  display: block;
+  width: 100%;
+  margin-top: 0.9rem;
+  text-align: center;
+  text-decoration: none;
+  background: #2b50d9;
+  color: #fff;
+  border-radius: 12px;
+  padding: 0.72rem 0.8rem;
+  font-size: 1.04rem;
+}
+
+@media (max-width: 1120px) {
+  .diploma-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .diploma-grid {
+    grid-template-columns: 1fr;
+  }
 }

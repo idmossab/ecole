@@ -35,6 +35,9 @@ public class Diplome {
     @Column(nullable = false, unique = true)
     private String label;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

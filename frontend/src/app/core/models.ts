@@ -49,6 +49,7 @@ export interface DiplomaSummary {
   title: string;
   requiredCount: number;
   mode: DiplomasMode;
+  imageUrl?: string | null;
 }
 
 export type DiplomasMode = 'SPECIALIZED_TECHNICIAN' | 'TECHNICIAN' | 'QUALIFICATION';

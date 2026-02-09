@@ -6,5 +6,6 @@ public record DiplomaSummaryResponse(
         Long id,
         String title,
         long requiredCount,
-        DiplomasMode mode
+        DiplomasMode mode,
+        String imageUrl
 ) {}
