@@ -5,7 +5,7 @@
   <div class="details-layout">
     <main class="left-col">
       <section class="cert-header">
-        <div class="header-copy">
+        <div class="header-copy" [style.--header-bg-image]="'url(' + certificateImageUrl() + ')'">
           <span class="pill">Certificate</span>
           <h1 class="display-font">{{ certificate.title }}</h1>
           <p class="lead">{{ certificate.description || 'Certificate description coming soon.' }}</p>
@@ -20,10 +20,6 @@
               <div class="meta-value">{{ modeBadge(selectedCourse?.mode) }}</div>
             </div>
           </div>
-        </div>
-
-        <div class="header-image-wrap">
-          <img [src]="certificateImageUrl()" [alt]="certificate.title" class="header-image" />
         </div>
       </section>
 
