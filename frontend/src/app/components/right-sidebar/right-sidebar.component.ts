@@ -7,7 +7,6 @@ import { fromEvent, Subscription } from 'rxjs';
 import { ApiService } from '../../core/api.service';
 import { AuthService } from '../../core/auth.service';
 import { UserResponse } from '../../core/models';
-import { FeedRefreshService } from '../../core/feed-refresh.service';
 
 @Component({
   selector: 'app-right-sidebar',
@@ -20,11 +19,9 @@ export class RightSidebarComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('scrollContainer') scrollContainer?: ElementRef<HTMLDivElement>;
 
   searchControl = new FormControl('', { nonNullable: true });
-  followedIds = new Set<number>();
   allCandidates: UserResponse[] = [];
   filteredUsers: UserResponse[] = [];
   displayedUsers: UserResponse[] = [];
-  followLoadingIds = new Set<number>();
 
   loading = false;
   loadingMore = false;
@@ -40,8 +37,7 @@ export class RightSidebarComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private api: ApiService,
-    private auth: AuthService,
-    private feedRefresh: FeedRefreshService
+    private auth: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -53,7 +49,7 @@ export class RightSidebarComponent implements OnInit, AfterViewInit, OnDestroy {
     this.api.getMe().subscribe({
       next: (me) => {
         this.currentUserId = me.userId;
-        this.loadFollowedIds();
+        this.loadUsers();
         this.setupSearch();
       },
       error: () => {
@@ -83,19 +79,6 @@ export class RightSidebarComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-  private loadFollowedIds(): void {
-    this.api.getFollowingIds().subscribe({
-      next: (ids) => {
-        this.followedIds = new Set(ids || []);
-        this.loadUsers();
-      },
-      error: () => {
-        this.followedIds = new Set();
-        this.loadUsers();
-      }
-    });
-  }
-
   private loadUsers(): void {
     this.api.getUsers().subscribe({
       next: (users) => {
@@ -116,7 +99,6 @@ export class RightSidebarComponent implements OnInit, AfterViewInit, OnDestroy {
     const term = this.searchControl.value.trim().toLowerCase();
     this.filteredUsers = this.allCandidates.filter((user) => {
       if (this.currentUserId && user.userId === this.currentUserId) return false;
-      if (this.followedIds.has(user.userId)) return false;
       if (!term) return true;
       const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
       const username = `@${user.userName}`.toLowerCase();
@@ -143,21 +125,5 @@ export class RightSidebarComponent implements OnInit, AfterViewInit, OnDestroy {
     this.displayedUsers = this.filteredUsers.slice(0, this.displayCount);
     this.endReached = this.filteredUsers.length <= this.displayCount;
     this.loadingMore = false;
-  }
-
-  follow(userId: number): void {
-    if (this.followLoadingIds.has(userId)) return;
-    this.followLoadingIds.add(userId);
-    this.api.followUser(userId).subscribe({
-      next: () => {
-        this.followLoadingIds.delete(userId);
-        this.feedRefresh.trigger();
-        this.followedIds.add(userId);
-        this.applyFilters();
-      },
-      error: () => {
-        this.followLoadingIds.delete(userId);
-      }
-    });
   }
 }

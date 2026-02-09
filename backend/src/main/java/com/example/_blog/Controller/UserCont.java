@@ -1,8 +1,10 @@
 package com.example._blog.Controller;
 
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+
 import java.util.List;
 
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,58 +13,60 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import jakarta.validation.Valid;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.example._blog.Dto.AuthResponse;
 import com.example._blog.Dto.UserLoginRequest;
 import com.example._blog.Dto.UserRegisterRequest;
 import com.example._blog.Dto.UserResponse;
+import com.example._blog.Security.UserPrincipal;
 import com.example._blog.Service.UserService;
 
+import jakarta.validation.Valid;
+
 @RestController
-@RequestMapping("/users")
 public class UserCont {
+    private final UserService userService;
 
-    private final UserService service;
-
-    public UserCont(UserService service) {
-        this.service = service;
+    public UserCont(UserService userService) {
+        this.userService = userService;
     }
 
-    //REGISTER
-    @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody @Valid UserRegisterRequest req) {
-        AuthResponse created = service.register(req);
-        return ResponseEntity.ok(created);
+    @PostMapping("/users/register")
+    public AuthResponse register(@Valid @RequestBody UserRegisterRequest request) {
+        return userService.register(request);
     }
 
-    //LOGIN (email OR username)
-    @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody @Valid UserLoginRequest req) {
-        AuthResponse u = service.login(req);
-        return ResponseEntity.ok(u);
+    @PostMapping("/users/login")
+    public AuthResponse login(@Valid @RequestBody UserLoginRequest request) {
+        return userService.login(request);
     }
 
-    @GetMapping
-    public ResponseEntity<List<UserResponse>> getAll() {
-        return ResponseEntity.ok(service.getAll());
+    @GetMapping("/users")
+    public List<UserResponse> getAllUsers() {
+        return userService.getAll();
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<UserResponse> getById(@PathVariable Long userId) {
-        return ResponseEntity.ok(service.getById(userId));
+    @GetMapping("/users/{userId}")
+    public UserResponse getUserById(@PathVariable Long userId) {
+        return userService.getById(userId);
     }
 
-    @PutMapping("/{userId}")
-    public ResponseEntity<UserResponse> update(@PathVariable Long userId,
-                                               @RequestBody @Valid UserRegisterRequest req) {
-        return ResponseEntity.ok(service.update(userId, req));
+    @PutMapping("/users/{userId}")
+    public UserResponse updateUser(@PathVariable Long userId, @Valid @RequestBody UserRegisterRequest request) {
+        return userService.update(userId, request);
     }
 
-    @DeleteMapping("/{userId}")
-    public ResponseEntity<Void> delete(@PathVariable Long userId) {
-        service.delete(userId);
-        return ResponseEntity.noContent().build();
+    @DeleteMapping("/users/{userId}")
+    public void deleteUser(@PathVariable Long userId) {
+        userService.delete(userId);
+    }
+
+    @GetMapping("/api/users/me")
+    public UserResponse getMe(@AuthenticationPrincipal UserPrincipal principal) {
+        if (principal == null || principal.getUser() == null) {
+            throw new ResponseStatusException(UNAUTHORIZED, "Unauthorized");
+        }
+        return userService.getById(principal.getUser().getUserId());
     }
 }
