@@ -4,6 +4,7 @@ import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -39,7 +40,7 @@ public class CourseService {
                 .title(title)
                 .description(request.description())
                 .imageUrl(request.imageUrl())
-                .mode(request.mode() == null ? CourseMode.ONLINE : request.mode())
+                .mode(parseMode(request.mode()))
                 .teacherName(request.teacherName())
                 .teacherBio(request.teacherBio())
                 .durationText(request.durationText())
@@ -81,7 +82,7 @@ public class CourseService {
         course.setTitle(title);
         course.setDescription(request.description());
         course.setImageUrl(request.imageUrl());
-        course.setMode(request.mode() == null ? CourseMode.ONLINE : request.mode());
+        course.setMode(parseMode(request.mode()));
         course.setTeacherName(request.teacherName());
         course.setTeacherBio(request.teacherBio());
         course.setDurationText(request.durationText());
@@ -111,5 +112,16 @@ public class CourseService {
                 course.getCreatedAt(),
                 course.getUpdatedAt()
         );
+    }
+
+    private CourseMode parseMode(String modeValue) {
+        if (modeValue == null || modeValue.isBlank()) {
+            return CourseMode.ONLINE;
+        }
+        try {
+            return CourseMode.valueOf(modeValue.trim().toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException ex) {
+            return CourseMode.ONLINE;
+        }
     }
 }
