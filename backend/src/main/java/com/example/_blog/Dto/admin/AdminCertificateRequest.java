@@ -10,5 +10,6 @@ public record AdminCertificateRequest(
         @Size(max = 255, message = "title must be at most 255 characters")
         String title,
         String description,
+        String imageUrl,
         Boolean isPublished
 ) {}

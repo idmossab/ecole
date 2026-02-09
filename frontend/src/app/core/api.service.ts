@@ -21,6 +21,7 @@ export type AdminCertificate = {
   id: number;
   title: string;
   description?: string | null;
+  imageUrl?: string | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -212,11 +213,11 @@ export class ApiService {
     return this.http.delete<void>(`${this.baseUrl}/api/admin/diplomas/${id}`);
   }
 
-  createCertificate(payload: { title: string; description: string }) {
+  createCertificate(payload: { title: string; description: string; imageUrl: string }) {
     return this.http.post<AdminCertificate>(`${this.baseUrl}/api/admin/certificates`, payload);
   }
 
-  updateCertificate(id: number, payload: { title: string; description: string }) {
+  updateCertificate(id: number, payload: { title: string; description: string; imageUrl: string }) {
     return this.http.put<AdminCertificate>(`${this.baseUrl}/api/admin/certificates/${id}`, payload);
   }
 
@@ -227,7 +228,6 @@ export class ApiService {
   createCourse(certificateId: number, payload: {
     title: string;
     description: string;
-    imageUrl: string;
     mode: 'ONLINE' | 'ONSITE' | 'IN_PERSON' | 'HYBRID';
     teacherName: string;
     teacherBio: string;
@@ -240,7 +240,6 @@ export class ApiService {
   updateCourse(courseId: number, payload: {
     title: string;
     description: string;
-    imageUrl: string;
     mode: 'ONLINE' | 'ONSITE' | 'IN_PERSON' | 'HYBRID';
     teacherName: string;
     teacherBio: string;
@@ -284,5 +283,11 @@ export class ApiService {
 
   deleteSpecialization(specializationId: number) {
     return this.http.delete<void>(`${this.baseUrl}/api/admin/specializations/${specializationId}`);
+  }
+
+  uploadAdminImage(file: File) {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<{ url: string }>(`${this.baseUrl}/api/admin/uploads/image`, formData);
   }
 }

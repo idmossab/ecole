@@ -14,6 +14,26 @@
     <label class="form-label">Description</label>
     <textarea class="form-control" rows="3" [(ngModel)]="form.description"></textarea>
 
+    <label class="form-label">Image</label>
+    <div class="image-upload-box">
+      <input #imageInput type="file" accept="image/*" (change)="onImageSelected($event)" hidden />
+
+      <button
+        class="upload-tile"
+        type="button"
+        (click)="imageInput.click()"
+        [disabled]="uploading || !!form.imageUrl"
+      >
+        <span class="plus">+</span>
+      </button>
+
+      <div class="preview-wrap" *ngIf="form.imageUrl">
+        <img [src]="imagePreviewUrl(form.imageUrl)" alt="Certificate image" />
+        <button type="button" class="action-btn danger" (click)="removeImage()">Remove</button>
+      </div>
+    </div>
+    <div class="text-muted small" *ngIf="uploading">Uploading image...</div>
+
     <div class="actions">
       <button class="btn btn-dark" type="button" (click)="submit()">
         {{ editingId ? 'Update' : 'Create' }}
@@ -30,6 +50,7 @@
           <tr>
             <th>Title</th>
             <th>Description</th>
+            <th>Image</th>
             <th class="actions-col">Actions</th>
           </tr>
         </thead>
@@ -37,13 +58,14 @@
           <tr *ngFor="let cert of certificates">
             <td>{{ cert.title }}</td>
             <td>{{ cert.description || '-' }}</td>
+            <td>{{ cert.imageUrl ? 'Yes' : 'No' }}</td>
             <td class="actions-col">
               <button type="button" class="action-btn" (click)="edit(cert)">Edit</button>
               <button type="button" class="action-btn danger" (click)="remove(cert)">Delete</button>
             </td>
           </tr>
           <tr *ngIf="!certificates.length">
-            <td colspan="3" class="empty-row">No certificates yet.</td>
+            <td colspan="4" class="empty-row">No certificates yet.</td>
           </tr>
         </tbody>
       </table>

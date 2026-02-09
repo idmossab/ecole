@@ -61,8 +61,10 @@ export class CertificatesComponent implements OnInit {
   }
 
   cardImage(cert: Certificate, index: number): string {
-    const fromCourse = cert.courses?.find((course) => !!course.imageUrl)?.imageUrl;
-    return fromCourse || this.fallbackImages[index % this.fallbackImages.length];
+    const source = cert.imageUrl || cert.courses?.find((course) => !!course.imageUrl)?.imageUrl;
+    if (!source) return this.fallbackImages[index % this.fallbackImages.length];
+    if (source.startsWith('http://') || source.startsWith('https://')) return source;
+    return `http://localhost:8080${source}`;
   }
 
   durationLabel(cert: Certificate): string {

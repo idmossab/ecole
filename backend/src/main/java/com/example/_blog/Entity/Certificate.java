@@ -37,6 +37,9 @@ public class Certificate {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @Builder.Default
     @Column(name = "is_published", nullable = false)
     private boolean published = true;

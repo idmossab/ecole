@@ -15,10 +15,12 @@ import { ApiService, AdminCertificate } from '../../core/api.service';
 export class AdminCertificatesComponent implements OnInit {
   certificates: AdminCertificate[] = [];
   editingId: number | null = null;
+  uploading = false;
 
   form = {
     title: '',
-    description: ''
+    description: '',
+    imageUrl: ''
   };
 
   toast = '';
@@ -52,7 +54,8 @@ export class AdminCertificatesComponent implements OnInit {
 
     const payload = {
       title: this.form.title.trim(),
-      description: this.form.description.trim()
+      description: this.form.description.trim(),
+      imageUrl: this.form.imageUrl.trim()
     };
 
     if (this.editingId) {
@@ -85,6 +88,7 @@ export class AdminCertificatesComponent implements OnInit {
     this.editingId = item.id;
     this.form.title = item.title;
     this.form.description = item.description || '';
+    this.form.imageUrl = item.imageUrl || '';
     this.toast = '';
     this.error = '';
   }
@@ -110,11 +114,51 @@ export class AdminCertificatesComponent implements OnInit {
     this.resetForm();
   }
 
+  onImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files && input.files[0];
+    if (!file) return;
+
+    this.toast = '';
+    this.error = '';
+
+    if (!file.type.startsWith('image/')) {
+      this.error = 'Please select an image file';
+      input.value = '';
+      return;
+    }
+
+    this.uploading = true;
+    this.api.uploadAdminImage(file).subscribe({
+      next: (res) => {
+        this.form.imageUrl = res.url || '';
+        this.uploading = false;
+        input.value = '';
+      },
+      error: (err) => {
+        this.error = err?.error?.message || err?.error || 'Failed to upload image';
+        this.uploading = false;
+        input.value = '';
+      }
+    });
+  }
+
+  removeImage(): void {
+    this.form.imageUrl = '';
+  }
+
+  imagePreviewUrl(path?: string | null): string {
+    if (!path) return '';
+    if (path.startsWith('http://') || path.startsWith('https://')) return path;
+    return `http://localhost:8080${path}`;
+  }
+
   private resetForm(): void {
     this.editingId = null;
     this.form = {
       title: '',
-      description: ''
+      description: '',
+      imageUrl: ''
     };
   }
 }

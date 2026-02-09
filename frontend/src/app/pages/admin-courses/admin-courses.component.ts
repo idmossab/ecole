@@ -22,7 +22,6 @@ export class AdminCoursesComponent implements OnInit {
   form = {
     title: '',
     description: '',
-    imageUrl: '',
     mode: 'ONLINE' as 'ONLINE' | 'ONSITE' | 'IN_PERSON' | 'HYBRID',
     teacherName: '',
     teacherBio: '',
@@ -85,7 +84,6 @@ export class AdminCoursesComponent implements OnInit {
     const payload = {
       title: this.form.title.trim(),
       description: this.form.description.trim(),
-      imageUrl: this.form.imageUrl.trim(),
       mode: this.form.mode,
       teacherName: this.form.teacherName.trim(),
       teacherBio: this.form.teacherBio.trim(),
@@ -123,7 +121,6 @@ export class AdminCoursesComponent implements OnInit {
     this.editingId = item.id;
     this.form.title = item.title;
     this.form.description = item.description || '';
-    this.form.imageUrl = item.imageUrl || '';
     this.form.mode = item.mode;
     this.form.teacherName = item.teacherName || '';
     this.form.teacherBio = item.teacherBio || '';
@@ -159,7 +156,6 @@ export class AdminCoursesComponent implements OnInit {
     this.form = {
       title: '',
       description: '',
-      imageUrl: '',
       mode: 'ONLINE',
       teacherName: '',
       teacherBio: '',

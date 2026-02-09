@@ -18,6 +18,7 @@ export type Certificate = {
   id: number;
   title: string;
   description?: string | null;
+  imageUrl?: string | null;
   isPublished?: boolean;
   courses?: Course[];
 };

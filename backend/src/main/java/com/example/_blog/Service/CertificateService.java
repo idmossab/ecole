@@ -30,6 +30,7 @@ public class CertificateService {
         Certificate cert = Certificate.builder()
                 .title(title)
                 .description(request.description())
+                .imageUrl(request.imageUrl())
                 .published(request.isPublished() == null ? true : request.isPublished())
                 .build();
         return toResponse(repo.save(cert));
@@ -58,6 +59,7 @@ public class CertificateService {
         }
         cert.setTitle(title);
         cert.setDescription(request.description());
+        cert.setImageUrl(request.imageUrl());
         cert.setPublished(request.isPublished() == null ? cert.isPublished() : request.isPublished());
         return toResponse(repo.save(cert));
     }
@@ -72,6 +74,7 @@ public class CertificateService {
                 certificate.getId(),
                 certificate.getTitle(),
                 certificate.getDescription(),
+                certificate.getImageUrl(),
                 certificate.getCreatedAt(),
                 certificate.getUpdatedAt()
         );
