@@ -44,7 +44,7 @@ public class CourseService {
                 .teacherBio(request.teacherBio())
                 .durationText(request.durationText())
                 .phoneContact(request.phoneContact())
-                .isPublished(request.isPublished() == null ? true : request.isPublished())
+                .published(request.isPublished() == null ? true : request.isPublished())
                 .certificate(cert)
                 .build();
         return toResponse(courseRepo.save(course));

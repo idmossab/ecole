@@ -7,6 +7,5 @@ public record AdminCertificateRequest(
         @NotBlank(message = "title is required")
         @Size(max = 255, message = "title must be at most 255 characters")
         String title,
-        String description,
-        Boolean isPublished
+        String description
 ) {}

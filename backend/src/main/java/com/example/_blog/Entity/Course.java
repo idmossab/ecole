@@ -68,7 +68,7 @@ public class Course {
 
     @Builder.Default
     @Column(name = "is_published", nullable = false)
-    private boolean isPublished = true;
+    private boolean published = true;
 
     @ManyToOne
     @JoinColumn(name = "certificate_id", nullable = false)

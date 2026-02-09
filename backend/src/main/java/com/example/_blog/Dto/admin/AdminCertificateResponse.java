@@ -6,7 +6,6 @@ public record AdminCertificateResponse(
         Long id,
         String title,
         String description,
-        boolean isPublished,
         Instant createdAt,
         Instant updatedAt
 ) {}
