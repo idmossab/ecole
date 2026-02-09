@@ -1,0 +1,60 @@
+.admin-page {
+  max-width: 1000px;
+}
+
+.back-link {
+  text-decoration: none;
+  color: #4b5563;
+}
+
+.card-box {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.actions {
+  margin-top: 0.75rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+  padding: 0.625rem;
+}
+
+.actions-col {
+  width: 180px;
+}
+
+.action-btn {
+  border: 1px solid #d1d5db;
+  background: white;
+  padding: 0.35rem 0.6rem;
+  margin-right: 0.5rem;
+  border-radius: 8px;
+}
+
+.action-btn.danger {
+  color: #b91c1c;
+  border-color: #fecaca;
+}
+
+.empty-row {
+  text-align: center;
+  color: #6b7280;
+}

@@ -10,6 +10,7 @@
   <div class="diploma-grid" *ngIf="!loading">
     <article class="diploma-card" *ngFor="let diploma of diplomas">
       <h3>{{ diploma.title }}</h3>
+      <p class="text-muted">Mode: {{ modeLabel(diploma.mode) }}</p>
       <p class="text-muted">{{ diploma.requiredCount }} required certificates</p>
 
       <ng-container *ngIf="isLoggedIn && progressById[diploma.id] as progress">

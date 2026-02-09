@@ -15,6 +15,8 @@ import com.example._blog.Dto.admin.AdminCertificateRequest;
 import com.example._blog.Dto.admin.AdminCertificateResponse;
 import com.example._blog.Dto.admin.AdminCourseRequest;
 import com.example._blog.Dto.admin.AdminCourseResponse;
+import com.example._blog.Dto.admin.AdminDiplomaRequest;
+import com.example._blog.Dto.admin.AdminDiplomaResponse;
 import com.example._blog.Dto.admin.AdminSpecializationRequest;
 import com.example._blog.Dto.admin.AdminSpecializationResponse;
 import com.example._blog.Entity.enums.UserRole;
@@ -23,6 +25,7 @@ import com.example._blog.Repositories.CourseRepo;
 import com.example._blog.Repositories.UserRepo;
 import com.example._blog.Service.CertificateService;
 import com.example._blog.Service.CourseService;
+import com.example._blog.Service.DiplomeService;
 import com.example._blog.Service.SpecializationService;
 
 import jakarta.validation.Valid;
@@ -36,6 +39,7 @@ public class AdminCont {
     private final CertificateService certificateService;
     private final CourseService courseService;
     private final SpecializationService specializationService;
+    private final DiplomeService diplomeService;
 
     public AdminCont(
             UserRepo userRepo,
@@ -43,7 +47,8 @@ public class AdminCont {
             CertificateRepo certificateRepo,
             CertificateService certificateService,
             CourseService courseService,
-            SpecializationService specializationService
+            SpecializationService specializationService,
+            DiplomeService diplomeService
     ) {
         this.userRepo = userRepo;
         this.courseRepo = courseRepo;
@@ -51,6 +56,7 @@ public class AdminCont {
         this.certificateService = certificateService;
         this.courseService = courseService;
         this.specializationService = specializationService;
+        this.diplomeService = diplomeService;
     }
 
     @GetMapping("/stats")
@@ -109,6 +115,29 @@ public class AdminCont {
     @DeleteMapping("/courses/{courseId}")
     public void deleteCourse(@PathVariable Long courseId) {
         courseService.delete(courseId);
+    }
+
+    @GetMapping("/diplomas")
+    public List<AdminDiplomaResponse> getDiplomas() {
+        return diplomeService.getAllAdmin();
+    }
+
+    @PostMapping("/diplomas")
+    public AdminDiplomaResponse createDiploma(@Valid @RequestBody AdminDiplomaRequest request) {
+        return diplomeService.createAdmin(request);
+    }
+
+    @PutMapping("/diplomas/{diplomaId}")
+    public AdminDiplomaResponse updateDiploma(
+            @PathVariable Long diplomaId,
+            @Valid @RequestBody AdminDiplomaRequest request
+    ) {
+        return diplomeService.updateAdmin(diplomaId, request);
+    }
+
+    @DeleteMapping("/diplomas/{diplomaId}")
+    public void deleteDiploma(@PathVariable Long diplomaId) {
+        diplomeService.deleteAdmin(diplomaId);
     }
 
     @GetMapping("/diplomas/{diplomaId}/specializations")

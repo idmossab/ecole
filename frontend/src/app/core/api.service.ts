@@ -7,6 +7,7 @@ import {
   CertificateProgress,
   DiplomaCertificateStatus,
   DiplomaClaimResponse,
+  DiplomasMode,
   DiplomaProgress,
   DiplomaSummary,
   MyCertificateProgress,
@@ -44,6 +45,27 @@ export type AdminStats = {
   totalStudents: number;
   totalCourses: number;
   totalCertificates: number;
+};
+
+export type AdminDiploma = {
+  id: number;
+  title: string;
+  mode: DiplomasMode;
+  requiredCount: number;
+};
+
+export type AdminSpecialization = {
+  id: number;
+  title: string;
+  description?: string | null;
+  programOverview?: string | null;
+  durationText?: string | null;
+  certificateAwarded?: string | null;
+  entryRequirements?: string | null;
+  programFeatures?: string | null;
+  diplomaId: number;
+  createdAt: string;
+  updatedAt: string;
 };
 
 @Injectable({ providedIn: 'root' })
@@ -174,6 +196,22 @@ export class ApiService {
     return this.http.get<AdminCourse[]>(`${this.baseUrl}/api/admin/certificates/${certificateId}/courses`);
   }
 
+  getAdminDiplomas() {
+    return this.http.get<AdminDiploma[]>(`${this.baseUrl}/api/admin/diplomas`);
+  }
+
+  createAdminDiploma(payload: { title: string; mode: DiplomasMode }) {
+    return this.http.post<AdminDiploma>(`${this.baseUrl}/api/admin/diplomas`, payload);
+  }
+
+  updateAdminDiploma(id: number, payload: { title: string; mode: DiplomasMode }) {
+    return this.http.put<AdminDiploma>(`${this.baseUrl}/api/admin/diplomas/${id}`, payload);
+  }
+
+  deleteAdminDiploma(id: number) {
+    return this.http.delete<void>(`${this.baseUrl}/api/admin/diplomas/${id}`);
+  }
+
   createCertificate(payload: { title: string; description: string }) {
     return this.http.post<AdminCertificate>(`${this.baseUrl}/api/admin/certificates`, payload);
   }
@@ -214,5 +252,37 @@ export class ApiService {
 
   deleteCourse(courseId: number) {
     return this.http.delete<void>(`${this.baseUrl}/api/admin/courses/${courseId}`);
+  }
+
+  getAdminSpecializations(diplomaId: number) {
+    return this.http.get<AdminSpecialization[]>(`${this.baseUrl}/api/admin/diplomas/${diplomaId}/specializations`);
+  }
+
+  createSpecialization(diplomaId: number, payload: {
+    title: string;
+    description: string;
+    programOverview: string;
+    durationText: string;
+    certificateAwarded: string;
+    entryRequirements: string;
+    programFeatures: string;
+  }) {
+    return this.http.post<AdminSpecialization>(`${this.baseUrl}/api/admin/diplomas/${diplomaId}/specializations`, payload);
+  }
+
+  updateSpecialization(specializationId: number, payload: {
+    title: string;
+    description: string;
+    programOverview: string;
+    durationText: string;
+    certificateAwarded: string;
+    entryRequirements: string;
+    programFeatures: string;
+  }) {
+    return this.http.put<AdminSpecialization>(`${this.baseUrl}/api/admin/specializations/${specializationId}`, payload);
+  }
+
+  deleteSpecialization(specializationId: number) {
+    return this.http.delete<void>(`${this.baseUrl}/api/admin/specializations/${specializationId}`);
   }
 }

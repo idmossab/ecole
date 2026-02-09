@@ -1,0 +1,75 @@
+<div class="container py-5 admin-page">
+  <a class="back-link" routerLink="/dashboard">&larr; Back to Dashboard</a>
+  <h1 class="display-font">Specializations</h1>
+
+  <div class="alert" *ngIf="toast">{{ toast }}</div>
+  <div class="alert error" *ngIf="error">{{ error }}</div>
+
+  <section class="card-box">
+    <label class="form-label">Diploma</label>
+    <select class="form-control" [(ngModel)]="selectedDiplomaId" (change)="loadSpecializations()">
+      <option [ngValue]="null">Select diploma</option>
+      <option *ngFor="let diploma of diplomas" [ngValue]="diploma.id">{{ diploma.title }}</option>
+    </select>
+
+    <h2 class="mt-3">{{ editingId ? 'Edit Specialization' : 'New Specialization' }}</h2>
+
+    <label class="form-label">Title</label>
+    <input class="form-control" [(ngModel)]="form.title" maxlength="255" />
+
+    <label class="form-label">Description</label>
+    <textarea class="form-control" rows="2" [(ngModel)]="form.description"></textarea>
+
+    <label class="form-label">Program Overview</label>
+    <textarea class="form-control" rows="2" [(ngModel)]="form.programOverview"></textarea>
+
+    <label class="form-label">Duration Text</label>
+    <input class="form-control" [(ngModel)]="form.durationText" placeholder="6 months" />
+
+    <label class="form-label">Certificate Awarded</label>
+    <input class="form-control" [(ngModel)]="form.certificateAwarded" />
+
+    <label class="form-label">Entry Requirements</label>
+    <textarea class="form-control" rows="2" [(ngModel)]="form.entryRequirements"></textarea>
+
+    <label class="form-label">Program Features</label>
+    <textarea class="form-control" rows="2" [(ngModel)]="form.programFeatures"></textarea>
+
+    <div class="actions">
+      <button class="btn btn-dark" type="button" (click)="submit()">
+        {{ editingId ? 'Update' : 'Create' }}
+      </button>
+      <button class="btn btn-outline-secondary" *ngIf="editingId" type="button" (click)="cancelEdit()">Cancel</button>
+    </div>
+  </section>
+
+  <section class="card-box">
+    <h2>Specializations For Selected Diploma</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Duration</th>
+            <th>Certificate Awarded</th>
+            <th class="actions-col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let specialization of specializations">
+            <td>{{ specialization.title }}</td>
+            <td>{{ specialization.durationText || '-' }}</td>
+            <td>{{ specialization.certificateAwarded || '-' }}</td>
+            <td class="actions-col">
+              <button type="button" class="action-btn" (click)="edit(specialization)">Edit</button>
+              <button type="button" class="action-btn danger" (click)="remove(specialization)">Delete</button>
+            </td>
+          </tr>
+          <tr *ngIf="!specializations.length">
+            <td colspan="4" class="empty-row">No specializations yet.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>

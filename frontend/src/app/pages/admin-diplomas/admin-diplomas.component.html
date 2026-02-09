@@ -1,0 +1,56 @@
+<div class="container py-5 admin-page">
+  <a class="back-link" routerLink="/dashboard">&larr; Back to Dashboard</a>
+  <h1 class="display-font">Diplomas</h1>
+
+  <div class="alert" *ngIf="toast">{{ toast }}</div>
+  <div class="alert error" *ngIf="error">{{ error }}</div>
+
+  <section class="card-box">
+    <h2>{{ editingId ? 'Edit Diploma' : 'New Diploma' }}</h2>
+
+    <label class="form-label">Title</label>
+    <input class="form-control" [(ngModel)]="form.title" maxlength="255" />
+
+    <label class="form-label">Mode</label>
+    <select class="form-control" [(ngModel)]="form.mode">
+      <option *ngFor="let mode of modes" [ngValue]="mode">{{ modeLabel(mode) }}</option>
+    </select>
+
+    <div class="actions">
+      <button class="btn btn-dark" type="button" (click)="submit()">
+        {{ editingId ? 'Update' : 'Create' }}
+      </button>
+      <button class="btn btn-outline-secondary" *ngIf="editingId" type="button" (click)="cancelEdit()">Cancel</button>
+    </div>
+  </section>
+
+  <section class="card-box">
+    <h2>All Diplomas</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Mode</th>
+            <th>Required Certificates</th>
+            <th class="actions-col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let diploma of diplomas">
+            <td>{{ diploma.title }}</td>
+            <td>{{ modeLabel(diploma.mode) }}</td>
+            <td>{{ diploma.requiredCount }}</td>
+            <td class="actions-col">
+              <button type="button" class="action-btn" (click)="edit(diploma)">Edit</button>
+              <button type="button" class="action-btn danger" (click)="remove(diploma)">Delete</button>
+            </td>
+          </tr>
+          <tr *ngIf="!diplomas.length">
+            <td colspan="4" class="empty-row">No diplomas yet.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>

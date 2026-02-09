@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 
 import { ApiService } from '../../core/api.service';
 import { AuthService } from '../../core/auth.service';
-import { DiplomaProgress, DiplomaSummary } from '../../core/models';
+import { DiplomaProgress, DiplomasMode, DiplomaSummary } from '../../core/models';
 
 @Component({
   selector: 'app-diplomas',
@@ -90,5 +90,11 @@ export class DiplomasComponent implements OnInit {
         this.messageById[diplomaId] = err?.error?.message || err?.error || 'Failed to claim diploma';
       }
     });
+  }
+
+  modeLabel(mode: DiplomasMode): string {
+    if (mode === 'SPECIALIZED_TECHNICIAN') return 'Specialized Technician';
+    if (mode === 'TECHNICIAN') return 'Technician';
+    return 'Qualification';
   }
 }

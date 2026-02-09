@@ -15,6 +15,8 @@ import { CourseComponent } from './pages/course/course.component';
 import { StatsComingComponent } from './pages/stats-coming/stats-coming.component';
 import { AdminCertificatesComponent } from './pages/admin-certificates/admin-certificates.component';
 import { AdminCoursesComponent } from './pages/admin-courses/admin-courses.component';
+import { AdminDiplomasComponent } from './pages/admin-diplomas/admin-diplomas.component';
+import { AdminSpecializationsComponent } from './pages/admin-specializations/admin-specializations.component';
 
 export const routes: Routes = [
   {
@@ -63,8 +65,16 @@ export const routes: Routes = [
     component: AdminCertificatesComponent
   },
   {
+    path: 'admin/diplomas',
+    component: AdminDiplomasComponent
+  },
+  {
     path: 'admin/courses',
     component: AdminCoursesComponent
+  },
+  {
+    path: 'admin/specializations',
+    component: AdminSpecializationsComponent
   },
   {
     path: 'manage-students',

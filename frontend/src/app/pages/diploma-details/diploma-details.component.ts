@@ -4,7 +4,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { ApiService } from '../../core/api.service';
 import { AuthService } from '../../core/auth.service';
-import { DiplomaCertificateStatus, DiplomaProgress, DiplomaSummary } from '../../core/models';
+import { DiplomaCertificateStatus, DiplomaProgress, DiplomasMode, DiplomaSummary } from '../../core/models';
 
 @Component({
   selector: 'app-diploma-details',
@@ -110,5 +110,11 @@ export class DiplomaDetailsComponent {
       return this.progress.requiredCertificates;
     }
     return this.requiredCertificates;
+  }
+
+  modeLabel(mode: DiplomasMode): string {
+    if (mode === 'SPECIALIZED_TECHNICIAN') return 'Specialized Technician';
+    if (mode === 'TECHNICIAN') return 'Technician';
+    return 'Qualification';
   }
 }

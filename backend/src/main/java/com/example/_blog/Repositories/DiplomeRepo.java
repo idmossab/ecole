@@ -9,6 +9,7 @@ import com.example._blog.Entity.Diplome;
 
 @Repository
 public interface DiplomeRepo extends JpaRepository<Diplome, Long> {
-    boolean existsByLabel(String label);
+    boolean existsByLabelIgnoreCase(String label);
+    boolean existsByLabelIgnoreCaseAndIdNot(String label, Long id);
     List<Diplome> findAllByOrderByIdDesc();
 }

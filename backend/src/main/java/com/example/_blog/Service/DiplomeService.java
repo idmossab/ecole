@@ -15,9 +15,12 @@ import com.example._blog.Dto.DiplomaCertificateStatusResponse;
 import com.example._blog.Dto.DiplomaClaimResponse;
 import com.example._blog.Dto.DiplomaProgressResponse;
 import com.example._blog.Dto.DiplomaSummaryResponse;
+import com.example._blog.Dto.admin.AdminDiplomaRequest;
+import com.example._blog.Dto.admin.AdminDiplomaResponse;
 import com.example._blog.Entity.Certificate;
 import com.example._blog.Entity.Diplome;
 import com.example._blog.Entity.User;
+import com.example._blog.Entity.enums.DiplomasMode;
 import com.example._blog.Entity.enums.UserRole;
 import com.example._blog.Repositories.CertificateRepo;
 import com.example._blog.Repositories.DiplomeRepo;
@@ -46,14 +49,17 @@ public class DiplomeService {
         if (title == null || title.isBlank()) {
             throw new ResponseStatusException(BAD_REQUEST, "Diploma title is required");
         }
-        if (diplomeRepo.existsByLabel(title.trim())) {
+        if (diplomeRepo.existsByLabelIgnoreCase(title.trim())) {
             throw new ResponseStatusException(CONFLICT, "Diploma title already exists");
         }
         if (certificateIds == null || certificateIds.isEmpty()) {
             throw new ResponseStatusException(BAD_REQUEST, "At least one certificate is required");
         }
 
-        Diplome diploma = diplomeRepo.save(Diplome.builder().label(title.trim()).build());
+        Diplome diploma = diplomeRepo.save(Diplome.builder()
+                .label(title.trim())
+                .mode(DiplomasMode.TECHNICIAN)
+                .build());
         List<Certificate> certificates = certificateRepo.findAllById(certificateIds);
         if (certificates.size() != certificateIds.size()) {
             throw new ResponseStatusException(BAD_REQUEST, "One or more certificates are invalid");
@@ -66,7 +72,8 @@ public class DiplomeService {
                 .map(diploma -> new DiplomaSummaryResponse(
                         diploma.getId(),
                         diploma.getLabel(),
-                        certificateRepo.count()
+                        certificateRepo.count(),
+                        diploma.getMode()
                 ))
                 .toList();
     }
@@ -75,7 +82,44 @@ public class DiplomeService {
         Diplome diploma = diplomeRepo.findById(diplomaId)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Diploma not found"));
         long requiredCount = certificateRepo.count();
-        return new DiplomaSummaryResponse(diploma.getId(), diploma.getLabel(), requiredCount);
+        return new DiplomaSummaryResponse(diploma.getId(), diploma.getLabel(), requiredCount, diploma.getMode());
+    }
+
+    public List<AdminDiplomaResponse> getAllAdmin() {
+        long requiredCount = certificateRepo.count();
+        return diplomeRepo.findAllByOrderByIdDesc().stream()
+                .map(diploma -> toAdminResponse(diploma, requiredCount))
+                .toList();
+    }
+
+    public AdminDiplomaResponse createAdmin(AdminDiplomaRequest request) {
+        String title = request.title().trim();
+        if (diplomeRepo.existsByLabelIgnoreCase(title)) {
+            throw new ResponseStatusException(CONFLICT, "Diploma title already exists");
+        }
+        Diplome diploma = Diplome.builder()
+                .label(title)
+                .mode(request.mode())
+                .build();
+        long requiredCount = certificateRepo.count();
+        return toAdminResponse(diplomeRepo.save(diploma), requiredCount);
+    }
+
+    public AdminDiplomaResponse updateAdmin(Long diplomaId, AdminDiplomaRequest request) {
+        Diplome diploma = ensureDiplomaExists(diplomaId);
+        String title = request.title().trim();
+        if (diplomeRepo.existsByLabelIgnoreCaseAndIdNot(title, diplomaId)) {
+            throw new ResponseStatusException(CONFLICT, "Diploma title already exists");
+        }
+        diploma.setLabel(title);
+        diploma.setMode(request.mode());
+        long requiredCount = certificateRepo.count();
+        return toAdminResponse(diplomeRepo.save(diploma), requiredCount);
+    }
+
+    public void deleteAdmin(Long diplomaId) {
+        Diplome diploma = ensureDiplomaExists(diplomaId);
+        diplomeRepo.delete(diploma);
     }
 
     public List<DiplomaCertificateStatusResponse> getDiplomaCertificates(Long diplomaId) {
@@ -152,5 +196,14 @@ public class DiplomeService {
     private String generateSerial(Long diplomaId, Long userId) {
         String randomPart = UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase();
         return "DIP-" + diplomaId + "-" + userId + "-" + randomPart;
+    }
+
+    private AdminDiplomaResponse toAdminResponse(Diplome diploma, long requiredCount) {
+        return new AdminDiplomaResponse(
+                diploma.getId(),
+                diploma.getLabel(),
+                diploma.getMode(),
+                requiredCount
+        );
     }
 }

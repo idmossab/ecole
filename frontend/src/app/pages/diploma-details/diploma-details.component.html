@@ -3,6 +3,7 @@
     <div>
       <span class="pill">Diploma</span>
       <h1 class="display-font">{{ diploma.title }}</h1>
+      <div class="requirement">Mode: {{ modeLabel(diploma.mode) }}</div>
       <p class="lead">Complete all required certificates to unlock diploma claim.</p>
       <div class="requirement">Required certificates: {{ diploma.requiredCount }}</div>
       <ng-container *ngIf="isLoggedIn && progress">

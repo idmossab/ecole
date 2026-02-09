@@ -48,7 +48,10 @@ export interface DiplomaSummary {
   id: number;
   title: string;
   requiredCount: number;
+  mode: DiplomasMode;
 }
+
+export type DiplomasMode = 'SPECIALIZED_TECHNICIAN' | 'TECHNICIAN' | 'QUALIFICATION';
 
 export interface DiplomaCertificateStatus {
   certificateId: number;
