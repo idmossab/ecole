@@ -10,6 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.example._blog.Dto.admin.AdminSpecializationRequest;
 import com.example._blog.Dto.admin.AdminSpecializationResponse;
+import com.example._blog.Dto.SpecializationResponse;
 import com.example._blog.Entity.Diplome;
 import com.example._blog.Entity.Specialization;
 import com.example._blog.Repositories.DiplomeRepo;
@@ -31,6 +32,15 @@ public class SpecializationService {
         }
         return specializationRepo.findByDiplomaIdOrderByCreatedAtDesc(diplomaId).stream()
                 .map(this::toResponse)
+                .toList();
+    }
+
+    public List<SpecializationResponse> getByDiplomaPublic(Long diplomaId) {
+        if (!diplomeRepo.existsById(diplomaId)) {
+            throw new ResponseStatusException(NOT_FOUND, "Diploma not found");
+        }
+        return specializationRepo.findByDiplomaIdOrderByCreatedAtDesc(diplomaId).stream()
+                .map(this::toPublicResponse)
                 .toList();
     }
 
@@ -100,6 +110,20 @@ public class SpecializationService {
                 specialization.getDiplomaId(),
                 specialization.getCreatedAt(),
                 specialization.getUpdatedAt()
+        );
+    }
+
+    private SpecializationResponse toPublicResponse(Specialization specialization) {
+        return new SpecializationResponse(
+                specialization.getId(),
+                specialization.getTitle(),
+                specialization.getDescription(),
+                specialization.getProgramOverview(),
+                specialization.getDurationText(),
+                specialization.getCertificateAwarded(),
+                specialization.getEntryRequirements(),
+                specialization.getProgramFeatures(),
+                specialization.getDiplomaId()
         );
     }
 }

@@ -16,15 +16,19 @@ import com.example._blog.Dto.DiplomaCertificateStatusResponse;
 import com.example._blog.Dto.DiplomaClaimResponse;
 import com.example._blog.Dto.DiplomaProgressResponse;
 import com.example._blog.Dto.DiplomaSummaryResponse;
+import com.example._blog.Dto.SpecializationResponse;
 import com.example._blog.Security.UserPrincipal;
 import com.example._blog.Service.DiplomeService;
+import com.example._blog.Service.SpecializationService;
 
 @RestController
 public class DiplomaCont {
     private final DiplomeService diplomeService;
+    private final SpecializationService specializationService;
 
-    public DiplomaCont(DiplomeService diplomeService) {
+    public DiplomaCont(DiplomeService diplomeService, SpecializationService specializationService) {
         this.diplomeService = diplomeService;
+        this.specializationService = specializationService;
     }
 
     @GetMapping("/diplomas")
@@ -40,6 +44,11 @@ public class DiplomaCont {
     @GetMapping("/diplomas/{diplomaId}/certificates")
     public List<DiplomaCertificateStatusResponse> getDiplomaCertificates(@PathVariable Long diplomaId) {
         return diplomeService.getDiplomaCertificates(diplomaId);
+    }
+
+    @GetMapping("/diplomas/{diplomaId}/specializations")
+    public List<SpecializationResponse> getDiplomaSpecializations(@PathVariable Long diplomaId) {
+        return specializationService.getByDiplomaPublic(diplomaId);
     }
 
     @GetMapping("/api/diplomas/progress")

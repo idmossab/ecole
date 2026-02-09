@@ -10,6 +10,7 @@ import {
   DiplomasMode,
   DiplomaProgress,
   DiplomaSummary,
+  SpecializationSummary,
   MyCertificateProgress,
   NotificationItem,
   UnreadNotificationCount,
@@ -143,6 +144,10 @@ export class ApiService {
 
   getDiplomaCertificates(id: number) {
     return this.http.get<DiplomaCertificateStatus[]>(`${this.baseUrl}/diplomas/${id}/certificates`);
+  }
+
+  getDiplomaSpecializations(id: number) {
+    return this.http.get<SpecializationSummary[]>(`${this.baseUrl}/diplomas/${id}/specializations`);
   }
 
   getCertificateById(id: number) {

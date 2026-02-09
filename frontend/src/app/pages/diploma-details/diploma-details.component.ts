@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { forkJoin } from 'rxjs';
 
 import { ApiService } from '../../core/api.service';
 import { AuthService } from '../../core/auth.service';
-import { DiplomaCertificateStatus, DiplomaProgress, DiplomasMode, DiplomaSummary } from '../../core/models';
+import { DiplomaCertificateStatus, DiplomaProgress, DiplomasMode, DiplomaSummary, SpecializationSummary } from '../../core/models';
 
 @Component({
   selector: 'app-diploma-details',
@@ -16,6 +17,8 @@ import { DiplomaCertificateStatus, DiplomaProgress, DiplomasMode, DiplomaSummary
 export class DiplomaDetailsComponent {
   diploma: DiplomaSummary | null = null;
   requiredCertificates: DiplomaCertificateStatus[] = [];
+  specializations: SpecializationSummary[] = [];
+  selectedSpecialization: SpecializationSummary | null = null;
   progress: DiplomaProgress | null = null;
   loading = true;
   message = '';
@@ -38,7 +41,7 @@ export class DiplomaDetailsComponent {
     this.api.getDiplomaById(diplomaId).subscribe({
       next: (diploma) => {
         this.diploma = diploma;
-        this.loadCertificates(diplomaId);
+        this.loadSupplementalData(diplomaId);
         if (this.isLoggedIn) {
           this.loadProgress(diplomaId);
         }
@@ -54,10 +57,15 @@ export class DiplomaDetailsComponent {
     return this.auth.isLoggedIn();
   }
 
-  private loadCertificates(diplomaId: number): void {
-    this.api.getDiplomaCertificates(diplomaId).subscribe({
-      next: (items) => {
-        this.requiredCertificates = items || [];
+  private loadSupplementalData(diplomaId: number): void {
+    forkJoin({
+      certificates: this.api.getDiplomaCertificates(diplomaId),
+      specializations: this.api.getDiplomaSpecializations(diplomaId)
+    }).subscribe({
+      next: ({ certificates, specializations }) => {
+        this.requiredCertificates = certificates || [];
+        this.specializations = specializations || [];
+        this.selectedSpecialization = this.specializations.length ? this.specializations[0] : null;
         this.loading = false;
       },
       error: () => {
@@ -116,5 +124,94 @@ export class DiplomaDetailsComponent {
     if (mode === 'SPECIALIZED_TECHNICIAN') return 'Specialized Technician';
     if (mode === 'TECHNICIAN') return 'Technician';
     return 'Qualification';
+  }
+
+  modeTag(mode: DiplomasMode): string {
+    return `${this.modeLabel(mode).toUpperCase()} DIPLOMA`;
+  }
+
+  selectSpecialization(item: SpecializationSummary): void {
+    this.selectedSpecialization = item;
+  }
+
+  isSpecializationSelected(item: SpecializationSummary): boolean {
+    return !!this.selectedSpecialization && this.selectedSpecialization.id === item.id;
+  }
+
+  diplomaImageUrl(): string {
+    const source = this.diploma?.imageUrl;
+    if (!source) {
+      return 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=80';
+    }
+    if (source.startsWith('http://') || source.startsWith('https://')) return source;
+    return `http://localhost:8080${source}`;
+  }
+
+  durationLabel(): string {
+    const specializationDuration = this.selectedSpecialization?.durationText?.trim();
+    if (specializationDuration) return specializationDuration;
+    if (!this.diploma) return '12-18 months';
+    if (this.diploma.mode === 'SPECIALIZED_TECHNICIAN') return '18-24 months';
+    if (this.diploma.mode === 'TECHNICIAN') return '12-18 months';
+    return '24-30 months';
+  }
+
+  credentialLabel(): string {
+    const awarded = this.selectedSpecialization?.certificateAwarded?.trim();
+    if (awarded) return awarded;
+    if (!this.diploma) return 'Professional Diploma Certificate';
+    if (this.diploma.mode === 'SPECIALIZED_TECHNICIAN') return 'Specialized Software Developer';
+    if (this.diploma.mode === 'TECHNICIAN') return 'Certified IT Technician';
+    return 'Professional Qualification Certificate';
+  }
+
+  admissionRequirements(): string[] {
+    const dynamic = this.parseList(this.selectedSpecialization?.entryRequirements);
+    if (dynamic.length) return dynamic;
+    if (!this.diploma) return [];
+    if (this.diploma.mode === 'SPECIALIZED_TECHNICIAN') {
+      return [
+        'High school diploma or equivalent',
+        'Strong computer literacy',
+        'Commitment to full-time study'
+      ];
+    }
+    if (this.diploma.mode === 'TECHNICIAN') {
+      return [
+        'High school diploma or equivalent',
+        'Basic computer literacy',
+        'Commitment to full-time study'
+      ];
+    }
+    return [
+      'Secondary school certificate',
+      'Basic academic readiness',
+      'Motivation to complete practical training'
+    ];
+  }
+
+  programFeatures(): string[] {
+    const dynamic = this.parseList(this.selectedSpecialization?.programFeatures);
+    if (dynamic.length) return dynamic;
+    return [
+      'Live instruction from expert teachers',
+      'Flexible online and in-person options',
+      'Official certification upon completion',
+      'Career guidance and support'
+    ];
+  }
+
+  programOverview(): string {
+    return this.selectedSpecialization?.programOverview?.trim()
+      || this.selectedSpecialization?.description?.trim()
+      || 'Choose your career path from our specialized tracks.';
+  }
+
+  private parseList(value?: string | null): string[] {
+    if (!value) return [];
+    return value
+      .split(/\r?\n|;|,/)
+      .map((item) => item.trim())
+      .filter((item) => item.length > 0);
   }
 }

@@ -1,51 +1,160 @@
-<div class="container py-4">
-  <div class="diploma-header" *ngIf="diploma">
-    <div>
-      <span class="pill">Diploma</span>
-      <h1 class="display-font">{{ diploma.title }}</h1>
-      <div class="requirement">Mode: {{ modeLabel(diploma.mode) }}</div>
-      <p class="lead">Complete all required certificates to unlock diploma claim.</p>
-      <div class="requirement">Required certificates: {{ diploma.requiredCount }}</div>
-      <ng-container *ngIf="isLoggedIn && progress">
-        <div class="progress-meta">
-          <span>{{ progress.completedCount }}/{{ progress.requiredCount }} completed</span>
-          <span>{{ progress.percentage }}%</span>
-        </div>
-        <div class="progress-track">
-          <div class="progress-fill" [style.width.%]="progress.percentage"></div>
-        </div>
-        <div class="claim-wrap">
-          <button class="btn btn-dark btn-sm" type="button" [disabled]="claimLoading || !canClaim() || progress.isClaimed" (click)="claimDiploma()">
-            {{ progress.isClaimed ? 'Claimed' : 'Get Diploma' }}
-          </button>
-          <button
-            class="claim-overlay"
-            type="button"
-            *ngIf="!progress.isClaimed && !canClaim()"
-            (click)="claimDiploma()"
-            aria-label="Show claim requirement"
-          ></button>
-        </div>
-        <div class="text-muted" *ngIf="progress.isClaimed">Serial: {{ progress.serialNumber || '-' }}</div>
-      </ng-container>
-    </div>
-  </div>
-
-  <div class="section" *ngIf="diploma">
-    <div class="section-header">
-      <h2 class="display-font">Required Certificates</h2>
-      <p class="text-muted mb-0">Done/Not done depends on claimed certificates.</p>
-    </div>
-    <div class="speciality-grid">
-      <div class="speciality-card" *ngFor="let cert of displayCertificates">
-        <h3>{{ cert.title }}</h3>
-        <p>{{ cert.done ? 'Done' : 'Not done' }}</p>
-        <a class="btn btn-outline-primary btn-sm" [routerLink]="['/certificate', cert.certificateId]">View Certificate</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="text-muted" *ngIf="loading">Loading diploma...</div>
+<div class="container py-4 diploma-page" *ngIf="diploma; else notFound">
+  <a class="back-link" routerLink="/diplomas">&larr; Back to Diplomas</a>
   <div class="alert error" *ngIf="error">{{ error }}</div>
-  <div class="text-muted" *ngIf="message">{{ message }}</div>
+
+  <section class="hero">
+    <div class="hero-copy">
+      <span class="pill">{{ modeTag(diploma.mode) }}</span>
+      <h1 class="display-font">{{ diploma.title }}</h1>
+      <p class="lead">{{ programOverview() }}</p>
+
+      <div class="hero-meta">
+        <div class="meta-box">
+          <div class="meta-label">Duration</div>
+          <div class="meta-value">{{ durationLabel() }}</div>
+        </div>
+        <div class="meta-box">
+          <div class="meta-label">Credential</div>
+          <div class="meta-value">{{ credentialLabel() }}</div>
+        </div>
+      </div>
+
+      <div class="cta-wrap">
+        <button
+          class="btn btn-primary join-btn"
+          type="button"
+          *ngIf="isLoggedIn && progress"
+          [disabled]="claimLoading || !canClaim() || progress.isClaimed"
+          (click)="claimDiploma()"
+        >
+          {{ progress.isClaimed ? 'Claimed' : 'Request to Join Diploma' }}
+        </button>
+        <a
+          *ngIf="!isLoggedIn"
+          class="btn btn-primary join-btn"
+          [routerLink]="['/login']"
+          [queryParams]="{ returnTo: '/diplomas/' + diploma.id }"
+        >
+          Request to Join Diploma
+        </a>
+      </div>
+      <div class="text-muted small" *ngIf="message">{{ message }}</div>
+    </div>
+
+    <div class="hero-image-wrap">
+      <img [src]="diplomaImageUrl()" [alt]="diploma.title" />
+    </div>
+  </section>
+
+  <section class="section-block">
+    <h2 class="display-font">Specializations</h2>
+    <div class="spec-grid">
+      <button
+        type="button"
+        class="spec-item"
+        [class.active]="isSpecializationSelected(spec)"
+        *ngFor="let spec of specializations"
+        (click)="selectSpecialization(spec)"
+      >
+        {{ spec.title }}
+      </button>
+    </div>
+    <div class="text-muted" *ngIf="!specializations.length">No specializations added yet.</div>
+  </section>
+
+  <section class="section-block">
+    <h2 class="display-font">Program Overview</h2>
+    <div class="overview-box">
+      {{ programOverview() }}
+    </div>
+  </section>
+
+  <section class="content-layout">
+    <div class="left-stack">
+      <section class="section-block warn">
+        <h2 class="display-font">Admission Requirements</h2>
+        <p class="warn-intro">Please ensure you meet all requirements before applying</p>
+        <ul>
+          <li *ngFor="let item of admissionRequirements()">{{ item }}</li>
+        </ul>
+      </section>
+
+      <section class="section-block">
+        <h2 class="display-font">Program Benefits</h2>
+        <div class="benefits-grid">
+          <article class="benefit-card">
+            <h3>Live Expert Instruction</h3>
+            <p>Learn from industry professionals in real-time through interactive online sessions or traditional on-campus classes.</p>
+          </article>
+          <article class="benefit-card">
+            <h3>Official Certification</h3>
+            <p>Receive a recognized diploma certificate upon completion. Each credential includes verification and is valued by employers.</p>
+          </article>
+          <article class="benefit-card">
+            <h3>Flexible Learning Options</h3>
+            <p>Choose between live online classes via Zoom/Teams or in-person sessions that fit your schedule and goals.</p>
+          </article>
+          <article class="benefit-card">
+            <h3>Career Advancement</h3>
+            <p>Programs are designed with employer needs in mind, providing practical skills that open doors to new opportunities.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-block">
+        <h2 class="display-font">What to Expect</h2>
+        <ol class="expect-list">
+          <li>
+            <h3>Application & Review</h3>
+            <p>Submit your application along with required documents. Admissions will review and contact you.</p>
+          </li>
+          <li>
+            <h3>Enrollment & Orientation</h3>
+            <p>Attend orientation to learn about structure, instructors, and connect with fellow students.</p>
+          </li>
+          <li>
+            <h3>Complete Coursework</h3>
+            <p>Progress through live instruction, assignments, and practical projects with ongoing support.</p>
+          </li>
+          <li>
+            <h3>Graduate & Certification</h3>
+            <p>Receive your official diploma certificate with verification and career support services.</p>
+          </li>
+        </ol>
+      </section>
+    </div>
+
+    <aside class="right-sticky">
+      <section class="contact-box">
+        <h3>Ready to Start?</h3>
+        <p>Contact the school to learn about class schedules and enrollment.</p>
+        <div class="contact-line"><strong>Phone</strong> +1 (555) 123-4567</div>
+        <div class="contact-line"><strong>Specialization</strong> {{ selectedSpecialization?.title || '-' }}</div>
+        <div class="contact-line"><strong>Mode</strong> {{ modeLabel(diploma.mode) }}</div>
+        <button class="btn btn-light contact-btn" type="button">Contact Administration</button>
+      </section>
+
+      <section class="features-box">
+        <h4>Program Features</h4>
+        <ul>
+          <li *ngFor="let feature of programFeatures()">{{ feature }}</li>
+        </ul>
+      </section>
+    </aside>
+  </section>
+</div>
+
+<ng-template #notFound>
+  <div class="container py-4">
+    <h2>Diploma not found</h2>
+    <a class="btn btn-dark btn-sm" routerLink="/diplomas">Back to diplomas</a>
+  </div>
+</ng-template>
+
+<div class="container py-4" *ngIf="loading">
+  <div class="text-muted">Loading diploma...</div>
+</div>
+
+<div class="container py-4" *ngIf="error && !diploma">
+  <div class="alert error">{{ error }}</div>
 </div>

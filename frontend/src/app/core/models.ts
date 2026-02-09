@@ -81,6 +81,18 @@ export interface DiplomaClaimResponse {
   serialNumber?: string | null;
 }
 
+export interface SpecializationSummary {
+  id: number;
+  title: string;
+  description?: string | null;
+  programOverview?: string | null;
+  durationText?: string | null;
+  certificateAwarded?: string | null;
+  entryRequirements?: string | null;
+  programFeatures?: string | null;
+  diplomaId: number;
+}
+
 export interface NotificationItem {
   id: number;
   title: string;
