@@ -30,35 +30,22 @@
   </div>
 
   <h2 class="quick-actions-title display-font">Quick Actions</h2>
-  <div class="quick-actions-grid">
-    <article class="quick-action-card">
-      <h3>Manage Students</h3>
-      <p>View, edit, ban, or delete student accounts.</p>
-      <a class="btn btn-dark" routerLink="/manage-students">Go to Students</a>
-    </article>
-
-    <article class="quick-action-card">
-      <h3>Certificates</h3>
-      <p>Create, edit, and publish certificates.</p>
-      <a class="btn btn-dark" routerLink="/admin/certificates">Go to Certificates</a>
-    </article>
-
-    <article class="quick-action-card">
-      <h3>Diplomas</h3>
-      <p>Create and update diploma programs and modes.</p>
-      <a class="btn btn-dark" routerLink="/admin/diplomas">Go to Diplomas</a>
-    </article>
-
-    <article class="quick-action-card">
-      <h3>Courses</h3>
-      <p>Manage live class course information.</p>
-      <a class="btn btn-dark" routerLink="/admin/courses">Go to Courses</a>
-    </article>
-
-    <article class="quick-action-card">
-      <h3>Specializations</h3>
-      <p>Create and manage diploma specializations.</p>
-      <a class="btn btn-dark" routerLink="/admin/specializations">Go to Specializations</a>
-    </article>
+  <div class="quick-actions-menu" role="tablist" aria-label="Admin quick actions">
+    <button
+      type="button"
+      class="menu-item"
+      *ngFor="let action of quickActions"
+      [class.active]="action.id === selectedActionId"
+      [attr.aria-selected]="action.id === selectedActionId"
+      (click)="selectAction(action.id)"
+    >
+      {{ action.title }}
+    </button>
   </div>
+
+  <article class="quick-action-content" *ngIf="selectedAction as action">
+    <h3>{{ action.title }}</h3>
+    <p>{{ action.description }}</p>
+    <a class="btn btn-dark" [routerLink]="action.route">{{ action.ctaLabel }}</a>
+  </article>
 </div>
