@@ -87,9 +87,11 @@ public class JoinRequestService {
 
     public List<AdminJoinRequestResponse> getAllAdmin() {
         List<AdminJoinRequestResponse> certificateRequests = joinRequestRepo.findAllByOrderByCreatedAtDesc().stream()
+                .filter(r -> r.getStatus() == JoinRequestStatus.PENDING)
                 .map(this::toResponse)
                 .toList();
         List<AdminJoinRequestResponse> diplomaRequests = diplomaJoinRequestRepo.findAllByOrderByCreatedAtDesc().stream()
+                .filter(r -> r.getStatus() == JoinRequestStatus.PENDING)
                 .map(this::toDiplomaResponse)
                 .toList();
         return java.util.stream.Stream.concat(certificateRequests.stream(), diplomaRequests.stream())

@@ -390,8 +390,8 @@ export class DashboardComponent implements OnInit {
       : this.api.acceptAdminJoinRequest(item.id);
     call$.subscribe({
       next: (updated) => {
-        this.joinRequests = this.joinRequests.map((req) =>
-          (req.id === item.id && req.requestType === item.requestType) ? updated : req
+        this.joinRequests = this.joinRequests.filter(
+          (req) => !(req.id === item.id && req.requestType === item.requestType)
         );
         this.actionToast = `Join request #${updated.id} accepted`;
       },
@@ -409,8 +409,8 @@ export class DashboardComponent implements OnInit {
       : this.api.rejectAdminJoinRequest(item.id);
     call$.subscribe({
       next: (updated) => {
-        this.joinRequests = this.joinRequests.map((req) =>
-          (req.id === item.id && req.requestType === item.requestType) ? updated : req
+        this.joinRequests = this.joinRequests.filter(
+          (req) => !(req.id === item.id && req.requestType === item.requestType)
         );
         this.actionToast = `Join request #${updated.id} rejected`;
       },
