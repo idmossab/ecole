@@ -3,7 +3,7 @@
   <div class="alert error" *ngIf="error">{{ error }}</div>
 
   <section class="hero">
-    <div class="hero-copy">
+    <div class="hero-copy" [style.--hero-bg-image]="'url(' + diplomaImageUrl() + ')'">
       <span class="pill">{{ modeTag(diploma.mode) }}</span>
       <h1 class="display-font">{{ diploma.title }}</h1>
       <p class="lead">{{ programOverview() }}</p>
@@ -41,9 +41,23 @@
       <div class="text-muted small" *ngIf="message">{{ message }}</div>
     </div>
 
-    <div class="hero-image-wrap">
-      <img [src]="diplomaImageUrl()" [alt]="diploma.title" />
-    </div>
+    <aside class="hero-side">
+      <section class="contact-box">
+        <h3>Ready to Start?</h3>
+        <p>Contact the school to learn about class schedules and enrollment.</p>
+        <div class="contact-line"><strong>Phone</strong> +1 (555) 123-4567</div>
+        <div class="contact-line"><strong>Specialization</strong> {{ selectedSpecialization?.title || '-' }}</div>
+        <div class="contact-line"><strong>Mode</strong> {{ modeLabel(diploma.mode) }}</div>
+        <button class="btn btn-light contact-btn" type="button">Contact Administration</button>
+      </section>
+
+      <section class="features-box">
+        <h4>Program Features</h4>
+        <ul>
+          <li *ngFor="let feature of programFeatures()">{{ feature }}</li>
+        </ul>
+      </section>
+    </aside>
   </section>
 
   <section class="section-block">
@@ -70,77 +84,57 @@
   </section>
 
   <section class="content-layout">
-    <div class="left-stack">
-      <section class="section-block warn">
-        <h2 class="display-font">Admission Requirements</h2>
-        <p class="warn-intro">Please ensure you meet all requirements before applying</p>
-        <ul>
-          <li *ngFor="let item of admissionRequirements()">{{ item }}</li>
-        </ul>
-      </section>
+    <section class="section-block warn">
+      <h2 class="display-font">Admission Requirements</h2>
+      <p class="warn-intro">Please ensure you meet all requirements before applying</p>
+      <ul>
+        <li *ngFor="let item of admissionRequirements()">{{ item }}</li>
+      </ul>
+    </section>
 
-      <section class="section-block">
-        <h2 class="display-font">Program Benefits</h2>
-        <div class="benefits-grid">
-          <article class="benefit-card">
-            <h3>Live Expert Instruction</h3>
-            <p>Learn from industry professionals in real-time through interactive online sessions or traditional on-campus classes.</p>
-          </article>
-          <article class="benefit-card">
-            <h3>Official Certification</h3>
-            <p>Receive a recognized diploma certificate upon completion. Each credential includes verification and is valued by employers.</p>
-          </article>
-          <article class="benefit-card">
-            <h3>Flexible Learning Options</h3>
-            <p>Choose between live online classes via Zoom/Teams or in-person sessions that fit your schedule and goals.</p>
-          </article>
-          <article class="benefit-card">
-            <h3>Career Advancement</h3>
-            <p>Programs are designed with employer needs in mind, providing practical skills that open doors to new opportunities.</p>
-          </article>
-        </div>
-      </section>
+    <section class="section-block">
+      <h2 class="display-font">Program Benefits</h2>
+      <div class="benefits-grid">
+        <article class="benefit-card">
+          <h3>Live Expert Instruction</h3>
+          <p>Learn from industry professionals in real-time through interactive online sessions or traditional on-campus classes.</p>
+        </article>
+        <article class="benefit-card">
+          <h3>Official Certification</h3>
+          <p>Receive a recognized diploma certificate upon completion. Each credential includes verification and is valued by employers.</p>
+        </article>
+        <article class="benefit-card">
+          <h3>Flexible Learning Options</h3>
+          <p>Choose between live online classes via Zoom/Teams or in-person sessions that fit your schedule and goals.</p>
+        </article>
+        <article class="benefit-card">
+          <h3>Career Advancement</h3>
+          <p>Programs are designed with employer needs in mind, providing practical skills that open doors to new opportunities.</p>
+        </article>
+      </div>
+    </section>
 
-      <section class="section-block">
-        <h2 class="display-font">What to Expect</h2>
-        <ol class="expect-list">
-          <li>
-            <h3>Application & Review</h3>
-            <p>Submit your application along with required documents. Admissions will review and contact you.</p>
-          </li>
-          <li>
-            <h3>Enrollment & Orientation</h3>
-            <p>Attend orientation to learn about structure, instructors, and connect with fellow students.</p>
-          </li>
-          <li>
-            <h3>Complete Coursework</h3>
-            <p>Progress through live instruction, assignments, and practical projects with ongoing support.</p>
-          </li>
-          <li>
-            <h3>Graduate & Certification</h3>
-            <p>Receive your official diploma certificate with verification and career support services.</p>
-          </li>
-        </ol>
-      </section>
-    </div>
-
-    <aside class="right-sticky">
-      <section class="contact-box">
-        <h3>Ready to Start?</h3>
-        <p>Contact the school to learn about class schedules and enrollment.</p>
-        <div class="contact-line"><strong>Phone</strong> +1 (555) 123-4567</div>
-        <div class="contact-line"><strong>Specialization</strong> {{ selectedSpecialization?.title || '-' }}</div>
-        <div class="contact-line"><strong>Mode</strong> {{ modeLabel(diploma.mode) }}</div>
-        <button class="btn btn-light contact-btn" type="button">Contact Administration</button>
-      </section>
-
-      <section class="features-box">
-        <h4>Program Features</h4>
-        <ul>
-          <li *ngFor="let feature of programFeatures()">{{ feature }}</li>
-        </ul>
-      </section>
-    </aside>
+    <section class="section-block">
+      <h2 class="display-font">What to Expect</h2>
+      <ol class="expect-list">
+        <li>
+          <h3>Application & Review</h3>
+          <p>Submit your application along with required documents. Admissions will review and contact you.</p>
+        </li>
+        <li>
+          <h3>Enrollment & Orientation</h3>
+          <p>Attend orientation to learn about structure, instructors, and connect with fellow students.</p>
+        </li>
+        <li>
+          <h3>Complete Coursework</h3>
+          <p>Progress through live instruction, assignments, and practical projects with ongoing support.</p>
+        </li>
+        <li>
+          <h3>Graduate & Certification</h3>
+          <p>Receive your official diploma certificate with verification and career support services.</p>
+        </li>
+      </ol>
+    </section>
   </section>
 </div>
 
