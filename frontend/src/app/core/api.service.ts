@@ -85,6 +85,67 @@ export type AdminJoinRequest = {
   requestedAt: string;
 };
 
+export type IssueStudentSearchItem = {
+  userId: number;
+  name: string;
+  userName: string;
+  email: string;
+};
+
+export type IssueStudentInfo = {
+  userId: number;
+  name: string;
+  userName: string;
+  email: string;
+  phone?: string | null;
+  city?: string | null;
+};
+
+export type IssueCertificateOption = {
+  certificateId: number;
+  title: string;
+  accepted: boolean;
+  completed: boolean;
+  eligible: boolean;
+  alreadyIssued: boolean;
+  courses: string[];
+};
+
+export type IssueDiplomaOption = {
+  diplomaId: number;
+  title: string;
+  accepted: boolean;
+  completed: boolean;
+  eligible: boolean;
+  alreadyIssued: boolean;
+  specializations: string[];
+  summaryCourses: string[];
+};
+
+export type IssueRecentItem = {
+  id: number;
+  title: string;
+  studentName: string;
+  serialNumber: string;
+  issueDate: string;
+  type: string;
+};
+
+export type IssueStudentContext = {
+  student: IssueStudentInfo;
+  certificates: IssueCertificateOption[];
+  diplomas: IssueDiplomaOption[];
+  recentlyIssued: IssueRecentItem[];
+};
+
+export type IssueGenerateResponse = {
+  issuedId: number;
+  serialNumber: string;
+  issueDate: string;
+  qrPreview: string;
+  documentUrl: string;
+};
+
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private readonly baseUrl = 'http://localhost:8080';
@@ -341,5 +402,25 @@ export class ApiService {
 
   createCertificateJoinRequest(certificateId: number, payload?: { courseId?: number | null }) {
     return this.http.post<AdminJoinRequest>(`${this.baseUrl}/api/certificates/${certificateId}/join-requests`, payload || {});
+  }
+
+  searchIssueStudents(query: string) {
+    return this.http.get<IssueStudentSearchItem[]>(`${this.baseUrl}/api/admin/issue/students/search`, {
+      params: { q: query }
+    });
+  }
+
+  getIssueStudentContext(userId: number) {
+    return this.http.get<IssueStudentContext>(`${this.baseUrl}/api/admin/issue/students/${userId}/context`);
+  }
+
+  generateIssue(payload: {
+    userId: number;
+    type: 'CERTIFICATE' | 'DIPLOMA';
+    certificateId?: number | null;
+    diplomaId?: number | null;
+    issueDate: string;
+  }) {
+    return this.http.post<IssueGenerateResponse>(`${this.baseUrl}/api/admin/issue/generate`, payload);
   }
 }

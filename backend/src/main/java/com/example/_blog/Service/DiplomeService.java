@@ -24,6 +24,7 @@ import com.example._blog.Entity.enums.DiplomasMode;
 import com.example._blog.Entity.enums.UserRole;
 import com.example._blog.Repositories.CertificateRepo;
 import com.example._blog.Repositories.DiplomeRepo;
+import com.example._blog.Repositories.IssuedCredentialRepo;
 import com.example._blog.Repositories.UserRepo;
 
 @Service
@@ -32,17 +33,20 @@ public class DiplomeService {
     private final CertificateRepo certificateRepo;
     private final UserRepo userRepo;
     private final NotificationService notificationService;
+    private final IssuedCredentialRepo issuedCredentialRepo;
 
     public DiplomeService(
             DiplomeRepo diplomeRepo,
             CertificateRepo certificateRepo,
             UserRepo userRepo,
-            NotificationService notificationService
+            NotificationService notificationService,
+            IssuedCredentialRepo issuedCredentialRepo
     ) {
         this.diplomeRepo = diplomeRepo;
         this.certificateRepo = certificateRepo;
         this.userRepo = userRepo;
         this.notificationService = notificationService;
+        this.issuedCredentialRepo = issuedCredentialRepo;
     }
 
     public Diplome createDiploma(String title, List<Long> certificateIds) {
@@ -128,6 +132,7 @@ public class DiplomeService {
 
     public void deleteAdmin(Long diplomaId) {
         Diplome diploma = ensureDiplomaExists(diplomaId);
+        issuedCredentialRepo.deleteByDiplomaId(diplomaId);
         diplomeRepo.delete(diploma);
     }
 

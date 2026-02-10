@@ -20,6 +20,7 @@ import com.example._blog.Entity.User;
 import com.example._blog.Entity.enums.UserRole;
 import com.example._blog.Entity.enums.UserStatus;
 import com.example._blog.Repositories.JoinRequestRepo;
+import com.example._blog.Repositories.IssuedCredentialRepo;
 import com.example._blog.Repositories.UserRepo;
 import com.example._blog.Security.JwtService;
 
@@ -27,11 +28,19 @@ import com.example._blog.Security.JwtService;
 public class UserService {
     private final UserRepo repo;
     private final JoinRequestRepo joinRequestRepo;
+    private final IssuedCredentialRepo issuedCredentialRepo;
     private final PasswordEncoder encoder;
     private final JwtService jwtService;
-    public UserService(UserRepo repo, JoinRequestRepo joinRequestRepo, PasswordEncoder encoder, JwtService jwtService) {
+    public UserService(
+            UserRepo repo,
+            JoinRequestRepo joinRequestRepo,
+            IssuedCredentialRepo issuedCredentialRepo,
+            PasswordEncoder encoder,
+            JwtService jwtService
+    ) {
         this.repo = repo;
         this.joinRequestRepo = joinRequestRepo;
+        this.issuedCredentialRepo = issuedCredentialRepo;
         this.encoder = encoder;
         this.jwtService = jwtService;
     }
@@ -110,6 +119,7 @@ public class UserService {
         User existing = repo.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "User not found"));
         joinRequestRepo.deleteByUserId(userId);
+        issuedCredentialRepo.deleteByUserId(userId);
         repo.delete(existing);
     }
 
@@ -152,6 +162,7 @@ public class UserService {
 
         enforceAdminManagementRules(actor, existing);
         joinRequestRepo.deleteByUserId(userId);
+        issuedCredentialRepo.deleteByUserId(userId);
         repo.delete(existing);
     }
 

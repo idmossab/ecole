@@ -30,6 +30,10 @@ import com.example._blog.Dto.admin.AdminSpecializationRequest;
 import com.example._blog.Dto.admin.AdminSpecializationResponse;
 import com.example._blog.Dto.admin.AdminUserRoleRequest;
 import com.example._blog.Dto.admin.AdminJoinRequestResponse;
+import com.example._blog.Dto.admin.IssueGenerateRequest;
+import com.example._blog.Dto.admin.IssueGenerateResponse;
+import com.example._blog.Dto.admin.IssueStudentContextResponse;
+import com.example._blog.Dto.admin.IssueStudentSearchResponse;
 import com.example._blog.Dto.UserResponse;
 import com.example._blog.Entity.enums.UserRole;
 import com.example._blog.Repositories.CertificateRepo;
@@ -42,6 +46,7 @@ import com.example._blog.Service.DiplomeService;
 import com.example._blog.Service.SpecializationService;
 import com.example._blog.Service.UserService;
 import com.example._blog.Service.JoinRequestService;
+import com.example._blog.Service.IssueService;
 import com.example._blog.Security.UserPrincipal;
 
 import jakarta.validation.Valid;
@@ -61,6 +66,7 @@ public class AdminCont {
     private final DiplomeService diplomeService;
     private final UserService userService;
     private final JoinRequestService joinRequestService;
+    private final IssueService issueService;
 
     public AdminCont(
             UserRepo userRepo,
@@ -72,7 +78,8 @@ public class AdminCont {
             SpecializationService specializationService,
             DiplomeService diplomeService,
             UserService userService,
-            JoinRequestService joinRequestService
+            JoinRequestService joinRequestService,
+            IssueService issueService
     ) {
         this.userRepo = userRepo;
         this.courseRepo = courseRepo;
@@ -84,6 +91,7 @@ public class AdminCont {
         this.diplomeService = diplomeService;
         this.userService = userService;
         this.joinRequestService = joinRequestService;
+        this.issueService = issueService;
     }
 
     @GetMapping("/stats")
@@ -267,6 +275,21 @@ public class AdminCont {
     @PostMapping("/join-requests/{requestId}/reject")
     public AdminJoinRequestResponse rejectJoinRequest(@PathVariable Long requestId) {
         return joinRequestService.reject(requestId);
+    }
+
+    @GetMapping("/issue/students/search")
+    public List<IssueStudentSearchResponse> searchIssueStudents(@RequestParam("q") String q) {
+        return issueService.searchStudents(q);
+    }
+
+    @GetMapping("/issue/students/{userId}/context")
+    public IssueStudentContextResponse getIssueStudentContext(@PathVariable Long userId) {
+        return issueService.getStudentContext(userId);
+    }
+
+    @PostMapping("/issue/generate")
+    public IssueGenerateResponse generateIssue(@Valid @RequestBody IssueGenerateRequest request) {
+        return issueService.generate(request);
     }
 
     private Long requireUserId(UserPrincipal principal) {

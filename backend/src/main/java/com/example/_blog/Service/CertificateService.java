@@ -16,17 +16,25 @@ import com.example._blog.Entity.Certificate;
 import com.example._blog.Repositories.CertificateRepo;
 import com.example._blog.Repositories.CourseRepo;
 import com.example._blog.Repositories.JoinRequestRepo;
+import com.example._blog.Repositories.IssuedCredentialRepo;
 
 @Service
 public class CertificateService {
     private final CertificateRepo repo;
     private final CourseRepo courseRepo;
     private final JoinRequestRepo joinRequestRepo;
+    private final IssuedCredentialRepo issuedCredentialRepo;
 
-    public CertificateService(CertificateRepo repo, CourseRepo courseRepo, JoinRequestRepo joinRequestRepo) {
+    public CertificateService(
+            CertificateRepo repo,
+            CourseRepo courseRepo,
+            JoinRequestRepo joinRequestRepo,
+            IssuedCredentialRepo issuedCredentialRepo
+    ) {
         this.repo = repo;
         this.courseRepo = courseRepo;
         this.joinRequestRepo = joinRequestRepo;
+        this.issuedCredentialRepo = issuedCredentialRepo;
     }
 
     public AdminCertificateResponse create(AdminCertificateRequest request) {
@@ -78,6 +86,7 @@ public class CertificateService {
         try {
             courseRepo.deleteByCertificateId(id);
             joinRequestRepo.deleteByCertificateId(id);
+            issuedCredentialRepo.deleteByCertificateId(id);
             repo.deleteUserCertificateLinks(id);
             repo.delete(cert);
         } catch (DataIntegrityViolationException ex) {

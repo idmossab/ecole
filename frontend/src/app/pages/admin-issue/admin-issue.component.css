@@ -1,0 +1,94 @@
+.issue-page {
+  max-width: 980px;
+}
+
+.issue-card,
+.result-card,
+.recent-card {
+  border: 1px solid #d7deea;
+  border-radius: 14px;
+  background: #fff;
+  padding: 14px;
+  margin-top: 12px;
+}
+
+.search-list {
+  margin-top: 8px;
+  border: 1px solid #d7deea;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.search-item {
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border: 0;
+  border-bottom: 1px solid #edf1f7;
+  background: #fff;
+}
+
+.search-item:last-child {
+  border-bottom: 0;
+}
+
+.search-item .name {
+  font-weight: 700;
+}
+
+.search-item .meta {
+  color: #6b7280;
+  font-size: 0.86rem;
+}
+
+.student-panel,
+.detail-panel {
+  margin-top: 10px;
+  background: #f8fafc;
+  border: 1px solid #dbe3f0;
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.detail-title {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.chip {
+  border-radius: 999px;
+  background: #e6edff;
+  color: #1e3a8a;
+  padding: 2px 9px;
+  font-size: 0.8rem;
+}
+
+.list-title {
+  margin-top: 6px;
+  font-weight: 600;
+}
+
+.already {
+  margin-top: 6px;
+  color: #991b1b;
+  font-weight: 700;
+}
+
+.qr-preview code {
+  display: inline-block;
+  margin-top: 4px;
+}
+
+.recent-item {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 10px;
+  margin-top: 8px;
+}

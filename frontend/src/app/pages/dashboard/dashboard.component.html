@@ -154,7 +154,9 @@
       </form>
     </section>
 
-    <div class="table-wrap" *ngIf="!loadingAction">
+    <app-admin-issue *ngIf="!loadingAction && selectedActionId === 'issue'"></app-admin-issue>
+
+    <div class="table-wrap" *ngIf="!loadingAction && selectedActionId !== 'issue'">
       <table class="admin-table" *ngIf="selectedActionId === 'students'">
         <thead>
           <tr>
