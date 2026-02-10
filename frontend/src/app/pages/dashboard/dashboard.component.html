@@ -44,8 +44,221 @@
   </div>
 
   <article class="quick-action-content" *ngIf="selectedAction as action">
-    <h3>{{ action.title }}</h3>
-    <p>{{ action.description }}</p>
-    <a class="btn btn-dark" [routerLink]="action.route">{{ action.ctaLabel }}</a>
+    <div class="content-header">
+      <div>
+        <h3>{{ action.title }}</h3>
+        <p>{{ action.description }}</p>
+      </div>
+      <button class="btn btn-dark" type="button" *ngIf="canCreate" (click)="showCreateForm()">Create</button>
+    </div>
+
+    <div class="alert-text success" *ngIf="actionToast">{{ actionToast }}</div>
+    <div class="alert-text error" *ngIf="actionError">{{ actionError }}</div>
+    <div class="text-muted" *ngIf="loadingAction">Loading...</div>
+
+    <section class="create-form" *ngIf="formVisible && !loadingAction">
+      <h4>{{ formTitle }}</h4>
+
+      <form *ngIf="selectedActionId === 'certificates'" (ngSubmit)="submitForm()" class="grid-form">
+        <label>Title</label>
+        <input type="text" [(ngModel)]="certificateForm.title" name="certTitle" />
+        <label>Description</label>
+        <textarea rows="3" [(ngModel)]="certificateForm.description" name="certDescription"></textarea>
+        <label>Image URL</label>
+        <input type="text" [(ngModel)]="certificateForm.imageUrl" name="certImage" />
+        <div class="form-actions">
+          <button class="btn btn-dark" type="submit" [disabled]="submitting">{{ editingId ? 'Update' : 'Create' }}</button>
+          <button class="btn btn-outline-dark" type="button" (click)="cancelForm()">Cancel</button>
+        </div>
+      </form>
+
+      <form *ngIf="selectedActionId === 'diplomas'" (ngSubmit)="submitForm()" class="grid-form">
+        <label>Title</label>
+        <input type="text" [(ngModel)]="diplomaForm.title" name="dipTitle" />
+        <label>Mode</label>
+        <select [(ngModel)]="diplomaForm.mode" name="dipMode">
+          <option *ngFor="let mode of diplomaModes" [ngValue]="mode">{{ modeLabel(mode) }}</option>
+        </select>
+        <label>Image URL</label>
+        <input type="text" [(ngModel)]="diplomaForm.imageUrl" name="dipImage" />
+        <div class="form-actions">
+          <button class="btn btn-dark" type="submit" [disabled]="submitting">{{ editingId ? 'Update' : 'Create' }}</button>
+          <button class="btn btn-outline-dark" type="button" (click)="cancelForm()">Cancel</button>
+        </div>
+      </form>
+
+      <form *ngIf="selectedActionId === 'courses'" (ngSubmit)="submitForm()" class="grid-form">
+        <label>Certificate</label>
+        <select [(ngModel)]="courseForm.certificateId" name="courseCertificateId">
+          <option [ngValue]="null">Select certificate</option>
+          <option *ngFor="let cert of certificates" [ngValue]="cert.id">{{ cert.title }}</option>
+        </select>
+        <label>Title</label>
+        <input type="text" [(ngModel)]="courseForm.title" name="courseTitle" />
+        <label>Description</label>
+        <textarea rows="2" [(ngModel)]="courseForm.description" name="courseDescription"></textarea>
+        <label>Mode</label>
+        <select [(ngModel)]="courseForm.mode" name="courseMode">
+          <option [ngValue]="'ONLINE'">ONLINE</option>
+          <option [ngValue]="'ONSITE'">ONSITE</option>
+          <option [ngValue]="'IN_PERSON'">IN_PERSON</option>
+          <option [ngValue]="'HYBRID'">HYBRID</option>
+        </select>
+        <label>Teacher Name</label>
+        <input type="text" [(ngModel)]="courseForm.teacherName" name="courseTeacherName" />
+        <label>Teacher Bio</label>
+        <textarea rows="2" [(ngModel)]="courseForm.teacherBio" name="courseTeacherBio"></textarea>
+        <label>Duration Text</label>
+        <input type="text" [(ngModel)]="courseForm.durationText" name="courseDuration" />
+        <label>Phone Contact</label>
+        <input type="text" [(ngModel)]="courseForm.phoneContact" name="coursePhone" />
+        <div class="form-actions">
+          <button class="btn btn-dark" type="submit" [disabled]="submitting">{{ editingId ? 'Update' : 'Create' }}</button>
+          <button class="btn btn-outline-dark" type="button" (click)="cancelForm()">Cancel</button>
+        </div>
+      </form>
+
+      <form *ngIf="selectedActionId === 'specializations'" (ngSubmit)="submitForm()" class="grid-form">
+        <label>Diploma</label>
+        <select [(ngModel)]="specializationForm.diplomaId" name="specDiplomaId">
+          <option [ngValue]="null">Select diploma</option>
+          <option *ngFor="let dip of diplomas" [ngValue]="dip.id">{{ dip.title }}</option>
+        </select>
+        <label>Title</label>
+        <input type="text" [(ngModel)]="specializationForm.title" name="specTitle" />
+        <label>Description</label>
+        <textarea rows="2" [(ngModel)]="specializationForm.description" name="specDescription"></textarea>
+        <label>Program Overview</label>
+        <textarea rows="2" [(ngModel)]="specializationForm.programOverview" name="specOverview"></textarea>
+        <label>Duration</label>
+        <input type="text" [(ngModel)]="specializationForm.durationText" name="specDuration" />
+        <label>Certificate Awarded</label>
+        <input type="text" [(ngModel)]="specializationForm.certificateAwarded" name="specAwarded" />
+        <label>Entry Requirements</label>
+        <textarea rows="2" [(ngModel)]="specializationForm.entryRequirements" name="specReq"></textarea>
+        <label>Program Features</label>
+        <textarea rows="2" [(ngModel)]="specializationForm.programFeatures" name="specFeatures"></textarea>
+        <div class="form-actions">
+          <button class="btn btn-dark" type="submit" [disabled]="submitting">{{ editingId ? 'Update' : 'Create' }}</button>
+          <button class="btn btn-outline-dark" type="button" (click)="cancelForm()">Cancel</button>
+        </div>
+      </form>
+    </section>
+
+    <div class="table-wrap" *ngIf="!loadingAction">
+      <table class="admin-table" *ngIf="selectedActionId === 'students'">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of students">
+            <td>{{ item.firstName }} {{ item.lastName }}</td>
+            <td>{{ item.email }}</td>
+            <td>{{ item.status }}</td>
+          </tr>
+          <tr *ngIf="!students.length">
+            <td colspan="3" class="empty-cell">No students found.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="admin-table" *ngIf="selectedActionId === 'certificates'">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Edit</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of certificates">
+            <td>{{ item.title }}</td>
+            <td>{{ item.description || '-' }}</td>
+            <td><button class="btn btn-sm btn-outline-dark" type="button" (click)="editItem(item)">Edit</button></td>
+            <td><button class="btn btn-sm btn-danger" type="button" (click)="removeItem(item)">Delete</button></td>
+          </tr>
+          <tr *ngIf="!certificates.length">
+            <td colspan="4" class="empty-cell">No certificates found.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="admin-table" *ngIf="selectedActionId === 'diplomas'">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Mode</th>
+            <th>Required Count</th>
+            <th>Edit</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of diplomas">
+            <td>{{ item.title }}</td>
+            <td>{{ modeLabel(item.mode) }}</td>
+            <td>{{ item.requiredCount }}</td>
+            <td><button class="btn btn-sm btn-outline-dark" type="button" (click)="editItem(item)">Edit</button></td>
+            <td><button class="btn btn-sm btn-danger" type="button" (click)="removeItem(item)">Delete</button></td>
+          </tr>
+          <tr *ngIf="!diplomas.length">
+            <td colspan="5" class="empty-cell">No diplomas found.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="admin-table" *ngIf="selectedActionId === 'courses'">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Certificate</th>
+            <th>Mode</th>
+            <th>Edit</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of courses">
+            <td>{{ item.title }}</td>
+            <td>{{ item.certificateTitle || '-' }}</td>
+            <td>{{ item.mode }}</td>
+            <td><button class="btn btn-sm btn-outline-dark" type="button" (click)="editItem(item)">Edit</button></td>
+            <td><button class="btn btn-sm btn-danger" type="button" (click)="removeItem(item)">Delete</button></td>
+          </tr>
+          <tr *ngIf="!courses.length">
+            <td colspan="5" class="empty-cell">No courses found.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="admin-table" *ngIf="selectedActionId === 'specializations'">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Diploma</th>
+            <th>Duration</th>
+            <th>Edit</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of specializations">
+            <td>{{ item.title }}</td>
+            <td>{{ item.diplomaTitle || '-' }}</td>
+            <td>{{ item.durationText || '-' }}</td>
+            <td><button class="btn btn-sm btn-outline-dark" type="button" (click)="editItem(item)">Edit</button></td>
+            <td><button class="btn btn-sm btn-danger" type="button" (click)="removeItem(item)">Delete</button></td>
+          </tr>
+          <tr *ngIf="!specializations.length">
+            <td colspan="5" class="empty-cell">No specializations found.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </article>
 </div>
