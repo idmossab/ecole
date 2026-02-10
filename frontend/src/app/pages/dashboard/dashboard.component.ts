@@ -220,7 +220,9 @@ export class DashboardComponent implements OnInit {
     this.actionToast = '';
     this.deleteConfirmVisible = true;
     this.pendingDeleteItem = item;
-    this.pendingDeleteLabel = item?.title || item?.id || 'selected item';
+    this.pendingDeleteLabel = this.selectedActionId === 'students'
+      ? `${item?.firstName || ''} ${item?.lastName || ''}`.trim() || item?.email || 'selected user'
+      : item?.title || item?.id || 'selected item';
   }
 
   cancelDelete(): void {
@@ -232,6 +234,20 @@ export class DashboardComponent implements OnInit {
   confirmDelete(): void {
     if (!this.pendingDeleteItem) return;
     const item = this.pendingDeleteItem;
+
+    if (this.selectedActionId === 'students') {
+      this.api.adminDeleteUser(item.userId).subscribe({
+        next: () => {
+          this.actionToast = 'User deleted';
+          this.cancelDelete();
+          this.reloadAction('students');
+        },
+        error: (err) => {
+          this.actionError = err?.error?.message || err?.error || 'Failed to delete user';
+        }
+      });
+      return;
+    }
 
     if (this.selectedActionId === 'certificates') {
       this.api.deleteCertificate(item.id).subscribe({
@@ -287,6 +303,35 @@ export class DashboardComponent implements OnInit {
         }
       });
     }
+  }
+
+  toggleStudentStatus(item: UserResponse): void {
+    this.actionError = '';
+    this.actionToast = '';
+    this.api.adminToggleUserStatus(item.userId).subscribe({
+      next: (updated) => {
+        this.students = this.students.map((user) => user.userId === item.userId ? updated : user);
+        this.actionToast = `User status changed to ${updated.status}`;
+      },
+      error: (err) => {
+        this.actionError = err?.error?.message || err?.error || 'Failed to change user status';
+      }
+    });
+  }
+
+  changeStudentRole(item: UserResponse): void {
+    this.actionError = '';
+    this.actionToast = '';
+    const nextRole: 'ADMIN' | 'USER' = item.role === 'ADMIN' ? 'USER' : 'ADMIN';
+    this.api.adminChangeUserRole(item.userId, nextRole).subscribe({
+      next: (updated) => {
+        this.students = this.students.map((user) => user.userId === item.userId ? updated : user);
+        this.actionToast = `User role changed to ${updated.role}`;
+      },
+      error: (err) => {
+        this.actionError = err?.error?.message || err?.error || 'Failed to change user role';
+      }
+    });
   }
 
   submitForm(): void {
@@ -482,9 +527,9 @@ export class DashboardComponent implements OnInit {
     this.actionError = '';
 
     if (actionId === 'students') {
-      this.api.getUsers().subscribe({
+      this.api.getAdminUsers().subscribe({
         next: (users) => {
-          this.students = (users || []).filter((u) => u.role === 'USER');
+          this.students = users || [];
           this.loadedActionIds.add(actionId);
           this.loadingAction = false;
         },

@@ -158,19 +158,39 @@
       <table class="admin-table" *ngIf="selectedActionId === 'students'">
         <thead>
           <tr>
+            <th>Role</th>
             <th>Name</th>
             <th>Email</th>
             <th>Status</th>
+            <th>Phone</th>
+            <th>City</th>
+            <th>Delete</th>
+            <th>Change Role</th>
+            <th>Toggle Status</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let item of students">
+            <td>{{ item.role }}</td>
             <td>{{ item.firstName }} {{ item.lastName }}</td>
             <td>{{ item.email }}</td>
             <td>{{ item.status }}</td>
+            <td>{{ item.phone || '-' }}</td>
+            <td>{{ item.city || '-' }}</td>
+            <td><button class="btn btn-sm btn-danger" type="button" (click)="removeItem(item)">Delete</button></td>
+            <td>
+              <button class="btn btn-sm btn-outline-dark" type="button" (click)="changeStudentRole(item)">
+                Make {{ item.role === 'ADMIN' ? 'USER' : 'ADMIN' }}
+              </button>
+            </td>
+            <td>
+              <button class="btn btn-sm btn-outline-dark" type="button" (click)="toggleStudentStatus(item)">
+                Set {{ item.status === 'ACTIVE' ? 'BANNED' : 'ACTIVE' }}
+              </button>
+            </td>
           </tr>
           <tr *ngIf="!students.length">
-            <td colspan="3" class="empty-cell">No students found.</td>
+            <td colspan="9" class="empty-cell">No users found.</td>
           </tr>
         </tbody>
       </table>

@@ -96,6 +96,10 @@ export class ApiService {
     return this.http.get<UserResponse[]>(`${this.baseUrl}/users`);
   }
 
+  getAdminUsers() {
+    return this.http.get<UserResponse[]>(`${this.baseUrl}/api/admin/users`);
+  }
+
   getMe() {
     return this.http.get<UserResponse>(`${this.baseUrl}/api/users/me`);
   }
@@ -116,6 +120,18 @@ export class ApiService {
 
   deleteUser(userId: number) {
     return this.http.delete<void>(`${this.baseUrl}/users/${userId}`);
+  }
+
+  adminChangeUserRole(userId: number, role: 'ADMIN' | 'USER') {
+    return this.http.put<UserResponse>(`${this.baseUrl}/api/admin/users/${userId}/role`, { role });
+  }
+
+  adminToggleUserStatus(userId: number) {
+    return this.http.post<UserResponse>(`${this.baseUrl}/api/admin/users/${userId}/toggle-status`, {});
+  }
+
+  adminDeleteUser(userId: number) {
+    return this.http.delete<void>(`${this.baseUrl}/api/admin/users/${userId}`);
   }
 
   getNotifications() {

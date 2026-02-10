@@ -7,6 +7,7 @@ import org.springframework.web.server.ResponseStatusException;
 import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ import com.example._blog.Dto.UserRegisterRequest;
 import com.example._blog.Dto.UserResponse;
 import com.example._blog.Entity.User;
 import com.example._blog.Entity.enums.UserRole;
+import com.example._blog.Entity.enums.UserStatus;
 import com.example._blog.Repositories.UserRepo;
 import com.example._blog.Security.JwtService;
 
@@ -106,6 +108,30 @@ public class UserService {
         repo.delete(existing);
     }
 
+    public UserResponse changeRole(Long userId, String roleValue) {
+        User existing = repo.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "User not found"));
+
+        UserRole role;
+        try {
+            role = UserRole.valueOf(roleValue.trim().toUpperCase());
+        } catch (Exception ex) {
+            throw new ResponseStatusException(BAD_REQUEST, "Invalid role");
+        }
+
+        existing.setRole(role);
+        return toResponse(repo.save(existing));
+    }
+
+    public UserResponse toggleActiveBanned(Long userId) {
+        User existing = repo.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "User not found"));
+
+        UserStatus next = existing.getStatus() == UserStatus.ACTIVE ? UserStatus.BANNED : UserStatus.ACTIVE;
+        existing.setStatus(next);
+        return toResponse(repo.save(existing));
+    }
+
     private UserResponse toResponse(User user) {
         return new UserResponse(
                 user.getUserId(),
@@ -113,6 +139,8 @@ public class UserService {
                 user.getLastName(),
                 user.getUserName(),
                 user.getEmail(),
+                user.getPhone(),
+                user.getCity(),
                 user.getStatus(),
                 user.getRole(),
                 user.getCreatedAt()

@@ -27,6 +27,8 @@ import com.example._blog.Dto.admin.AdminDiplomaRequest;
 import com.example._blog.Dto.admin.AdminDiplomaResponse;
 import com.example._blog.Dto.admin.AdminSpecializationRequest;
 import com.example._blog.Dto.admin.AdminSpecializationResponse;
+import com.example._blog.Dto.admin.AdminUserRoleRequest;
+import com.example._blog.Dto.UserResponse;
 import com.example._blog.Entity.enums.UserRole;
 import com.example._blog.Repositories.CertificateRepo;
 import com.example._blog.Repositories.CourseRepo;
@@ -36,6 +38,7 @@ import com.example._blog.Service.CertificateService;
 import com.example._blog.Service.CourseService;
 import com.example._blog.Service.DiplomeService;
 import com.example._blog.Service.SpecializationService;
+import com.example._blog.Service.UserService;
 
 import jakarta.validation.Valid;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -52,6 +55,7 @@ public class AdminCont {
     private final CourseService courseService;
     private final SpecializationService specializationService;
     private final DiplomeService diplomeService;
+    private final UserService userService;
 
     public AdminCont(
             UserRepo userRepo,
@@ -61,7 +65,8 @@ public class AdminCont {
             CertificateService certificateService,
             CourseService courseService,
             SpecializationService specializationService,
-            DiplomeService diplomeService
+            DiplomeService diplomeService,
+            UserService userService
     ) {
         this.userRepo = userRepo;
         this.courseRepo = courseRepo;
@@ -71,6 +76,7 @@ public class AdminCont {
         this.courseService = courseService;
         this.specializationService = specializationService;
         this.diplomeService = diplomeService;
+        this.userService = userService;
     }
 
     @GetMapping("/stats")
@@ -210,4 +216,24 @@ public class AdminCont {
 
     public record AdminStatsResponse(long totalStudents, long totalCourses, long totalCertificates, long totalDiplomas) {}
     public record UploadResponse(String url) {}
+
+    @GetMapping("/users")
+    public List<UserResponse> getUsers() {
+        return userService.getAll();
+    }
+
+    @PutMapping("/users/{userId}/role")
+    public UserResponse changeUserRole(@PathVariable Long userId, @Valid @RequestBody AdminUserRoleRequest request) {
+        return userService.changeRole(userId, request.role());
+    }
+
+    @PostMapping("/users/{userId}/toggle-status")
+    public UserResponse toggleUserStatus(@PathVariable Long userId) {
+        return userService.toggleActiveBanned(userId);
+    }
+
+    @DeleteMapping("/users/{userId}")
+    public void deleteUserAdmin(@PathVariable Long userId) {
+        userService.delete(userId);
+    }
 }
