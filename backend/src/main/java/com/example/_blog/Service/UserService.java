@@ -19,16 +19,19 @@ import com.example._blog.Dto.UserResponse;
 import com.example._blog.Entity.User;
 import com.example._blog.Entity.enums.UserRole;
 import com.example._blog.Entity.enums.UserStatus;
+import com.example._blog.Repositories.JoinRequestRepo;
 import com.example._blog.Repositories.UserRepo;
 import com.example._blog.Security.JwtService;
 
 @Service
 public class UserService {
     private final UserRepo repo;
+    private final JoinRequestRepo joinRequestRepo;
     private final PasswordEncoder encoder;
     private final JwtService jwtService;
-    public UserService(UserRepo repo, PasswordEncoder encoder, JwtService jwtService) {
+    public UserService(UserRepo repo, JoinRequestRepo joinRequestRepo, PasswordEncoder encoder, JwtService jwtService) {
         this.repo = repo;
+        this.joinRequestRepo = joinRequestRepo;
         this.encoder = encoder;
         this.jwtService = jwtService;
     }
@@ -106,6 +109,7 @@ public class UserService {
     public void delete(Long userId) {
         User existing = repo.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "User not found"));
+        joinRequestRepo.deleteByUserId(userId);
         repo.delete(existing);
     }
 
@@ -147,6 +151,7 @@ public class UserService {
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "User not found"));
 
         enforceAdminManagementRules(actor, existing);
+        joinRequestRepo.deleteByUserId(userId);
         repo.delete(existing);
     }
 
