@@ -31,6 +31,7 @@ public class UserService {
     private final JoinRequestRepo joinRequestRepo;
     private final DiplomaJoinRequestRepo diplomaJoinRequestRepo;
     private final IssuedCredentialRepo issuedCredentialRepo;
+    private final NotificationService notificationService;
     private final PasswordEncoder encoder;
     private final JwtService jwtService;
     public UserService(
@@ -38,6 +39,7 @@ public class UserService {
             JoinRequestRepo joinRequestRepo,
             DiplomaJoinRequestRepo diplomaJoinRequestRepo,
             IssuedCredentialRepo issuedCredentialRepo,
+            NotificationService notificationService,
             PasswordEncoder encoder,
             JwtService jwtService
     ) {
@@ -45,6 +47,7 @@ public class UserService {
         this.joinRequestRepo = joinRequestRepo;
         this.diplomaJoinRequestRepo = diplomaJoinRequestRepo;
         this.issuedCredentialRepo = issuedCredentialRepo;
+        this.notificationService = notificationService;
         this.encoder = encoder;
         this.jwtService = jwtService;
     }
@@ -70,6 +73,14 @@ public class UserService {
 
         // INSERT
         User saved = repo.save(user);
+
+        notificationService.notifyRole(
+                UserRole.ADMIN,
+                "New User Registration",
+                "New user registered: " + saved.getUserName() + " (" + saved.getEmail() + ")",
+                "USER_REGISTERED"
+        );
+
         return new AuthResponse(jwtService.generateToken(saved), toResponse(saved));
     }
 

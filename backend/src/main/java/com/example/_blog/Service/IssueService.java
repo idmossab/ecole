@@ -99,10 +99,10 @@ public class IssueService {
                 student.getCity()
         );
 
-        List<JoinRequest> accepted = joinRequestRepo.findByUserIdAndStatusOrderByCreatedAtDesc(userId, JoinRequestStatus.ACCEPTED)
-                .stream()
-                .filter(r -> r.getCourseId() != null)
-                .toList();
+        List<JoinRequest> accepted = joinRequestRepo.findByUserIdAndStatusOrderByCreatedAtDesc(
+                userId,
+                JoinRequestStatus.ACCEPTED
+        );
 
         List<IssueCertificateOptionResponse> certificateOptions = accepted.stream()
                 .filter(r -> r.getCertificate() != null)
@@ -124,7 +124,7 @@ public class IssueService {
                             .distinct()
                             .toList();
                     boolean completed = false;
-                    boolean eligible = !courses.isEmpty();
+                    boolean eligible = true;
                     boolean alreadyIssued = issuedCredentialRepo.existsByUserIdAndTypeAndCertificateId(
                             userId,
                             IssueType.CERTIFICATE,

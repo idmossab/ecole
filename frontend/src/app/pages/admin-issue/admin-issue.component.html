@@ -52,6 +52,9 @@
           {{ item.title }} (eligible: {{ item.eligible ? 'yes' : 'no' }}, accepted: {{ item.accepted ? 'yes' : 'no' }}, completed: {{ item.completed ? 'yes' : 'no' }})
         </option>
       </select>
+      <div class="text-muted small mt-1" *ngIf="student && !certificateOptions.length">
+        No accepted certificates found for this student.
+      </div>
 
       <div class="detail-panel" *ngIf="selectedCertificate as cert">
         <div class="detail-title">{{ cert.title }}</div>
@@ -76,6 +79,9 @@
           {{ item.title }} (eligible: {{ item.eligible ? 'yes' : 'no' }}, accepted: {{ item.accepted ? 'yes' : 'no' }}, completed: {{ item.completed ? 'yes' : 'no' }})
         </option>
       </select>
+      <div class="text-muted small mt-1" *ngIf="student && !diplomaOptions.length">
+        No accepted diplomas found for this student.
+      </div>
 
       <div class="detail-panel" *ngIf="selectedDiploma as dip">
         <div class="detail-title">{{ dip.title }}</div>

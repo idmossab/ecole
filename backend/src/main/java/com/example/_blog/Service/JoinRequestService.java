@@ -16,6 +16,7 @@ import com.example._blog.Entity.Course;
 import com.example._blog.Entity.JoinRequest;
 import com.example._blog.Entity.User;
 import com.example._blog.Entity.enums.JoinRequestStatus;
+import com.example._blog.Entity.enums.UserRole;
 import com.example._blog.Repositories.CertificateRepo;
 import com.example._blog.Repositories.CourseRepo;
 import com.example._blog.Repositories.DiplomaJoinRequestRepo;
@@ -36,6 +37,7 @@ public class JoinRequestService {
     private final DiplomaJoinRequestRepo diplomaJoinRequestRepo;
     private final com.example._blog.Repositories.DiplomeRepo diplomeRepo;
     private final SpecializationRepo specializationRepo;
+    private final NotificationService notificationService;
 
     public JoinRequestService(
             JoinRequestRepo joinRequestRepo,
@@ -44,7 +46,8 @@ public class JoinRequestService {
             CourseRepo courseRepo,
             DiplomaJoinRequestRepo diplomaJoinRequestRepo,
             com.example._blog.Repositories.DiplomeRepo diplomeRepo,
-            SpecializationRepo specializationRepo
+            SpecializationRepo specializationRepo,
+            NotificationService notificationService
     ) {
         this.joinRequestRepo = joinRequestRepo;
         this.userRepo = userRepo;
@@ -53,6 +56,7 @@ public class JoinRequestService {
         this.diplomaJoinRequestRepo = diplomaJoinRequestRepo;
         this.diplomeRepo = diplomeRepo;
         this.specializationRepo = specializationRepo;
+        this.notificationService = notificationService;
     }
 
     public AdminJoinRequestResponse create(Long userId, Long certificateId, JoinRequestCreateRequest request) {
@@ -82,7 +86,15 @@ public class JoinRequestService {
                 .status(JoinRequestStatus.PENDING)
                 .build();
 
-        return toResponse(joinRequestRepo.save(joinRequest));
+        JoinRequest saved = joinRequestRepo.save(joinRequest);
+        notificationService.notifyRole(
+                UserRole.ADMIN,
+                "New Join Request",
+                user.getUserName() + " requested to join certificate \"" + certificate.getTitle()
+                        + "\" course \"" + course.getTitle() + "\"",
+                "JOIN_REQUEST"
+        );
+        return toResponse(saved);
     }
 
     public List<AdminJoinRequestResponse> getAllAdmin() {
@@ -102,13 +114,17 @@ public class JoinRequestService {
     public AdminJoinRequestResponse accept(Long id) {
         JoinRequest request = getById(id);
         request.setStatus(JoinRequestStatus.ACCEPTED);
-        return toResponse(joinRequestRepo.save(request));
+        JoinRequest saved = joinRequestRepo.save(request);
+        notifyCertificateJoinResult(saved, true);
+        return toResponse(saved);
     }
 
     public AdminJoinRequestResponse reject(Long id) {
         JoinRequest request = getById(id);
         request.setStatus(JoinRequestStatus.REJECTED);
-        return toResponse(joinRequestRepo.save(request));
+        JoinRequest saved = joinRequestRepo.save(request);
+        notifyCertificateJoinResult(saved, false);
+        return toResponse(saved);
     }
 
     public AdminJoinRequestResponse createDiploma(Long userId, Long diplomaId, DiplomaJoinRequestCreateRequest request) {
@@ -143,21 +159,71 @@ public class JoinRequestService {
                 .status(JoinRequestStatus.PENDING)
                 .build();
 
-        return toDiplomaResponse(diplomaJoinRequestRepo.save(joinRequest));
+        DiplomaJoinRequest saved = diplomaJoinRequestRepo.save(joinRequest);
+        notificationService.notifyRole(
+                UserRole.ADMIN,
+                "New Join Request",
+                user.getUserName() + " requested to join diploma \"" + diploma.getLabel()
+                        + "\" specialization \"" + specialization.getTitle() + "\"",
+                "JOIN_REQUEST"
+        );
+        return toDiplomaResponse(saved);
     }
 
     public AdminJoinRequestResponse acceptDiploma(Long id) {
         DiplomaJoinRequest request = diplomaJoinRequestRepo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Diploma join request not found"));
         request.setStatus(JoinRequestStatus.ACCEPTED);
-        return toDiplomaResponse(diplomaJoinRequestRepo.save(request));
+        DiplomaJoinRequest saved = diplomaJoinRequestRepo.save(request);
+        notifyDiplomaJoinResult(saved, true);
+        return toDiplomaResponse(saved);
     }
 
     public AdminJoinRequestResponse rejectDiploma(Long id) {
         DiplomaJoinRequest request = diplomaJoinRequestRepo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Diploma join request not found"));
         request.setStatus(JoinRequestStatus.REJECTED);
-        return toDiplomaResponse(diplomaJoinRequestRepo.save(request));
+        DiplomaJoinRequest saved = diplomaJoinRequestRepo.save(request);
+        notifyDiplomaJoinResult(saved, false);
+        return toDiplomaResponse(saved);
+    }
+
+    private void notifyCertificateJoinResult(JoinRequest request, boolean accepted) {
+        User student = request.getUser();
+        if (student == null) {
+            return;
+        }
+
+        String title = accepted ? "Join Request Accepted" : "Join Request Rejected";
+        String action = accepted ? "accepted" : "rejected";
+        String certificateTitle = request.getCertificate() == null ? "certificate" : request.getCertificate().getTitle();
+        String courseTitle = request.getCourse() == null ? "course" : request.getCourse().getTitle();
+        notificationService.notifyUser(
+                student,
+                title,
+                "Your request for " + certificateTitle + " (" + courseTitle + ") was " + action + ".",
+                "JOIN_REQUEST_RESULT"
+        );
+    }
+
+    private void notifyDiplomaJoinResult(DiplomaJoinRequest request, boolean accepted) {
+        User student = request.getUser();
+        if (student == null) {
+            return;
+        }
+
+        String title = accepted ? "Join Request Accepted" : "Join Request Rejected";
+        String action = accepted ? "accepted" : "rejected";
+        String diplomaTitle = request.getDiploma() == null ? "diploma" : request.getDiploma().getLabel();
+        String specializationTitle = request.getSpecialization() == null
+                ? "specialization"
+                : request.getSpecialization().getTitle();
+        notificationService.notifyUser(
+                student,
+                title,
+                "Your request for " + diplomaTitle + " (" + specializationTitle + ") was " + action + ".",
+                "JOIN_REQUEST_RESULT"
+        );
     }
 
     private JoinRequest getById(Long id) {

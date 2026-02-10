@@ -70,8 +70,10 @@ export class AdminIssueComponent {
       next: (ctx) => {
         this.context = ctx;
         this.student = ctx.student;
-        this.selectedCertificateId = ctx.certificates.length ? ctx.certificates[0].certificateId : null;
-        this.selectedDiplomaId = ctx.diplomas.length ? ctx.diplomas[0].diplomaId : null;
+        const acceptedCertificates = (ctx.certificates || []).filter((entry) => entry.accepted);
+        const acceptedDiplomas = (ctx.diplomas || []).filter((entry) => entry.accepted);
+        this.selectedCertificateId = acceptedCertificates.length ? acceptedCertificates[0].certificateId : null;
+        this.selectedDiplomaId = acceptedDiplomas.length ? acceptedDiplomas[0].diplomaId : null;
       },
       error: () => {
         this.error = 'Failed to load student context';
@@ -83,14 +85,20 @@ export class AdminIssueComponent {
     this.result = null;
     this.success = '';
     this.error = '';
+    if (this.issueType === 'CERTIFICATE' && this.selectedCertificateId == null && this.certificateOptions.length) {
+      this.selectedCertificateId = this.certificateOptions[0].certificateId;
+    }
+    if (this.issueType === 'DIPLOMA' && this.selectedDiplomaId == null && this.diplomaOptions.length) {
+      this.selectedDiplomaId = this.diplomaOptions[0].diplomaId;
+    }
   }
 
   get certificateOptions(): IssueCertificateOption[] {
-    return this.context?.certificates || [];
+    return (this.context?.certificates || []).filter((entry) => entry.accepted);
   }
 
   get diplomaOptions(): IssueDiplomaOption[] {
-    return this.context?.diplomas || [];
+    return (this.context?.diplomas || []).filter((entry) => entry.accepted);
   }
 
   get selectedCertificate(): IssueCertificateOption | null {
@@ -126,11 +134,11 @@ export class AdminIssueComponent {
       return;
     }
     if (this.issueType === 'CERTIFICATE' && !this.selectedCertificateId) {
-      this.error = 'Please select a certificate';
+      this.error = this.certificateOptions.length ? 'Please select a certificate' : 'No accepted certificates for this student';
       return;
     }
     if (this.issueType === 'DIPLOMA' && !this.selectedDiplomaId) {
-      this.error = 'Please select a diploma';
+      this.error = this.diplomaOptions.length ? 'Please select a diploma' : 'No accepted diplomas for this student';
       return;
     }
 
