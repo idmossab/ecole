@@ -30,6 +30,7 @@ import com.example._blog.Dto.admin.AdminSpecializationResponse;
 import com.example._blog.Entity.enums.UserRole;
 import com.example._blog.Repositories.CertificateRepo;
 import com.example._blog.Repositories.CourseRepo;
+import com.example._blog.Repositories.DiplomeRepo;
 import com.example._blog.Repositories.UserRepo;
 import com.example._blog.Service.CertificateService;
 import com.example._blog.Service.CourseService;
@@ -46,6 +47,7 @@ public class AdminCont {
     private final UserRepo userRepo;
     private final CourseRepo courseRepo;
     private final CertificateRepo certificateRepo;
+    private final DiplomeRepo diplomeRepo;
     private final CertificateService certificateService;
     private final CourseService courseService;
     private final SpecializationService specializationService;
@@ -55,6 +57,7 @@ public class AdminCont {
             UserRepo userRepo,
             CourseRepo courseRepo,
             CertificateRepo certificateRepo,
+            DiplomeRepo diplomeRepo,
             CertificateService certificateService,
             CourseService courseService,
             SpecializationService specializationService,
@@ -63,6 +66,7 @@ public class AdminCont {
         this.userRepo = userRepo;
         this.courseRepo = courseRepo;
         this.certificateRepo = certificateRepo;
+        this.diplomeRepo = diplomeRepo;
         this.certificateService = certificateService;
         this.courseService = courseService;
         this.specializationService = specializationService;
@@ -74,7 +78,8 @@ public class AdminCont {
         return new AdminStatsResponse(
                 userRepo.countByRole(UserRole.USER),
                 courseRepo.count(),
-                certificateRepo.count()
+                certificateRepo.count(),
+                diplomeRepo.count()
         );
     }
 
@@ -203,6 +208,6 @@ public class AdminCont {
         }
     }
 
-    public record AdminStatsResponse(long totalStudents, long totalCourses, long totalCertificates) {}
+    public record AdminStatsResponse(long totalStudents, long totalCourses, long totalCertificates, long totalDiplomas) {}
     public record UploadResponse(String url) {}
 }
