@@ -12,6 +12,7 @@ import {
   DiplomaSummary,
   SpecializationSummary,
   MyCertificateProgress,
+  JoinRequestStatus,
   NotificationItem,
   UnreadNotificationCount,
   UserResponse
@@ -424,8 +425,16 @@ export class ApiService {
     return this.http.post<AdminJoinRequest>(`${this.baseUrl}/api/certificates/${certificateId}/join-requests`, payload || {});
   }
 
+  getMyCertificateJoinRequestStatus(certificateId: number) {
+    return this.http.get<JoinRequestStatus | null>(`${this.baseUrl}/api/certificates/${certificateId}/join-requests/me`);
+  }
+
   createDiplomaJoinRequest(diplomaId: number, payload: { specializationId: number }) {
     return this.http.post<AdminJoinRequest>(`${this.baseUrl}/api/diplomas/${diplomaId}/join-requests`, payload);
+  }
+
+  getMyDiplomaJoinRequestStatus(diplomaId: number) {
+    return this.http.get<JoinRequestStatus | null>(`${this.baseUrl}/api/diplomas/${diplomaId}/join-requests/me`);
   }
 
   searchIssueStudents(query: string) {

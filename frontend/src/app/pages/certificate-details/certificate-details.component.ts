@@ -5,6 +5,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
 import { ApiService } from '../../core/api.service';
 import { Certificate, Course } from '../../core/certificates.data';
+import { JoinRequestStatus } from '../../core/models';
 
 @Component({
   selector: 'app-certificate-details',
@@ -21,6 +22,7 @@ export class CertificateDetailsComponent {
   error = '';
   joinRequested = false;
   joinRequestMessage = '';
+  joinStatus: JoinRequestStatus['status'] | null = null;
   readonly fallbackPhone = '+1 (555) 123-4567';
   private readonly fallbackBanner =
     'https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=1400&q=80';
@@ -44,6 +46,9 @@ export class CertificateDetailsComponent {
     this.api.getCertificateById(id).subscribe({
       next: (cert) => {
         this.certificate = cert;
+        if (this.isLoggedIn) {
+          this.loadJoinRequestStatus(cert.id);
+        }
         this.loadCourses(id);
       },
       error: (err) => {
@@ -114,20 +119,50 @@ export class CertificateDetailsComponent {
   }
 
   requestJoinCertificate(): void {
-    if (!this.certificate || this.joinRequested) return;
+    if (!this.certificate || this.isJoinDisabled()) return;
     if (!this.selectedCourse?.id) {
       this.joinRequestMessage = 'Please select a course first.';
       return;
     }
     this.joinRequestMessage = '';
     this.api.createCertificateJoinRequest(this.certificate.id, { courseId: this.selectedCourse.id }).subscribe({
-      next: () => {
-        this.joinRequested = true;
-        this.joinRequestMessage = 'Join request sent. Administration will review it.';
+      next: (res) => {
+        this.joinStatus = res.status;
+        this.joinRequested = this.joinStatus === 'PENDING' || this.joinStatus === 'ACCEPTED';
+        this.joinRequestMessage = this.statusMessage();
       },
       error: (err) => {
         this.joinRequestMessage = err?.error?.message || err?.error || 'Failed to send join request';
       }
+    });
+  }
+
+  isJoinDisabled(): boolean {
+    return this.joinRequested || this.joinStatus === 'PENDING' || this.joinStatus === 'ACCEPTED';
+  }
+
+  joinButtonLabel(): string {
+    if (this.joinStatus === 'PENDING') return 'Request Sent';
+    if (this.joinStatus === 'ACCEPTED') return 'Accepted';
+    return 'Request to Join Certificate';
+  }
+
+  private statusMessage(): string {
+    if (this.joinStatus === 'PENDING') return 'Request sent. Waiting for admin response.';
+    if (this.joinStatus === 'ACCEPTED') return 'Accepted by administration.';
+    if (this.joinStatus === 'REJECTED') return 'Rejected by administration.';
+    return '';
+  }
+
+  private loadJoinRequestStatus(certificateId: number): void {
+    this.api.getMyCertificateJoinRequestStatus(certificateId).subscribe({
+      next: (res) => {
+        if (!res) return;
+        this.joinStatus = res.status;
+        this.joinRequested = this.joinStatus === 'PENDING' || this.joinStatus === 'ACCEPTED';
+        this.joinRequestMessage = this.statusMessage();
+      },
+      error: () => {}
     });
   }
 }

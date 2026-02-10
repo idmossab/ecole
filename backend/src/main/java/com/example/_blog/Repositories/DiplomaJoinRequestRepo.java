@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import com.example._blog.Entity.DiplomaJoinRequest;
 import com.example._blog.Entity.enums.JoinRequestStatus;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface DiplomaJoinRequestRepo extends JpaRepository<DiplomaJoinRequest, Long> {
@@ -34,6 +35,7 @@ public interface DiplomaJoinRequestRepo extends JpaRepository<DiplomaJoinRequest
             JoinRequestStatus status
     );
     List<DiplomaJoinRequest> findAllByOrderByCreatedAtDesc();
+    Optional<DiplomaJoinRequest> findTopByUserIdAndDiplomaIdOrderByCreatedAtDesc(Long userId, Long diplomaId);
     List<DiplomaJoinRequest> findByUserIdAndStatusOrderByCreatedAtDesc(Long userId, JoinRequestStatus status);
     boolean existsByUserIdAndDiplomaIdAndSpecializationIdAndStatusIn(
             Long userId,

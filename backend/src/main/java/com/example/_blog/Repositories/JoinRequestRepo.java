@@ -1,6 +1,7 @@
 package com.example._blog.Repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,6 +13,7 @@ import com.example._blog.Entity.enums.JoinRequestStatus;
 @Repository
 public interface JoinRequestRepo extends JpaRepository<JoinRequest, Long> {
     List<JoinRequest> findAllByOrderByCreatedAtDesc();
+    Optional<JoinRequest> findTopByUserIdAndCertificateIdOrderByCreatedAtDesc(Long userId, Long certificateId);
     boolean existsByUserIdAndCertificateIdAndStatus(Long userId, Long certificateId, JoinRequestStatus status);
     void deleteByCertificateId(Long certificateId);
     void deleteByCourseId(Long courseId);

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example._blog.Dto.JoinRequestCreateRequest;
+import com.example._blog.Dto.JoinRequestStatusResponse;
 import com.example._blog.Dto.admin.AdminJoinRequestResponse;
 import com.example._blog.Entity.Certificate;
 import com.example._blog.Entity.Course;
@@ -64,6 +65,14 @@ public class CertificateCont {
             @RequestBody(required = false) JoinRequestCreateRequest request
     ) {
         return joinRequestService.create(requireUserId(principal), certificateId, request);
+    }
+
+    @GetMapping("/api/certificates/{certificateId}/join-requests/me")
+    public JoinRequestStatusResponse getMyJoinRequestStatus(
+            @AuthenticationPrincipal UserPrincipal principal,
+            @PathVariable Long certificateId
+    ) {
+        return joinRequestService.getCertificateJoinStatus(requireUserId(principal), certificateId);
     }
 
     private Long requireUserId(UserPrincipal principal) {

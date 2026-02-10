@@ -26,10 +26,10 @@
               class="btn btn-primary join-btn"
               type="button"
               *ngIf="isLoggedIn"
-              [disabled]="joinRequested"
+              [disabled]="isJoinDisabled()"
               (click)="requestJoinCertificate()"
             >
-              {{ joinRequested ? 'Request Sent' : 'Request to Join Certificate' }}
+              {{ joinButtonLabel() }}
             </button>
             <a
               *ngIf="!isLoggedIn"
@@ -40,10 +40,7 @@
               Request to Join Certificate
             </a>
           </div>
-          <div class="text-muted small cta-note" *ngIf="joinRequested">
-            Request sent. Administration will contact you soon.
-          </div>
-          <div class="text-muted small cta-note" *ngIf="!joinRequested && joinRequestMessage">
+          <div class="text-muted small cta-note" *ngIf="joinRequestMessage">
             {{ joinRequestMessage }}
           </div>
         </div>

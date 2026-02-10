@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example._blog.Dto.JoinRequestCreateRequest;
+import com.example._blog.Dto.JoinRequestStatusResponse;
 import com.example._blog.Dto.admin.AdminJoinRequestResponse;
 import com.example._blog.Entity.Certificate;
 import com.example._blog.Entity.Course;
@@ -186,6 +187,18 @@ public class JoinRequestService {
         DiplomaJoinRequest saved = diplomaJoinRequestRepo.save(request);
         notifyDiplomaJoinResult(saved, false);
         return toDiplomaResponse(saved);
+    }
+
+    public JoinRequestStatusResponse getCertificateJoinStatus(Long userId, Long certificateId) {
+        return joinRequestRepo.findTopByUserIdAndCertificateIdOrderByCreatedAtDesc(userId, certificateId)
+                .map(r -> new JoinRequestStatusResponse("CERTIFICATE", r.getStatus(), r.getCreatedAt()))
+                .orElse(null);
+    }
+
+    public JoinRequestStatusResponse getDiplomaJoinStatus(Long userId, Long diplomaId) {
+        return diplomaJoinRequestRepo.findTopByUserIdAndDiplomaIdOrderByCreatedAtDesc(userId, diplomaId)
+                .map(r -> new JoinRequestStatusResponse("DIPLOMA", r.getStatus(), r.getCreatedAt()))
+                .orElse(null);
     }
 
     private void notifyCertificateJoinResult(JoinRequest request, boolean accepted) {

@@ -107,3 +107,9 @@ export interface NotificationItem {
 export interface UnreadNotificationCount {
   unreadCount: number;
 }
+
+export interface JoinRequestStatus {
+  requestType: 'CERTIFICATE' | 'DIPLOMA';
+  status: 'PENDING' | 'ACCEPTED' | 'REJECTED';
+  requestedAt: string;
+}

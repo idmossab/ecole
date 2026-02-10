@@ -17,6 +17,7 @@ import com.example._blog.Dto.DiplomaClaimResponse;
 import com.example._blog.Dto.DiplomaJoinRequestCreateRequest;
 import com.example._blog.Dto.DiplomaProgressResponse;
 import com.example._blog.Dto.DiplomaSummaryResponse;
+import com.example._blog.Dto.JoinRequestStatusResponse;
 import com.example._blog.Dto.SpecializationResponse;
 import com.example._blog.Dto.admin.AdminJoinRequestResponse;
 import com.example._blog.Security.UserPrincipal;
@@ -88,6 +89,14 @@ public class DiplomaCont {
             @org.springframework.web.bind.annotation.RequestBody DiplomaJoinRequestCreateRequest request
     ) {
         return joinRequestService.createDiploma(requireUserId(principal), diplomaId, request);
+    }
+
+    @GetMapping("/api/diplomas/{diplomaId}/join-requests/me")
+    public JoinRequestStatusResponse getMyDiplomaJoinRequestStatus(
+            @AuthenticationPrincipal UserPrincipal principal,
+            @PathVariable Long diplomaId
+    ) {
+        return joinRequestService.getDiplomaJoinStatus(requireUserId(principal), diplomaId);
     }
 
     private Long requireUserId(UserPrincipal principal) {

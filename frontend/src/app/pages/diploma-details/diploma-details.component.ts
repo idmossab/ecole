@@ -5,7 +5,7 @@ import { forkJoin } from 'rxjs';
 
 import { ApiService } from '../../core/api.service';
 import { AuthService } from '../../core/auth.service';
-import { DiplomaCertificateStatus, DiplomaProgress, DiplomasMode, DiplomaSummary, SpecializationSummary } from '../../core/models';
+import { DiplomaCertificateStatus, DiplomaProgress, DiplomasMode, DiplomaSummary, JoinRequestStatus, SpecializationSummary } from '../../core/models';
 
 @Component({
   selector: 'app-diploma-details',
@@ -25,6 +25,7 @@ export class DiplomaDetailsComponent {
   error = '';
   claimLoading = false;
   joinRequested = false;
+  joinStatus: JoinRequestStatus['status'] | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -45,6 +46,7 @@ export class DiplomaDetailsComponent {
         this.loadSupplementalData(diplomaId);
         if (this.isLoggedIn) {
           this.loadProgress(diplomaId);
+          this.loadJoinRequestStatus(diplomaId);
         }
       },
       error: (err) => {
@@ -89,7 +91,7 @@ export class DiplomaDetailsComponent {
   }
 
   requestJoinDiploma(): void {
-    if (!this.diploma || this.joinRequested) return;
+    if (!this.diploma || this.isJoinDisabled()) return;
     if (!this.selectedSpecialization?.id) {
       this.message = 'Please select a specialization first.';
       return;
@@ -99,14 +101,25 @@ export class DiplomaDetailsComponent {
     this.api.createDiplomaJoinRequest(this.diploma.id, { specializationId: this.selectedSpecialization.id }).subscribe({
       next: (res) => {
         this.claimLoading = false;
-        this.message = `Join request sent (${res.status}).`;
-        this.joinRequested = true;
+        this.joinStatus = res.status;
+        this.joinRequested = this.joinStatus === 'PENDING' || this.joinStatus === 'ACCEPTED';
+        this.message = this.statusMessage();
       },
       error: (err) => {
         this.claimLoading = false;
         this.message = err?.error?.message || err?.error || 'Failed to send join request';
       }
     });
+  }
+
+  isJoinDisabled(): boolean {
+    return this.claimLoading || !this.selectedSpecialization || this.joinStatus === 'PENDING' || this.joinStatus === 'ACCEPTED';
+  }
+
+  joinButtonLabel(): string {
+    if (this.joinStatus === 'PENDING') return 'Request Sent';
+    if (this.joinStatus === 'ACCEPTED') return 'Accepted';
+    return 'Request to Join Diploma';
   }
 
   get displayCertificates(): DiplomaCertificateStatus[] {
@@ -209,5 +222,24 @@ export class DiplomaDetailsComponent {
       .split(/\r?\n|;|,/)
       .map((item) => item.trim())
       .filter((item) => item.length > 0);
+  }
+
+  private statusMessage(): string {
+    if (this.joinStatus === 'PENDING') return 'Request sent. Waiting for admin response.';
+    if (this.joinStatus === 'ACCEPTED') return 'Accepted by administration.';
+    if (this.joinStatus === 'REJECTED') return 'Rejected by administration.';
+    return '';
+  }
+
+  private loadJoinRequestStatus(diplomaId: number): void {
+    this.api.getMyDiplomaJoinRequestStatus(diplomaId).subscribe({
+      next: (res) => {
+        if (!res) return;
+        this.joinStatus = res.status;
+        this.joinRequested = this.joinStatus === 'PENDING' || this.joinStatus === 'ACCEPTED';
+        this.message = this.statusMessage();
+      },
+      error: () => {}
+    });
   }
 }
