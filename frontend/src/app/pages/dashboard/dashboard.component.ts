@@ -59,6 +59,9 @@ export class DashboardComponent implements OnInit {
   formVisible = false;
   editingId: number | null = null;
   submitting = false;
+  deleteConfirmVisible = false;
+  pendingDeleteItem: any = null;
+  pendingDeleteLabel = '';
 
   diplomaModes: DiplomasMode[] = ['SPECIALIZED_TECHNICIAN', 'TECHNICIAN', 'QUALIFICATION'];
 
@@ -128,6 +131,8 @@ export class DashboardComponent implements OnInit {
   selectAction(actionId: QuickActionId): void {
     this.selectedActionId = actionId;
     this.formVisible = false;
+    this.deleteConfirmVisible = false;
+    this.pendingDeleteItem = null;
     this.editingId = null;
     this.actionError = '';
     this.actionToast = '';
@@ -213,11 +218,26 @@ export class DashboardComponent implements OnInit {
   removeItem(item: any): void {
     this.actionError = '';
     this.actionToast = '';
+    this.deleteConfirmVisible = true;
+    this.pendingDeleteItem = item;
+    this.pendingDeleteLabel = item?.title || item?.id || 'selected item';
+  }
+
+  cancelDelete(): void {
+    this.deleteConfirmVisible = false;
+    this.pendingDeleteItem = null;
+    this.pendingDeleteLabel = '';
+  }
+
+  confirmDelete(): void {
+    if (!this.pendingDeleteItem) return;
+    const item = this.pendingDeleteItem;
 
     if (this.selectedActionId === 'certificates') {
       this.api.deleteCertificate(item.id).subscribe({
         next: () => {
           this.actionToast = 'Certificate deleted';
+          this.cancelDelete();
           this.reloadAction('certificates');
         },
         error: (err) => {
@@ -231,6 +251,7 @@ export class DashboardComponent implements OnInit {
       this.api.deleteAdminDiploma(item.id).subscribe({
         next: () => {
           this.actionToast = 'Diploma deleted';
+          this.cancelDelete();
           this.reloadAction('diplomas');
         },
         error: (err) => {
@@ -244,6 +265,7 @@ export class DashboardComponent implements OnInit {
       this.api.deleteCourse(item.id).subscribe({
         next: () => {
           this.actionToast = 'Course deleted';
+          this.cancelDelete();
           this.reloadAction('courses');
         },
         error: (err) => {
@@ -257,6 +279,7 @@ export class DashboardComponent implements OnInit {
       this.api.deleteSpecialization(item.id).subscribe({
         next: () => {
           this.actionToast = 'Specialization deleted';
+          this.cancelDelete();
           this.reloadAction('specializations');
         },
         error: (err) => {

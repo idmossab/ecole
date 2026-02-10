@@ -129,6 +129,21 @@
   margin-top: 2px;
 }
 
+.delete-confirm {
+  border: 1px solid #fecaca;
+  border-radius: 14px;
+  padding: 14px 16px;
+  background: #fff7f7;
+}
+
+.delete-confirm h4 {
+  margin: 0 0 6px;
+}
+
+.delete-confirm p {
+  margin: 0;
+}
+
 .create-form h4 {
   margin: 0 0 12px;
 }

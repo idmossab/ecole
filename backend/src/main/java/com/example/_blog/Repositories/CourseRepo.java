@@ -12,4 +12,5 @@ public interface CourseRepo extends JpaRepository<Course, Long> {
     List<Course> findByCertificateIdOrderByCreatedAtDesc(Long certificateId);
     boolean existsByCertificateIdAndTitleIgnoreCase(Long certificateId, String title);
     boolean existsByCertificateIdAndTitleIgnoreCaseAndIdNot(Long certificateId, String title, Long id);
+    void deleteByCertificateId(Long certificateId);
 }

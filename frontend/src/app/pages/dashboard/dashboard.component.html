@@ -56,6 +56,15 @@
     <div class="alert-text error" *ngIf="actionError">{{ actionError }}</div>
     <div class="text-muted" *ngIf="loadingAction">Loading...</div>
 
+    <section class="delete-confirm" *ngIf="deleteConfirmVisible">
+      <h4>Confirm Delete</h4>
+      <p>Are you sure you want to delete <strong>{{ pendingDeleteLabel }}</strong>?</p>
+      <div class="form-actions">
+        <button class="btn btn-danger" type="button" (click)="confirmDelete()">Yes, Delete</button>
+        <button class="btn btn-outline-dark" type="button" (click)="cancelDelete()">Cancel</button>
+      </div>
+    </section>
+
     <section class="create-form" *ngIf="formVisible && !loadingAction">
       <h4>{{ formTitle }}</h4>
 

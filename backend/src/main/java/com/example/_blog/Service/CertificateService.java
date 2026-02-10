@@ -5,20 +5,25 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 import java.util.List;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example._blog.Dto.admin.AdminCertificateRequest;
 import com.example._blog.Dto.admin.AdminCertificateResponse;
 import com.example._blog.Entity.Certificate;
 import com.example._blog.Repositories.CertificateRepo;
+import com.example._blog.Repositories.CourseRepo;
 
 @Service
 public class CertificateService {
     private final CertificateRepo repo;
+    private final CourseRepo courseRepo;
 
-    public CertificateService(CertificateRepo repo) {
+    public CertificateService(CertificateRepo repo, CourseRepo courseRepo) {
         this.repo = repo;
+        this.courseRepo = courseRepo;
     }
 
     public AdminCertificateResponse create(AdminCertificateRequest request) {
@@ -64,9 +69,16 @@ public class CertificateService {
         return toResponse(repo.save(cert));
     }
 
+    @Transactional
     public void delete(Long id) {
         Certificate cert = getById(id);
-        repo.delete(cert);
+        try {
+            courseRepo.deleteByCertificateId(id);
+            repo.deleteUserCertificateLinks(id);
+            repo.delete(cert);
+        } catch (DataIntegrityViolationException ex) {
+            throw new ResponseStatusException(CONFLICT, "Cannot delete certificate: linked records still exist");
+        }
     }
 
     private AdminCertificateResponse toResponse(Certificate certificate) {
