@@ -146,6 +146,13 @@ export type IssueGenerateResponse = {
   documentUrl: string;
 };
 
+export type IssueStats = {
+  activeCertificates: number;
+  activeDiplomas: number;
+  issuedDiplomas: number;
+  issuedCertificates: number;
+};
+
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private readonly baseUrl = 'http://localhost:8080';
@@ -422,5 +429,9 @@ export class ApiService {
     issueDate: string;
   }) {
     return this.http.post<IssueGenerateResponse>(`${this.baseUrl}/api/admin/issue/generate`, payload);
+  }
+
+  getIssueStats() {
+    return this.http.get<IssueStats>(`${this.baseUrl}/api/admin/issue/stats`);
   }
 }

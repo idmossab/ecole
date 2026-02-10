@@ -17,6 +17,7 @@ import com.example._blog.Dto.admin.IssueDiplomaOptionResponse;
 import com.example._blog.Dto.admin.IssueGenerateRequest;
 import com.example._blog.Dto.admin.IssueGenerateResponse;
 import com.example._blog.Dto.admin.IssueRecentResponse;
+import com.example._blog.Dto.admin.IssueStatsResponse;
 import com.example._blog.Dto.admin.IssueStudentContextResponse;
 import com.example._blog.Dto.admin.IssueStudentInfoResponse;
 import com.example._blog.Dto.admin.IssueStudentSearchResponse;
@@ -31,6 +32,7 @@ import com.example._blog.Entity.enums.IssueType;
 import com.example._blog.Entity.enums.JoinRequestStatus;
 import com.example._blog.Repositories.CertificateRepo;
 import com.example._blog.Repositories.CourseRepo;
+import com.example._blog.Repositories.DiplomaJoinRequestRepo;
 import com.example._blog.Repositories.DiplomeRepo;
 import com.example._blog.Repositories.IssuedCredentialRepo;
 import com.example._blog.Repositories.JoinRequestRepo;
@@ -45,6 +47,7 @@ public class IssueService {
     private final DiplomeRepo diplomeRepo;
     private final SpecializationRepo specializationRepo;
     private final JoinRequestRepo joinRequestRepo;
+    private final DiplomaJoinRequestRepo diplomaJoinRequestRepo;
     private final IssuedCredentialRepo issuedCredentialRepo;
 
     public IssueService(
@@ -54,6 +57,7 @@ public class IssueService {
             DiplomeRepo diplomeRepo,
             SpecializationRepo specializationRepo,
             JoinRequestRepo joinRequestRepo,
+            DiplomaJoinRequestRepo diplomaJoinRequestRepo,
             IssuedCredentialRepo issuedCredentialRepo
     ) {
         this.userRepo = userRepo;
@@ -62,7 +66,17 @@ public class IssueService {
         this.diplomeRepo = diplomeRepo;
         this.specializationRepo = specializationRepo;
         this.joinRequestRepo = joinRequestRepo;
+        this.diplomaJoinRequestRepo = diplomaJoinRequestRepo;
         this.issuedCredentialRepo = issuedCredentialRepo;
+    }
+
+    public IssueStatsResponse getStats() {
+        return new IssueStatsResponse(
+                joinRequestRepo.countAcceptedActiveCertificateJoins(),
+                diplomaJoinRequestRepo.countAcceptedActiveDiplomaJoins(),
+                issuedCredentialRepo.countByType(IssueType.DIPLOMA),
+                issuedCredentialRepo.countByType(IssueType.CERTIFICATE)
+        );
     }
 
     public List<IssueStudentSearchResponse> searchStudents(String query) {

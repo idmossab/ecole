@@ -3,6 +3,7 @@ package com.example._blog.Repositories;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.example._blog.Entity.JoinRequest;
@@ -15,4 +16,18 @@ public interface JoinRequestRepo extends JpaRepository<JoinRequest, Long> {
     void deleteByCertificateId(Long certificateId);
     void deleteByCourseId(Long courseId);
     void deleteByUserId(Long userId);
+
+    @Query(
+            value = """
+                    select count(*)
+                    from (
+                      select distinct r.user_id, r.certificate_id
+                      from join_requests r
+                      join users u on u.id = r.user_id
+                      where r.status = 'ACCEPTED' and u.status = 'ACTIVE'
+                    ) x
+                    """,
+            nativeQuery = true
+    )
+    long countAcceptedActiveCertificateJoins();
 }

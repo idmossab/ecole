@@ -16,4 +16,5 @@ public interface IssuedCredentialRepo extends JpaRepository<IssuedCredential, Lo
     void deleteByUserId(Long userId);
     void deleteByCertificateId(Long certificateId);
     void deleteByDiplomaId(Long diplomaId);
+    long countByType(IssueType type);
 }

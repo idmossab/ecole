@@ -155,8 +155,9 @@
     </section>
 
     <app-admin-issue *ngIf="!loadingAction && selectedActionId === 'issue'"></app-admin-issue>
+    <app-admin-issue-stats *ngIf="!loadingAction && selectedActionId === 'issue-stats'"></app-admin-issue-stats>
 
-    <div class="table-wrap" *ngIf="!loadingAction && selectedActionId !== 'issue'">
+    <div class="table-wrap" *ngIf="!loadingAction && selectedActionId !== 'issue' && selectedActionId !== 'issue-stats'">
       <table class="admin-table" *ngIf="selectedActionId === 'students'">
         <thead>
           <tr>

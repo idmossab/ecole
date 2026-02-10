@@ -32,6 +32,7 @@ import com.example._blog.Dto.admin.AdminUserRoleRequest;
 import com.example._blog.Dto.admin.AdminJoinRequestResponse;
 import com.example._blog.Dto.admin.IssueGenerateRequest;
 import com.example._blog.Dto.admin.IssueGenerateResponse;
+import com.example._blog.Dto.admin.IssueStatsResponse;
 import com.example._blog.Dto.admin.IssueStudentContextResponse;
 import com.example._blog.Dto.admin.IssueStudentSearchResponse;
 import com.example._blog.Dto.UserResponse;
@@ -290,6 +291,11 @@ public class AdminCont {
     @PostMapping("/issue/generate")
     public IssueGenerateResponse generateIssue(@Valid @RequestBody IssueGenerateRequest request) {
         return issueService.generate(request);
+    }
+
+    @GetMapping("/issue/stats")
+    public IssueStatsResponse getIssueStats() {
+        return issueService.getStats();
     }
 
     private Long requireUserId(UserPrincipal principal) {

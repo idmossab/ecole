@@ -18,6 +18,7 @@ import { AdminCoursesComponent } from './pages/admin-courses/admin-courses.compo
 import { AdminDiplomasComponent } from './pages/admin-diplomas/admin-diplomas.component';
 import { AdminSpecializationsComponent } from './pages/admin-specializations/admin-specializations.component';
 import { AdminIssueComponent } from './pages/admin-issue/admin-issue.component';
+import { AdminIssueStatsComponent } from './pages/admin-issue-stats/admin-issue-stats.component';
 
 export const routes: Routes = [
   {
@@ -80,6 +81,10 @@ export const routes: Routes = [
   {
     path: 'admin/issue',
     component: AdminIssueComponent
+  },
+  {
+    path: 'admin/issue-stats',
+    component: AdminIssueStatsComponent
   },
   {
     path: 'manage-students',

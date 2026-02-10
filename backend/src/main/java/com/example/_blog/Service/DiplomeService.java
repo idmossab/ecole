@@ -23,6 +23,7 @@ import com.example._blog.Entity.User;
 import com.example._blog.Entity.enums.DiplomasMode;
 import com.example._blog.Entity.enums.UserRole;
 import com.example._blog.Repositories.CertificateRepo;
+import com.example._blog.Repositories.DiplomaJoinRequestRepo;
 import com.example._blog.Repositories.DiplomeRepo;
 import com.example._blog.Repositories.IssuedCredentialRepo;
 import com.example._blog.Repositories.UserRepo;
@@ -34,19 +35,22 @@ public class DiplomeService {
     private final UserRepo userRepo;
     private final NotificationService notificationService;
     private final IssuedCredentialRepo issuedCredentialRepo;
+    private final DiplomaJoinRequestRepo diplomaJoinRequestRepo;
 
     public DiplomeService(
             DiplomeRepo diplomeRepo,
             CertificateRepo certificateRepo,
             UserRepo userRepo,
             NotificationService notificationService,
-            IssuedCredentialRepo issuedCredentialRepo
+            IssuedCredentialRepo issuedCredentialRepo,
+            DiplomaJoinRequestRepo diplomaJoinRequestRepo
     ) {
         this.diplomeRepo = diplomeRepo;
         this.certificateRepo = certificateRepo;
         this.userRepo = userRepo;
         this.notificationService = notificationService;
         this.issuedCredentialRepo = issuedCredentialRepo;
+        this.diplomaJoinRequestRepo = diplomaJoinRequestRepo;
     }
 
     public Diplome createDiploma(String title, List<Long> certificateIds) {
@@ -132,6 +136,7 @@ public class DiplomeService {
 
     public void deleteAdmin(Long diplomaId) {
         Diplome diploma = ensureDiplomaExists(diplomaId);
+        diplomaJoinRequestRepo.deleteByDiplomaId(diplomaId);
         issuedCredentialRepo.deleteByDiplomaId(diplomaId);
         diplomeRepo.delete(diploma);
     }

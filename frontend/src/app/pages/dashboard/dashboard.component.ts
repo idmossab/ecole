@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import { AdminIssueComponent } from '../admin-issue/admin-issue.component';
+import { AdminIssueStatsComponent } from '../admin-issue-stats/admin-issue-stats.component';
 
 import {
   AdminCertificate,
@@ -15,7 +16,7 @@ import {
 } from '../../core/api.service';
 import { DiplomasMode, UserResponse } from '../../core/models';
 
-type QuickActionId = 'students' | 'certificates' | 'diplomas' | 'courses' | 'specializations' | 'issue' | 'join-requests';
+type QuickActionId = 'students' | 'certificates' | 'diplomas' | 'courses' | 'specializations' | 'issue' | 'issue-stats' | 'join-requests';
 
 type QuickAction = {
   id: QuickActionId;
@@ -26,7 +27,7 @@ type QuickAction = {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, AdminIssueComponent],
+  imports: [CommonModule, FormsModule, AdminIssueComponent, AdminIssueStatsComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
@@ -45,6 +46,7 @@ export class DashboardComponent implements OnInit {
     { id: 'courses', title: 'Courses', description: 'Manage live class course information.' },
     { id: 'specializations', title: 'Specializations', description: 'Create and manage diploma specializations.' },
     { id: 'issue', title: 'Issue Certificate/Diploma', description: 'Issue certificates and diplomas to students.' },
+    { id: 'issue-stats', title: 'Issue Statistics', description: 'View accepted join and issued counts.' },
     { id: 'join-requests', title: 'Join Requests', description: 'Review and process students join requests.' }
   ];
   selectedActionId: QuickActionId = 'students';
@@ -131,7 +133,8 @@ export class DashboardComponent implements OnInit {
   get canCreate(): boolean {
     return this.selectedActionId !== 'students'
       && this.selectedActionId !== 'join-requests'
-      && this.selectedActionId !== 'issue';
+      && this.selectedActionId !== 'issue'
+      && this.selectedActionId !== 'issue-stats';
   }
 
   get formTitle(): string {
@@ -141,6 +144,7 @@ export class DashboardComponent implements OnInit {
     if (this.selectedActionId === 'courses') return `${mode} Course`;
     if (this.selectedActionId === 'specializations') return `${mode} Specialization`;
     if (this.selectedActionId === 'issue') return '';
+    if (this.selectedActionId === 'issue-stats') return '';
     if (this.selectedActionId === 'join-requests') return '';
     return '';
   }
@@ -729,6 +733,12 @@ export class DashboardComponent implements OnInit {
     }
 
     if (actionId === 'issue') {
+      this.loadedActionIds.add(actionId);
+      this.loadingAction = false;
+      return;
+    }
+
+    if (actionId === 'issue-stats') {
       this.loadedActionIds.add(actionId);
       this.loadingAction = false;
       return;
