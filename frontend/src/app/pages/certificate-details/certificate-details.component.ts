@@ -20,6 +20,7 @@ export class CertificateDetailsComponent {
   loading = true;
   error = '';
   joinRequested = false;
+  joinRequestMessage = '';
   readonly fallbackPhone = '+1 (555) 123-4567';
   private readonly fallbackBanner =
     'https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=1400&q=80';
@@ -113,6 +114,16 @@ export class CertificateDetailsComponent {
   }
 
   requestJoinCertificate(): void {
-    this.joinRequested = true;
+    if (!this.certificate || this.joinRequested) return;
+    this.joinRequestMessage = '';
+    this.api.createCertificateJoinRequest(this.certificate.id, { courseId: this.selectedCourse?.id ?? null }).subscribe({
+      next: () => {
+        this.joinRequested = true;
+        this.joinRequestMessage = 'Join request sent. Administration will review it.';
+      },
+      error: (err) => {
+        this.joinRequestMessage = err?.error?.message || err?.error || 'Failed to send join request';
+      }
+    });
   }
 }

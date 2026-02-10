@@ -43,6 +43,9 @@
           <div class="text-muted small cta-note" *ngIf="joinRequested">
             Request sent. Administration will contact you soon.
           </div>
+          <div class="text-muted small cta-note" *ngIf="!joinRequested && joinRequestMessage">
+            {{ joinRequestMessage }}
+          </div>
         </div>
       </section>
 

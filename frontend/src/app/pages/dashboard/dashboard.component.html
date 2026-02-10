@@ -307,6 +307,26 @@
           </tr>
         </tbody>
       </table>
+
+      <div class="join-requests-list" *ngIf="selectedActionId === 'join-requests'">
+        <article class="join-request-card" *ngFor="let item of joinRequests">
+          <div class="request-head">
+            <div>
+              <h4>Student ID: {{ item.studentUserName || ('User #' + item.userId) }}</h4>
+              <p>{{ item.certificateTitle || 'Certificate' }}<span *ngIf="item.courseTitle"> - {{ item.courseTitle }}</span></p>
+              <div class="request-meta">Requested: {{ item.requestedAt | date:'M/d/yyyy' }}</div>
+            </div>
+            <span class="status-pill" [class.pending]="item.status === 'PENDING'" [class.accepted]="item.status === 'ACCEPTED'" [class.rejected]="item.status === 'REJECTED'">
+              {{ item.status }}
+            </span>
+          </div>
+          <div class="request-actions">
+            <button class="btn btn-success btn-sm" type="button" (click)="acceptJoinRequest(item)" [disabled]="item.status !== 'PENDING'">Accept</button>
+            <button class="btn btn-danger btn-sm" type="button" (click)="rejectJoinRequest(item)" [disabled]="item.status !== 'PENDING'">Reject</button>
+          </div>
+        </article>
+        <div class="empty-cell" *ngIf="!joinRequests.length">No join requests found.</div>
+      </div>
     </div>
   </article>
 </div>

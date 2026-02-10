@@ -72,6 +72,19 @@ export type AdminSpecialization = {
   updatedAt: string;
 };
 
+export type AdminJoinRequest = {
+  id: number;
+  userId: number;
+  studentUserName?: string | null;
+  studentEmail?: string | null;
+  certificateId: number;
+  certificateTitle?: string | null;
+  courseId?: number | null;
+  courseTitle?: string | null;
+  status: 'PENDING' | 'ACCEPTED' | 'REJECTED';
+  requestedAt: string;
+};
+
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private readonly baseUrl = 'http://localhost:8080';
@@ -280,6 +293,18 @@ export class ApiService {
     return this.http.get<AdminSpecialization[]>(`${this.baseUrl}/api/admin/diplomas/${diplomaId}/specializations`);
   }
 
+  getAdminJoinRequests() {
+    return this.http.get<AdminJoinRequest[]>(`${this.baseUrl}/api/admin/join-requests`);
+  }
+
+  acceptAdminJoinRequest(requestId: number) {
+    return this.http.post<AdminJoinRequest>(`${this.baseUrl}/api/admin/join-requests/${requestId}/accept`, {});
+  }
+
+  rejectAdminJoinRequest(requestId: number) {
+    return this.http.post<AdminJoinRequest>(`${this.baseUrl}/api/admin/join-requests/${requestId}/reject`, {});
+  }
+
   createSpecialization(diplomaId: number, payload: {
     title: string;
     description: string;
@@ -312,5 +337,9 @@ export class ApiService {
     const formData = new FormData();
     formData.append('file', file);
     return this.http.post<{ url: string }>(`${this.baseUrl}/api/admin/uploads/image`, formData);
+  }
+
+  createCertificateJoinRequest(certificateId: number, payload?: { courseId?: number | null }) {
+    return this.http.post<AdminJoinRequest>(`${this.baseUrl}/api/certificates/${certificateId}/join-requests`, payload || {});
   }
 }

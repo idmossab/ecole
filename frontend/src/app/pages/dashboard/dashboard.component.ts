@@ -7,13 +7,14 @@ import {
   AdminCertificate,
   AdminCourse,
   AdminDiploma,
+  AdminJoinRequest,
   AdminSpecialization,
   AdminStats,
   ApiService
 } from '../../core/api.service';
 import { DiplomasMode, UserResponse } from '../../core/models';
 
-type QuickActionId = 'students' | 'certificates' | 'diplomas' | 'courses' | 'specializations';
+type QuickActionId = 'students' | 'certificates' | 'diplomas' | 'courses' | 'specializations' | 'join-requests';
 
 type QuickAction = {
   id: QuickActionId;
@@ -41,7 +42,8 @@ export class DashboardComponent implements OnInit {
     { id: 'certificates', title: 'Certificates', description: 'Create, edit, and publish certificates.' },
     { id: 'diplomas', title: 'Diplomas', description: 'Create and update diploma programs and modes.' },
     { id: 'courses', title: 'Courses', description: 'Manage live class course information.' },
-    { id: 'specializations', title: 'Specializations', description: 'Create and manage diploma specializations.' }
+    { id: 'specializations', title: 'Specializations', description: 'Create and manage diploma specializations.' },
+    { id: 'join-requests', title: 'Join Requests', description: 'Review and process students join requests.' }
   ];
   selectedActionId: QuickActionId = 'students';
 
@@ -56,6 +58,7 @@ export class DashboardComponent implements OnInit {
   diplomas: AdminDiploma[] = [];
   courses: (AdminCourse & { certificateTitle?: string })[] = [];
   specializations: (AdminSpecialization & { diplomaTitle?: string })[] = [];
+  joinRequests: AdminJoinRequest[] = [];
 
   formVisible = false;
   editingId: number | null = null;
@@ -124,7 +127,7 @@ export class DashboardComponent implements OnInit {
   }
 
   get canCreate(): boolean {
-    return this.selectedActionId !== 'students';
+    return this.selectedActionId !== 'students' && this.selectedActionId !== 'join-requests';
   }
 
   get formTitle(): string {
@@ -133,6 +136,7 @@ export class DashboardComponent implements OnInit {
     if (this.selectedActionId === 'diplomas') return `${mode} Diploma`;
     if (this.selectedActionId === 'courses') return `${mode} Course`;
     if (this.selectedActionId === 'specializations') return `${mode} Specialization`;
+    if (this.selectedActionId === 'join-requests') return '';
     return '';
   }
 
@@ -367,6 +371,34 @@ export class DashboardComponent implements OnInit {
     if (this.isSuperAdmin(item)) return false;
     if (item.role === 'ADMIN' && !this.isCurrentUserSuperAdmin()) return false;
     return true;
+  }
+
+  acceptJoinRequest(item: AdminJoinRequest): void {
+    this.actionError = '';
+    this.actionToast = '';
+    this.api.acceptAdminJoinRequest(item.id).subscribe({
+      next: (updated) => {
+        this.joinRequests = this.joinRequests.map((req) => req.id === item.id ? updated : req);
+        this.actionToast = `Join request #${updated.id} accepted`;
+      },
+      error: (err) => {
+        this.actionError = err?.error?.message || err?.error || 'Failed to accept join request';
+      }
+    });
+  }
+
+  rejectJoinRequest(item: AdminJoinRequest): void {
+    this.actionError = '';
+    this.actionToast = '';
+    this.api.rejectAdminJoinRequest(item.id).subscribe({
+      next: (updated) => {
+        this.joinRequests = this.joinRequests.map((req) => req.id === item.id ? updated : req);
+        this.actionToast = `Join request #${updated.id} rejected`;
+      },
+      error: (err) => {
+        this.actionError = err?.error?.message || err?.error || 'Failed to reject join request';
+      }
+    });
   }
 
   submitForm(): void {
@@ -670,6 +702,21 @@ export class DashboardComponent implements OnInit {
         },
         error: () => {
           this.actionError = 'Failed to load specializations';
+          this.loadingAction = false;
+        }
+      });
+      return;
+    }
+
+    if (actionId === 'join-requests') {
+      this.api.getAdminJoinRequests().subscribe({
+        next: (data) => {
+          this.joinRequests = data || [];
+          this.loadedActionIds.add(actionId);
+          this.loadingAction = false;
+        },
+        error: () => {
+          this.actionError = 'Failed to load join requests';
           this.loadingAction = false;
         }
       });

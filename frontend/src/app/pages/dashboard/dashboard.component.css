@@ -218,6 +218,68 @@
   font-weight: 700;
 }
 
+.join-requests-list {
+  display: grid;
+  gap: 12px;
+}
+
+.join-request-card {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  background: #f9fbff;
+}
+
+.request-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.request-head h4 {
+  margin: 0;
+  font-size: 1.65rem;
+  color: #1e3a8a;
+}
+
+.request-head p {
+  margin: 4px 0 2px;
+}
+
+.request-meta {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.request-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+}
+
+.status-pill {
+  align-self: start;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.status-pill.pending {
+  background: #fef3c7;
+  color: #a16207;
+}
+
+.status-pill.accepted {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-pill.rejected {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
 @media (max-width: 680px) {
   .quick-actions-menu {
     gap: 8px;
@@ -232,5 +294,9 @@
   .content-header {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .request-head {
+    flex-direction: column;
   }
 }

@@ -29,6 +29,7 @@ import com.example._blog.Dto.admin.AdminDiplomaResponse;
 import com.example._blog.Dto.admin.AdminSpecializationRequest;
 import com.example._blog.Dto.admin.AdminSpecializationResponse;
 import com.example._blog.Dto.admin.AdminUserRoleRequest;
+import com.example._blog.Dto.admin.AdminJoinRequestResponse;
 import com.example._blog.Dto.UserResponse;
 import com.example._blog.Entity.enums.UserRole;
 import com.example._blog.Repositories.CertificateRepo;
@@ -40,6 +41,7 @@ import com.example._blog.Service.CourseService;
 import com.example._blog.Service.DiplomeService;
 import com.example._blog.Service.SpecializationService;
 import com.example._blog.Service.UserService;
+import com.example._blog.Service.JoinRequestService;
 import com.example._blog.Security.UserPrincipal;
 
 import jakarta.validation.Valid;
@@ -58,6 +60,7 @@ public class AdminCont {
     private final SpecializationService specializationService;
     private final DiplomeService diplomeService;
     private final UserService userService;
+    private final JoinRequestService joinRequestService;
 
     public AdminCont(
             UserRepo userRepo,
@@ -68,7 +71,8 @@ public class AdminCont {
             CourseService courseService,
             SpecializationService specializationService,
             DiplomeService diplomeService,
-            UserService userService
+            UserService userService,
+            JoinRequestService joinRequestService
     ) {
         this.userRepo = userRepo;
         this.courseRepo = courseRepo;
@@ -79,6 +83,7 @@ public class AdminCont {
         this.specializationService = specializationService;
         this.diplomeService = diplomeService;
         this.userService = userService;
+        this.joinRequestService = joinRequestService;
     }
 
     @GetMapping("/stats")
@@ -247,6 +252,21 @@ public class AdminCont {
             @PathVariable Long userId
     ) {
         userService.deleteAdminManaged(requireUserId(principal), userId);
+    }
+
+    @GetMapping("/join-requests")
+    public List<AdminJoinRequestResponse> getJoinRequests() {
+        return joinRequestService.getAllAdmin();
+    }
+
+    @PostMapping("/join-requests/{requestId}/accept")
+    public AdminJoinRequestResponse acceptJoinRequest(@PathVariable Long requestId) {
+        return joinRequestService.accept(requestId);
+    }
+
+    @PostMapping("/join-requests/{requestId}/reject")
+    public AdminJoinRequestResponse rejectJoinRequest(@PathVariable Long requestId) {
+        return joinRequestService.reject(requestId);
     }
 
     private Long requireUserId(UserPrincipal principal) {

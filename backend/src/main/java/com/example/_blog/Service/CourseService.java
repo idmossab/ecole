@@ -16,15 +16,18 @@ import com.example._blog.Entity.Course;
 import com.example._blog.Entity.enums.CourseMode;
 import com.example._blog.Repositories.CertificateRepo;
 import com.example._blog.Repositories.CourseRepo;
+import com.example._blog.Repositories.JoinRequestRepo;
 
 @Service
 public class CourseService {
     private final CourseRepo courseRepo;
     private final CertificateRepo certificateRepo;
+    private final JoinRequestRepo joinRequestRepo;
 
-    public CourseService(CourseRepo courseRepo, CertificateRepo certificateRepo) {
+    public CourseService(CourseRepo courseRepo, CertificateRepo certificateRepo, JoinRequestRepo joinRequestRepo) {
         this.courseRepo = courseRepo;
         this.certificateRepo = certificateRepo;
+        this.joinRequestRepo = joinRequestRepo;
     }
 
     public AdminCourseResponse create(Long certificateId, AdminCourseRequest request) {
@@ -93,6 +96,7 @@ public class CourseService {
 
     public void delete(Long courseId) {
         Course course = getById(courseId);
+        joinRequestRepo.deleteByCourseId(courseId);
         courseRepo.delete(course);
     }
 
