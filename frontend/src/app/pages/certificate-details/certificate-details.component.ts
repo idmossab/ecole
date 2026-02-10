@@ -19,6 +19,7 @@ export class CertificateDetailsComponent {
   selectedCourse: Course | null = null;
   loading = true;
   error = '';
+  joinRequested = false;
   readonly fallbackPhone = '+1 (555) 123-4567';
   private readonly fallbackBanner =
     'https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=1400&q=80';
@@ -103,5 +104,15 @@ export class CertificateDetailsComponent {
 
   phoneNumber(course: Course | null): string {
     return course?.phoneContact?.trim() || this.fallbackPhone;
+  }
+
+  phoneHref(course: Course | null): string {
+    const source = this.phoneNumber(course);
+    const cleaned = source.replace(/[^+\d]/g, '');
+    return cleaned || '+15551234567';
+  }
+
+  requestJoinCertificate(): void {
+    this.joinRequested = true;
   }
 }

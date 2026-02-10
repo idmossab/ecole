@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
-import { ApiService } from '../../core/api.service';
+import { AdminStats, ApiService } from '../../core/api.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,10 +12,11 @@ import { ApiService } from '../../core/api.service';
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent implements OnInit {
-  stats = {
+  stats: AdminStats = {
     totalStudents: 0,
     totalCourses: 0,
-    totalCertificates: 0
+    totalCertificates: 0,
+    totalDiplomas: 0
   };
 
   constructor(private api: ApiService) {}

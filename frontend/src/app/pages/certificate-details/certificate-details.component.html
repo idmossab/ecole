@@ -20,6 +20,29 @@
               <div class="meta-value">{{ modeBadge(selectedCourse?.mode) }}</div>
             </div>
           </div>
+
+          <div class="cta-wrap">
+            <button
+              class="btn btn-primary join-btn"
+              type="button"
+              *ngIf="isLoggedIn"
+              [disabled]="joinRequested"
+              (click)="requestJoinCertificate()"
+            >
+              {{ joinRequested ? 'Request Sent' : 'Request to Join Certificate' }}
+            </button>
+            <a
+              *ngIf="!isLoggedIn"
+              class="btn btn-primary join-btn"
+              [routerLink]="['/login']"
+              [queryParams]="{ returnTo: '/certificates/' + certificate.id }"
+            >
+              Request to Join Certificate
+            </a>
+          </div>
+          <div class="text-muted small cta-note" *ngIf="joinRequested">
+            Request sent. Administration will contact you soon.
+          </div>
         </div>
       </section>
 
@@ -66,6 +89,9 @@
           <span class="value">{{ modeBadge(selectedCourse.mode) }} ({{ modeDescription(selectedCourse.mode) }})</span>
         </div>
         <p class="contact-note">Contact the school to know when classes start.</p>
+        <a class="btn btn-light contact-btn" [attr.href]="'tel:' + phoneHref(selectedCourse)">
+          Contact Administration
+        </a>
       </ng-container>
 
       <ng-template #noSelection>

@@ -59,6 +59,20 @@
   margin-top: 1rem;
 }
 
+.cta-wrap {
+  margin-top: 1rem;
+}
+
+.join-btn {
+  border-radius: 12px;
+  padding: 0.55rem 1rem;
+  font-weight: 600;
+}
+
+.cta-note {
+  margin-top: 0.55rem;
+}
+
 .meta-box {
   background: #f3f5f9;
   border: 1px solid #d8dfeb;
@@ -174,6 +188,12 @@
   margin-top: 1rem;
   padding-top: 0.9rem;
   color: #e8ecff;
+}
+
+.contact-btn {
+  margin-top: 0.8rem;
+  border-radius: 12px;
+  font-weight: 600;
 }
 
 .placeholder {

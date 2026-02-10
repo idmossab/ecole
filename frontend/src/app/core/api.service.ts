@@ -47,6 +47,7 @@ export type AdminStats = {
   totalStudents: number;
   totalCourses: number;
   totalCertificates: number;
+  totalDiplomas: number;
 };
 
 export type AdminDiploma = {
