@@ -171,20 +171,39 @@
         </thead>
         <tbody>
           <tr *ngFor="let item of students">
-            <td>{{ item.role }}</td>
+            <td>{{ item.role }} <span *ngIf="isSuperAdmin(item)" class="super-badge">SUPER</span></td>
             <td>{{ item.firstName }} {{ item.lastName }}</td>
             <td>{{ item.email }}</td>
             <td>{{ item.status }}</td>
             <td>{{ item.phone || '-' }}</td>
             <td>{{ item.city || '-' }}</td>
-            <td><button class="btn btn-sm btn-danger" type="button" (click)="removeItem(item)">Delete</button></td>
             <td>
-              <button class="btn btn-sm btn-outline-dark" type="button" (click)="changeStudentRole(item)">
+              <button
+                class="btn btn-sm btn-danger"
+                type="button"
+                (click)="removeItem(item)"
+                [disabled]="!canManageStudentActions(item)"
+              >
+                Delete
+              </button>
+            </td>
+            <td>
+              <button
+                class="btn btn-sm btn-outline-dark"
+                type="button"
+                (click)="changeStudentRole(item)"
+                [disabled]="!canManageStudentActions(item)"
+              >
                 Make {{ item.role === 'ADMIN' ? 'USER' : 'ADMIN' }}
               </button>
             </td>
             <td>
-              <button class="btn btn-sm btn-outline-dark" type="button" (click)="toggleStudentStatus(item)">
+              <button
+                class="btn btn-sm btn-outline-dark"
+                type="button"
+                (click)="toggleStudentStatus(item)"
+                [disabled]="!canManageStudentActions(item)"
+              >
                 Set {{ item.status === 'ACTIVE' ? 'BANNED' : 'ACTIVE' }}
               </button>
             </td>

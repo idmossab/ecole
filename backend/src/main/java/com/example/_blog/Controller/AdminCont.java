@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -39,6 +40,7 @@ import com.example._blog.Service.CourseService;
 import com.example._blog.Service.DiplomeService;
 import com.example._blog.Service.SpecializationService;
 import com.example._blog.Service.UserService;
+import com.example._blog.Security.UserPrincipal;
 
 import jakarta.validation.Valid;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -223,17 +225,34 @@ public class AdminCont {
     }
 
     @PutMapping("/users/{userId}/role")
-    public UserResponse changeUserRole(@PathVariable Long userId, @Valid @RequestBody AdminUserRoleRequest request) {
-        return userService.changeRole(userId, request.role());
+    public UserResponse changeUserRole(
+            @AuthenticationPrincipal UserPrincipal principal,
+            @PathVariable Long userId,
+            @Valid @RequestBody AdminUserRoleRequest request
+    ) {
+        return userService.changeRole(requireUserId(principal), userId, request.role());
     }
 
     @PostMapping("/users/{userId}/toggle-status")
-    public UserResponse toggleUserStatus(@PathVariable Long userId) {
-        return userService.toggleActiveBanned(userId);
+    public UserResponse toggleUserStatus(
+            @AuthenticationPrincipal UserPrincipal principal,
+            @PathVariable Long userId
+    ) {
+        return userService.toggleActiveBanned(requireUserId(principal), userId);
     }
 
     @DeleteMapping("/users/{userId}")
-    public void deleteUserAdmin(@PathVariable Long userId) {
-        userService.delete(userId);
+    public void deleteUserAdmin(
+            @AuthenticationPrincipal UserPrincipal principal,
+            @PathVariable Long userId
+    ) {
+        userService.deleteAdminManaged(requireUserId(principal), userId);
+    }
+
+    private Long requireUserId(UserPrincipal principal) {
+        if (principal == null || principal.getUser() == null || principal.getUser().getUserId() == null) {
+            throw new ResponseStatusException(BAD_REQUEST, "Unauthorized user context");
+        }
+        return principal.getUser().getUserId();
     }
 }

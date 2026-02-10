@@ -8,6 +8,7 @@ import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 
 import java.util.List;
 
@@ -108,9 +109,13 @@ public class UserService {
         repo.delete(existing);
     }
 
-    public UserResponse changeRole(Long userId, String roleValue) {
+    public UserResponse changeRole(Long actorUserId, Long userId, String roleValue) {
+        User actor = repo.findById(actorUserId)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Actor user not found"));
         User existing = repo.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "User not found"));
+
+        enforceAdminManagementRules(actor, existing);
 
         UserRole role;
         try {
@@ -123,13 +128,42 @@ public class UserService {
         return toResponse(repo.save(existing));
     }
 
-    public UserResponse toggleActiveBanned(Long userId) {
+    public UserResponse toggleActiveBanned(Long actorUserId, Long userId) {
+        User actor = repo.findById(actorUserId)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Actor user not found"));
         User existing = repo.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "User not found"));
 
+        enforceAdminManagementRules(actor, existing);
         UserStatus next = existing.getStatus() == UserStatus.ACTIVE ? UserStatus.BANNED : UserStatus.ACTIVE;
         existing.setStatus(next);
         return toResponse(repo.save(existing));
+    }
+
+    public void deleteAdminManaged(Long actorUserId, Long userId) {
+        User actor = repo.findById(actorUserId)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Actor user not found"));
+        User existing = repo.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "User not found"));
+
+        enforceAdminManagementRules(actor, existing);
+        repo.delete(existing);
+    }
+
+    private void enforceAdminManagementRules(User actor, User target) {
+        User superAdmin = repo.findFirstByRoleOrderByUserIdAsc(UserRole.ADMIN)
+                .orElse(null);
+        Long superAdminId = superAdmin == null ? null : superAdmin.getUserId();
+        boolean actorIsSuperAdmin = superAdminId != null && superAdminId.equals(actor.getUserId());
+        boolean targetIsSuperAdmin = superAdminId != null && superAdminId.equals(target.getUserId());
+
+        if (targetIsSuperAdmin) {
+            throw new ResponseStatusException(FORBIDDEN, "Super admin account cannot be modified");
+        }
+
+        if (target.getRole() == UserRole.ADMIN && !actorIsSuperAdmin) {
+            throw new ResponseStatusException(FORBIDDEN, "Only super admin can manage other admin accounts");
+        }
     }
 
     private UserResponse toResponse(User user) {

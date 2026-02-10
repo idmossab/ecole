@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import com.example._blog.Entity.User;
 import com.example._blog.Entity.enums.UserRole;
+import java.util.Optional;
 
 @Repository
 public interface UserRepo extends JpaRepository<User, Long> {
@@ -15,4 +16,5 @@ public interface UserRepo extends JpaRepository<User, Long> {
     boolean existsByEmail(String email);
 
     long countByRole(UserRole role);
+    Optional<User> findFirstByRoleOrderByUserIdAsc(UserRole role);
 }

@@ -51,6 +51,7 @@ export class DashboardComponent implements OnInit {
   loadedActionIds = new Set<QuickActionId>();
 
   students: UserResponse[] = [];
+  currentUserId: number | null = null;
   certificates: AdminCertificate[] = [];
   diplomas: AdminDiploma[] = [];
   courses: (AdminCourse & { certificateTitle?: string })[] = [];
@@ -102,6 +103,13 @@ export class DashboardComponent implements OnInit {
   constructor(private api: ApiService) {}
 
   ngOnInit(): void {
+    this.api.getMe().subscribe({
+      next: (me) => {
+        this.currentUserId = me.userId;
+      },
+      error: () => {}
+    });
+
     this.api.getAdminStats().subscribe({
       next: (data) => {
         this.stats = data;
@@ -218,6 +226,9 @@ export class DashboardComponent implements OnInit {
   removeItem(item: any): void {
     this.actionError = '';
     this.actionToast = '';
+    if (this.selectedActionId === 'students' && !this.canManageStudentActions(item)) {
+      return;
+    }
     this.deleteConfirmVisible = true;
     this.pendingDeleteItem = item;
     this.pendingDeleteLabel = this.selectedActionId === 'students'
@@ -306,6 +317,7 @@ export class DashboardComponent implements OnInit {
   }
 
   toggleStudentStatus(item: UserResponse): void {
+    if (!this.canManageStudentActions(item)) return;
     this.actionError = '';
     this.actionToast = '';
     this.api.adminToggleUserStatus(item.userId).subscribe({
@@ -320,6 +332,7 @@ export class DashboardComponent implements OnInit {
   }
 
   changeStudentRole(item: UserResponse): void {
+    if (!this.canManageStudentActions(item)) return;
     this.actionError = '';
     this.actionToast = '';
     const nextRole: 'ADMIN' | 'USER' = item.role === 'ADMIN' ? 'USER' : 'ADMIN';
@@ -332,6 +345,28 @@ export class DashboardComponent implements OnInit {
         this.actionError = err?.error?.message || err?.error || 'Failed to change user role';
       }
     });
+  }
+
+  isSuperAdmin(item: UserResponse): boolean {
+    const adminIds = this.students
+      .filter((u) => u.role === 'ADMIN')
+      .map((u) => u.userId)
+      .sort((a, b) => a - b);
+    if (!adminIds.length) return false;
+    return item.userId === adminIds[0];
+  }
+
+  isCurrentUserSuperAdmin(): boolean {
+    if (!this.currentUserId) return false;
+    const current = this.students.find((u) => u.userId === this.currentUserId);
+    if (!current) return false;
+    return this.isSuperAdmin(current);
+  }
+
+  canManageStudentActions(item: UserResponse): boolean {
+    if (this.isSuperAdmin(item)) return false;
+    if (item.role === 'ADMIN' && !this.isCurrentUserSuperAdmin()) return false;
+    return true;
   }
 
   submitForm(): void {

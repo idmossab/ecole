@@ -207,6 +207,17 @@
   color: var(--text-secondary);
 }
 
+.super-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: #e0ecff;
+  color: #1d4ed8;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
 @media (max-width: 680px) {
   .quick-actions-menu {
     gap: 8px;
