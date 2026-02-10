@@ -115,8 +115,12 @@ export class CertificateDetailsComponent {
 
   requestJoinCertificate(): void {
     if (!this.certificate || this.joinRequested) return;
+    if (!this.selectedCourse?.id) {
+      this.joinRequestMessage = 'Please select a course first.';
+      return;
+    }
     this.joinRequestMessage = '';
-    this.api.createCertificateJoinRequest(this.certificate.id, { courseId: this.selectedCourse?.id ?? null }).subscribe({
+    this.api.createCertificateJoinRequest(this.certificate.id, { courseId: this.selectedCourse.id }).subscribe({
       next: () => {
         this.joinRequested = true;
         this.joinRequestMessage = 'Join request sent. Administration will review it.';

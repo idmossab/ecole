@@ -385,9 +385,14 @@ export class DashboardComponent implements OnInit {
   acceptJoinRequest(item: AdminJoinRequest): void {
     this.actionError = '';
     this.actionToast = '';
-    this.api.acceptAdminJoinRequest(item.id).subscribe({
+    const call$ = item.requestType === 'DIPLOMA'
+      ? this.api.acceptAdminDiplomaJoinRequest(item.id)
+      : this.api.acceptAdminJoinRequest(item.id);
+    call$.subscribe({
       next: (updated) => {
-        this.joinRequests = this.joinRequests.map((req) => req.id === item.id ? updated : req);
+        this.joinRequests = this.joinRequests.map((req) =>
+          (req.id === item.id && req.requestType === item.requestType) ? updated : req
+        );
         this.actionToast = `Join request #${updated.id} accepted`;
       },
       error: (err) => {
@@ -399,9 +404,14 @@ export class DashboardComponent implements OnInit {
   rejectJoinRequest(item: AdminJoinRequest): void {
     this.actionError = '';
     this.actionToast = '';
-    this.api.rejectAdminJoinRequest(item.id).subscribe({
+    const call$ = item.requestType === 'DIPLOMA'
+      ? this.api.rejectAdminDiplomaJoinRequest(item.id)
+      : this.api.rejectAdminJoinRequest(item.id);
+    call$.subscribe({
       next: (updated) => {
-        this.joinRequests = this.joinRequests.map((req) => req.id === item.id ? updated : req);
+        this.joinRequests = this.joinRequests.map((req) =>
+          (req.id === item.id && req.requestType === item.requestType) ? updated : req
+        );
         this.actionToast = `Join request #${updated.id} rejected`;
       },
       error: (err) => {

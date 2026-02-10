@@ -74,13 +74,18 @@ export type AdminSpecialization = {
 
 export type AdminJoinRequest = {
   id: number;
+  requestType: 'CERTIFICATE' | 'DIPLOMA';
   userId: number;
   studentUserName?: string | null;
   studentEmail?: string | null;
-  certificateId: number;
+  certificateId?: number | null;
   certificateTitle?: string | null;
   courseId?: number | null;
   courseTitle?: string | null;
+  diplomaId?: number | null;
+  diplomaTitle?: string | null;
+  specializationId?: number | null;
+  specializationTitle?: string | null;
   status: 'PENDING' | 'ACCEPTED' | 'REJECTED';
   requestedAt: string;
 };
@@ -373,6 +378,14 @@ export class ApiService {
     return this.http.post<AdminJoinRequest>(`${this.baseUrl}/api/admin/join-requests/${requestId}/reject`, {});
   }
 
+  acceptAdminDiplomaJoinRequest(requestId: number) {
+    return this.http.post<AdminJoinRequest>(`${this.baseUrl}/api/admin/diploma-join-requests/${requestId}/accept`, {});
+  }
+
+  rejectAdminDiplomaJoinRequest(requestId: number) {
+    return this.http.post<AdminJoinRequest>(`${this.baseUrl}/api/admin/diploma-join-requests/${requestId}/reject`, {});
+  }
+
   createSpecialization(diplomaId: number, payload: {
     title: string;
     description: string;
@@ -409,6 +422,10 @@ export class ApiService {
 
   createCertificateJoinRequest(certificateId: number, payload?: { courseId?: number | null }) {
     return this.http.post<AdminJoinRequest>(`${this.baseUrl}/api/certificates/${certificateId}/join-requests`, payload || {});
+  }
+
+  createDiplomaJoinRequest(diplomaId: number, payload: { specializationId: number }) {
+    return this.http.post<AdminJoinRequest>(`${this.baseUrl}/api/diplomas/${diplomaId}/join-requests`, payload);
   }
 
   searchIssueStudents(query: string) {

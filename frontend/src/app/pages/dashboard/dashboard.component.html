@@ -316,7 +316,12 @@
           <div class="request-head">
             <div>
               <h4>Student ID: {{ item.studentUserName || ('User #' + item.userId) }}</h4>
-              <p>{{ item.certificateTitle || 'Certificate' }}<span *ngIf="item.courseTitle"> - {{ item.courseTitle }}</span></p>
+              <p *ngIf="item.requestType === 'CERTIFICATE'">
+                {{ item.certificateTitle || 'Certificate' }}<span *ngIf="item.courseTitle"> - {{ item.courseTitle }}</span>
+              </p>
+              <p *ngIf="item.requestType === 'DIPLOMA'">
+                {{ item.diplomaTitle || 'Diploma' }}<span *ngIf="item.specializationTitle"> - {{ item.specializationTitle }}</span>
+              </p>
               <div class="request-meta">Requested: {{ item.requestedAt | date:'M/d/yyyy' }}</div>
             </div>
             <span class="status-pill" [class.pending]="item.status === 'PENDING'" [class.accepted]="item.status === 'ACCEPTED'" [class.rejected]="item.status === 'REJECTED'">

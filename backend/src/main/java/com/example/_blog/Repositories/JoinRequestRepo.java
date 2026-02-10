@@ -16,6 +16,13 @@ public interface JoinRequestRepo extends JpaRepository<JoinRequest, Long> {
     void deleteByCertificateId(Long certificateId);
     void deleteByCourseId(Long courseId);
     void deleteByUserId(Long userId);
+    List<JoinRequest> findByUserIdAndStatusOrderByCreatedAtDesc(Long userId, JoinRequestStatus status);
+    boolean existsByUserIdAndCertificateIdAndCourseIdAndStatusIn(
+            Long userId,
+            Long certificateId,
+            Long courseId,
+            List<JoinRequestStatus> statuses
+    );
 
     @Query(
             value = """

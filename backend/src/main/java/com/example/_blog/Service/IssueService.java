@@ -24,6 +24,7 @@ import com.example._blog.Dto.admin.IssueStudentSearchResponse;
 import com.example._blog.Entity.Certificate;
 import com.example._blog.Entity.Course;
 import com.example._blog.Entity.Diplome;
+import com.example._blog.Entity.DiplomaJoinRequest;
 import com.example._blog.Entity.IssuedCredential;
 import com.example._blog.Entity.JoinRequest;
 import com.example._blog.Entity.Specialization;
@@ -36,16 +37,13 @@ import com.example._blog.Repositories.DiplomaJoinRequestRepo;
 import com.example._blog.Repositories.DiplomeRepo;
 import com.example._blog.Repositories.IssuedCredentialRepo;
 import com.example._blog.Repositories.JoinRequestRepo;
-import com.example._blog.Repositories.SpecializationRepo;
 import com.example._blog.Repositories.UserRepo;
 
 @Service
 public class IssueService {
     private final UserRepo userRepo;
     private final CertificateRepo certificateRepo;
-    private final CourseRepo courseRepo;
     private final DiplomeRepo diplomeRepo;
-    private final SpecializationRepo specializationRepo;
     private final JoinRequestRepo joinRequestRepo;
     private final DiplomaJoinRequestRepo diplomaJoinRequestRepo;
     private final IssuedCredentialRepo issuedCredentialRepo;
@@ -53,18 +51,14 @@ public class IssueService {
     public IssueService(
             UserRepo userRepo,
             CertificateRepo certificateRepo,
-            CourseRepo courseRepo,
             DiplomeRepo diplomeRepo,
-            SpecializationRepo specializationRepo,
             JoinRequestRepo joinRequestRepo,
             DiplomaJoinRequestRepo diplomaJoinRequestRepo,
             IssuedCredentialRepo issuedCredentialRepo
     ) {
         this.userRepo = userRepo;
         this.certificateRepo = certificateRepo;
-        this.courseRepo = courseRepo;
         this.diplomeRepo = diplomeRepo;
-        this.specializationRepo = specializationRepo;
         this.joinRequestRepo = joinRequestRepo;
         this.diplomaJoinRequestRepo = diplomaJoinRequestRepo;
         this.issuedCredentialRepo = issuedCredentialRepo;
@@ -105,9 +99,9 @@ public class IssueService {
                 student.getCity()
         );
 
-        List<JoinRequest> accepted = joinRequestRepo.findAllByOrderByCreatedAtDesc().stream()
-                .filter(r -> r.getUserId() != null && r.getUserId().equals(userId))
-                .filter(r -> r.getStatus() == JoinRequestStatus.ACCEPTED)
+        List<JoinRequest> accepted = joinRequestRepo.findByUserIdAndStatusOrderByCreatedAtDesc(userId, JoinRequestStatus.ACCEPTED)
+                .stream()
+                .filter(r -> r.getCourseId() != null)
                 .toList();
 
         List<IssueCertificateOptionResponse> certificateOptions = accepted.stream()
@@ -122,11 +116,15 @@ public class IssueService {
                 .stream()
                 .map(r -> {
                     Certificate cert = r.getCertificate();
-                    List<String> courses = courseRepo.findByCertificateIdOrderByCreatedAtDesc(cert.getId()).stream()
+                    List<String> courses = accepted.stream()
+                            .filter(x -> cert.getId().equals(x.getCertificateId()))
+                            .map(JoinRequest::getCourse)
+                            .filter(java.util.Objects::nonNull)
                             .map(Course::getTitle)
+                            .distinct()
                             .toList();
                     boolean completed = false;
-                    boolean eligible = r.getStatus() == JoinRequestStatus.ACCEPTED || completed;
+                    boolean eligible = !courses.isEmpty();
                     boolean alreadyIssued = issuedCredentialRepo.existsByUserIdAndTypeAndCertificateId(
                             userId,
                             IssueType.CERTIFICATE,
@@ -145,23 +143,41 @@ public class IssueService {
                 .sorted(Comparator.comparing(IssueCertificateOptionResponse::title))
                 .toList();
 
-        List<Certificate> allCertificates = certificateRepo.findAllByOrderByCreatedAtDesc();
-        List<IssueDiplomaOptionResponse> diplomaOptions = diplomeRepo.findAllByOrderByIdDesc().stream()
-                .map(diploma -> {
-                    List<String> specs = specializationRepo.findByDiplomaIdOrderByCreatedAtDesc(diploma.getId()).stream()
+        List<DiplomaJoinRequest> acceptedDiploma = diplomaJoinRequestRepo
+                .findByUserIdAndStatusOrderByCreatedAtDesc(userId, JoinRequestStatus.ACCEPTED)
+                .stream()
+                .filter(r -> r.getSpecializationId() != null)
+                .toList();
+
+        List<IssueDiplomaOptionResponse> diplomaOptions = acceptedDiploma.stream()
+                .collect(java.util.stream.Collectors.toMap(
+                        DiplomaJoinRequest::getDiplomaId,
+                        r -> r,
+                        (a, b) -> a,
+                        java.util.LinkedHashMap::new
+                ))
+                .values()
+                .stream()
+                .map(req -> {
+                    Diplome diploma = req.getDiploma();
+                    List<String> specs = acceptedDiploma.stream()
+                            .filter(x -> diploma.getId().equals(x.getDiplomaId()))
+                            .map(DiplomaJoinRequest::getSpecialization)
+                            .filter(java.util.Objects::nonNull)
                             .map(Specialization::getTitle)
+                            .distinct()
                             .toList();
-                    List<String> summaryCourses = allCertificates.stream().map(Certificate::getTitle).toList();
+                    List<String> summaryCourses = specs;
                     boolean completed = false;
-                    boolean acceptedState = completed;
-                    boolean eligible = completed || acceptedState;
+                    boolean acceptedState = !specs.isEmpty();
+                    boolean eligible = acceptedState || completed;
                     boolean alreadyIssued = issuedCredentialRepo.existsByUserIdAndTypeAndDiplomaId(
                             userId,
                             IssueType.DIPLOMA,
                             diploma.getId()
                     );
                     return new IssueDiplomaOptionResponse(
-                            diploma.getId(),
+                        diploma.getId(),
                             diploma.getLabel(),
                             acceptedState,
                             completed,
@@ -171,6 +187,7 @@ public class IssueService {
                             summaryCourses
                     );
                 })
+                .sorted(Comparator.comparing(IssueDiplomaOptionResponse::title))
                 .toList();
 
         List<IssueRecentResponse> recentlyIssued = issuedCredentialRepo.findTop10ByUserIdOrderByCreatedAtDesc(userId).stream()
@@ -219,6 +236,12 @@ public class IssueService {
             if (issuedCredentialRepo.existsByUserIdAndTypeAndCertificateId(user.getUserId(), IssueType.CERTIFICATE, cert.getId())) {
                 throw new ResponseStatusException(CONFLICT, "Already issued");
             }
+            boolean hasAcceptedCourseJoin = joinRequestRepo.findByUserIdAndStatusOrderByCreatedAtDesc(user.getUserId(), JoinRequestStatus.ACCEPTED)
+                    .stream()
+                    .anyMatch(r -> cert.getId().equals(r.getCertificateId()) && r.getCourseId() != null);
+            if (!hasAcceptedCourseJoin) {
+                throw new ResponseStatusException(BAD_REQUEST, "Student is not accepted in a course for this certificate");
+            }
             entity.setCertificate(cert);
             entity.setSerialNumber(generateSerial("CERT", cert.getId(), user.getUserId()));
         } else {
@@ -229,6 +252,12 @@ public class IssueService {
                     .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Diploma not found"));
             if (issuedCredentialRepo.existsByUserIdAndTypeAndDiplomaId(user.getUserId(), IssueType.DIPLOMA, diploma.getId())) {
                 throw new ResponseStatusException(CONFLICT, "Already issued");
+            }
+            boolean hasAcceptedSpecJoin = diplomaJoinRequestRepo.findByUserIdAndStatusOrderByCreatedAtDesc(user.getUserId(), JoinRequestStatus.ACCEPTED)
+                    .stream()
+                    .anyMatch(r -> diploma.getId().equals(r.getDiplomaId()) && r.getSpecializationId() != null);
+            if (!hasAcceptedSpecJoin) {
+                throw new ResponseStatusException(BAD_REQUEST, "Student is not accepted in a specialization for this diploma");
             }
             entity.setDiploma(diploma);
             entity.setSerialNumber(generateSerial("DIP", diploma.getId(), user.getUserId()));

@@ -278,6 +278,16 @@ public class AdminCont {
         return joinRequestService.reject(requestId);
     }
 
+    @PostMapping("/diploma-join-requests/{requestId}/accept")
+    public AdminJoinRequestResponse acceptDiplomaJoinRequest(@PathVariable Long requestId) {
+        return joinRequestService.acceptDiploma(requestId);
+    }
+
+    @PostMapping("/diploma-join-requests/{requestId}/reject")
+    public AdminJoinRequestResponse rejectDiplomaJoinRequest(@PathVariable Long requestId) {
+        return joinRequestService.rejectDiploma(requestId);
+    }
+
     @GetMapping("/issue/students/search")
     public List<IssueStudentSearchResponse> searchIssueStudents(@RequestParam("q") String q) {
         return issueService.searchStudents(q);

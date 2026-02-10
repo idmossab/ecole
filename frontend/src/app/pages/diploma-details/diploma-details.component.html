@@ -23,11 +23,11 @@
         <button
           class="btn btn-primary join-btn"
           type="button"
-          *ngIf="isLoggedIn && progress"
-          [disabled]="claimLoading || !canClaim() || progress.isClaimed"
-          (click)="claimDiploma()"
+          *ngIf="isLoggedIn"
+          [disabled]="claimLoading || !selectedSpecialization || joinRequested"
+          (click)="requestJoinDiploma()"
         >
-          {{ progress.isClaimed ? 'Claimed' : 'Request to Join Diploma' }}
+          {{ joinRequested ? 'Request Sent' : 'Request to Join Diploma' }}
         </button>
         <a
           *ngIf="!isLoggedIn"

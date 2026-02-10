@@ -24,6 +24,7 @@ export class DiplomaDetailsComponent {
   message = '';
   error = '';
   claimLoading = false;
+  joinRequested = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -87,28 +88,23 @@ export class DiplomaDetailsComponent {
     return !!this.progress && this.progress.isCompleted && !this.progress.isClaimed;
   }
 
-  claimDiploma(): void {
-    if (!this.diploma || !this.progress) return;
-    if (!this.canClaim()) {
-      this.message = 'Complete required certificates first to get this diploma.';
+  requestJoinDiploma(): void {
+    if (!this.diploma || this.joinRequested) return;
+    if (!this.selectedSpecialization?.id) {
+      this.message = 'Please select a specialization first.';
       return;
     }
     this.claimLoading = true;
     this.message = '';
-    this.api.claimDiploma(this.diploma.id).subscribe({
+    this.api.createDiplomaJoinRequest(this.diploma.id, { specializationId: this.selectedSpecialization.id }).subscribe({
       next: (res) => {
         this.claimLoading = false;
-        this.message = res.message;
-        this.progress = {
-          ...this.progress!,
-          isClaimed: true,
-          serialNumber: res.serialNumber || null,
-          claimedAt: res.claimedAt
-        };
+        this.message = `Join request sent (${res.status}).`;
+        this.joinRequested = true;
       },
       error: (err) => {
         this.claimLoading = false;
-        this.message = err?.error?.message || err?.error || 'Failed to claim diploma';
+        this.message = err?.error?.message || err?.error || 'Failed to send join request';
       }
     });
   }

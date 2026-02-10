@@ -14,21 +14,30 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.example._blog.Dto.DiplomaCertificateStatusResponse;
 import com.example._blog.Dto.DiplomaClaimResponse;
+import com.example._blog.Dto.DiplomaJoinRequestCreateRequest;
 import com.example._blog.Dto.DiplomaProgressResponse;
 import com.example._blog.Dto.DiplomaSummaryResponse;
 import com.example._blog.Dto.SpecializationResponse;
+import com.example._blog.Dto.admin.AdminJoinRequestResponse;
 import com.example._blog.Security.UserPrincipal;
 import com.example._blog.Service.DiplomeService;
+import com.example._blog.Service.JoinRequestService;
 import com.example._blog.Service.SpecializationService;
 
 @RestController
 public class DiplomaCont {
     private final DiplomeService diplomeService;
     private final SpecializationService specializationService;
+    private final JoinRequestService joinRequestService;
 
-    public DiplomaCont(DiplomeService diplomeService, SpecializationService specializationService) {
+    public DiplomaCont(
+            DiplomeService diplomeService,
+            SpecializationService specializationService,
+            JoinRequestService joinRequestService
+    ) {
         this.diplomeService = diplomeService;
         this.specializationService = specializationService;
+        this.joinRequestService = joinRequestService;
     }
 
     @GetMapping("/diplomas")
@@ -70,6 +79,15 @@ public class DiplomaCont {
             @PathVariable Long diplomaId
     ) {
         return diplomeService.claim(requireUserId(principal), diplomaId);
+    }
+
+    @PostMapping("/api/diplomas/{diplomaId}/join-requests")
+    public AdminJoinRequestResponse createDiplomaJoinRequest(
+            @AuthenticationPrincipal UserPrincipal principal,
+            @PathVariable Long diplomaId,
+            @org.springframework.web.bind.annotation.RequestBody DiplomaJoinRequestCreateRequest request
+    ) {
+        return joinRequestService.createDiploma(requireUserId(principal), diplomaId, request);
     }
 
     private Long requireUserId(UserPrincipal principal) {

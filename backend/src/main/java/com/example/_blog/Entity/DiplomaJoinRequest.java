@@ -50,6 +50,14 @@ public class DiplomaJoinRequest {
     @Column(name = "diploma_id", insertable = false, updatable = false)
     private Long diplomaId;
 
+    @ManyToOne
+    @JoinColumn(name = "specialization_id", nullable = false)
+    @JsonIgnore
+    private Specialization specialization;
+
+    @Column(name = "specialization_id", insertable = false, updatable = false)
+    private Long specializationId;
+
     @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
