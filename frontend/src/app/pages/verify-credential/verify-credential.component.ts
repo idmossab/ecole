@@ -35,4 +35,10 @@ export class VerifyCredentialComponent {
       }
     });
   }
+
+  typeLabel(type: string): string {
+    if (type === 'DIPLOMA') return 'Specialization';
+    if (type === 'CERTIFICATE') return 'Certificate';
+    return type;
+  }
 }

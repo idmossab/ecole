@@ -118,24 +118,20 @@
     </div>
     <div class="small mt-2"><strong>Verify URL:</strong> {{ result.qrPreview }}</div>
     <a class="btn btn-outline-primary btn-sm mt-2 me-2" [routerLink]="['/verify', result.serialNumber]">Open Verification Page</a>
-    <a class="btn btn-outline-dark btn-sm mt-2" [attr.href]="result.documentUrl" target="_blank">View Document</a>
-  </section>
-
-  <section class="recent-card" *ngIf="recentItems.length">
-    <h2 class="display-font">Recently Issued</h2>
-    <article class="recent-item" *ngFor="let item of recentItems">
-      <h4>{{ item.title }}</h4>
-      <div>{{ item.studentName }}</div>
-      <div>Serial: {{ item.serialNumber }}</div>
-      <div>Issued: {{ item.issueDate | date:'M/d/yyyy' }}</div>
-    </article>
   </section>
 
   <section class="recent-card">
     <h2 class="display-font">Students With Issued Credentials</h2>
+    <label class="form-label mt-2">Search Student</label>
+    <input
+      class="form-control"
+      type="text"
+      placeholder="Search by name, username, or email"
+      [(ngModel)]="issuedStudentQuery"
+    />
     <div class="text-muted" *ngIf="loadingIssuedStudents">Loading students...</div>
     <div class="table-wrap" *ngIf="!loadingIssuedStudents">
-      <table class="issued-table" *ngIf="issuedStudents.length; else noIssuedStudents">
+      <table class="issued-table" *ngIf="filteredIssuedStudents.length; else noIssuedStudents">
         <thead>
           <tr>
             <th>Student</th>
@@ -148,7 +144,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let row of issuedStudents">
+          <tr *ngFor="let row of filteredIssuedStudents">
             <td>{{ row.name }}</td>
             <td>{{ row.userName }}</td>
             <td>{{ row.email }}</td>
@@ -164,8 +160,32 @@
         </tbody>
       </table>
       <ng-template #noIssuedStudents>
-        <div class="text-muted">No issued credentials yet.</div>
+        <div class="text-muted">No students match your search.</div>
       </ng-template>
+    </div>
+
+    <div class="detail-panel mt-3" *ngIf="selectedIssuedResult">
+      <div class="detail-title">Selected Student Confirmation</div>
+      <div><strong>Student:</strong> {{ selectedIssuedStudentName || '-' }}</div>
+      <div><strong>Serial:</strong> {{ selectedIssuedResult.serialNumber }}</div>
+      <div><strong>Issue Date:</strong> {{ selectedIssuedResult.issueDate | date:'M/d/yyyy' }}</div>
+      <div class="qr-preview">
+        <strong>QR Code:</strong>
+        <img [src]="selectedIssuedResult.qrImageUrl" alt="Selected issued credential QR code" />
+      </div>
+      <div class="small mt-2"><strong>Verify URL:</strong> {{ selectedIssuedResult.qrPreview }}</div>
+      <a class="btn btn-outline-primary btn-sm mt-2 me-2" [routerLink]="['/verify', selectedIssuedResult.serialNumber]">
+        Open Verification Page
+      </a>
+      <a
+        class="btn btn-outline-success btn-sm mt-2 ms-2"
+        [attr.href]="selectedIssuedResult.qrImageUrl"
+        [attr.download]="'qr-' + selectedIssuedResult.serialNumber + '.png'"
+        target="_blank"
+        rel="noopener"
+      >
+        Download QR PNG
+      </a>
     </div>
   </section>
 </div>

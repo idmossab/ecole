@@ -24,6 +24,7 @@ import {
 })
 export class AdminIssueComponent {
   query = '';
+  issuedStudentQuery = '';
   searching = false;
   searchResults: IssueStudentSearchItem[] = [];
   issuedStudents: IssueIssuedStudent[] = [];
@@ -40,6 +41,8 @@ export class AdminIssueComponent {
   error = '';
   success = '';
   result: IssueGenerateResponse | null = null;
+  selectedIssuedResult: IssueGenerateResponse | null = null;
+  selectedIssuedStudentName = '';
 
   constructor(private api: ApiService) {
     this.loadIssuedStudents();
@@ -69,20 +72,14 @@ export class AdminIssueComponent {
     this.query = `${item.name} (${item.userName})`;
     this.searchResults = [];
     this.result = null;
+    this.selectedIssuedResult = null;
+    this.selectedIssuedStudentName = '';
     this.success = '';
     this.error = '';
 
     this.api.getIssueStudentContext(item.userId).subscribe({
       next: (ctx) => {
-        this.context = ctx;
-        this.student = ctx.student;
-        const acceptedCertificates = (ctx.certificates || []).filter((entry) => entry.accepted);
-        const acceptedDiplomas = (ctx.diplomas || []).filter((entry) => entry.accepted);
-        this.selectedCertificateId = acceptedCertificates.length ? acceptedCertificates[0].certificateId : null;
-        this.selectedDiplomaId = acceptedDiplomas.length ? acceptedDiplomas[0].diplomaId : null;
-        if (ctx.recentlyIssued?.length) {
-          this.result = this.toResultFromRecent(ctx.recentlyIssued[0]);
-        }
+        this.applyContext(ctx);
       },
       error: () => {
         this.error = 'Failed to load student context';
@@ -179,25 +176,43 @@ export class AdminIssueComponent {
     return this.context?.recentlyIssued || [];
   }
 
+  get filteredIssuedStudents(): IssueIssuedStudent[] {
+    const q = this.issuedStudentQuery.trim().toLowerCase();
+    if (!q) return this.issuedStudents;
+    return this.issuedStudents.filter((row) =>
+      (row.name || '').toLowerCase().includes(q)
+      || (row.userName || '').toLowerCase().includes(q)
+      || (row.email || '').toLowerCase().includes(q)
+    );
+  }
+
   private refreshStudentContext(userId: number): void {
     this.api.getIssueStudentContext(userId).subscribe({
       next: (ctx) => {
-        this.context = ctx;
-        this.student = ctx.student;
-        if (!this.result && ctx.recentlyIssued?.length) {
-          this.result = this.toResultFromRecent(ctx.recentlyIssued[0]);
-        }
+        this.applyContext(ctx);
       },
       error: () => {}
     });
   }
 
   selectIssuedStudent(item: IssueIssuedStudent): void {
-    this.selectStudent({
-      userId: item.userId,
-      name: item.name,
-      userName: item.userName,
-      email: item.email
+    this.query = `${item.name} (${item.userName})`;
+    this.searchResults = [];
+    this.result = null;
+    this.success = '';
+    this.error = '';
+
+    this.api.getIssueStudentContext(item.userId).subscribe({
+      next: (ctx) => {
+        this.applyContext(ctx);
+        this.selectedIssuedStudentName = item.name;
+        this.selectedIssuedResult = ctx.recentlyIssued?.length
+          ? this.toResultFromRecent(ctx.recentlyIssued[0])
+          : null;
+      },
+      error: () => {
+        this.error = 'Failed to load selected student details';
+      }
     });
   }
 
@@ -223,5 +238,14 @@ export class AdminIssueComponent {
       qrImageUrl: `http://localhost:8080/api/issued/qr/${item.serialNumber}`,
       documentUrl: '/documents/issued/' + item.serialNumber
     };
+  }
+
+  private applyContext(ctx: IssueStudentContext): void {
+    this.context = ctx;
+    this.student = ctx.student;
+    const acceptedCertificates = (ctx.certificates || []).filter((entry) => entry.accepted);
+    const acceptedDiplomas = (ctx.diplomas || []).filter((entry) => entry.accepted);
+    this.selectedCertificateId = acceptedCertificates.length ? acceptedCertificates[0].certificateId : null;
+    this.selectedDiplomaId = acceptedDiplomas.length ? acceptedDiplomas[0].diplomaId : null;
   }
 }
