@@ -38,6 +38,15 @@
     <button
       class="btn btn-outline-secondary btn-sm"
       type="button"
+      routerLink="/admin/profile"
+      *ngIf="isAdmin"
+    >
+      Profile
+    </button>
+
+    <button
+      class="btn btn-outline-secondary btn-sm"
+      type="button"
       routerLink="/profile"
       *ngIf="isUser"
     >

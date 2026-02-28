@@ -88,6 +88,10 @@ export const routes: Routes = [
     component: AdminIssueStatsComponent
   },
   {
+    path: 'admin/profile',
+    component: ProfileComponent
+  },
+  {
     path: 'manage-students',
     component: StatsComingComponent
   },
