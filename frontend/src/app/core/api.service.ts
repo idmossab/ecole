@@ -149,7 +149,21 @@ export type IssueGenerateResponse = {
   serialNumber: string;
   issueDate: string;
   qrPreview: string;
+  qrImageUrl: string;
   documentUrl: string;
+};
+
+export type IssuedCredentialVerify = {
+  serialNumber: string;
+  type: 'CERTIFICATE' | 'DIPLOMA' | string;
+  title: string;
+  issueDate: string;
+  userId: number;
+  fullName: string;
+  userName: string;
+  email: string;
+  phone?: string | null;
+  city?: string | null;
 };
 
 export type IssueStats = {
@@ -459,5 +473,9 @@ export class ApiService {
 
   getIssueStats() {
     return this.http.get<IssueStats>(`${this.baseUrl}/api/admin/issue/stats`);
+  }
+
+  verifyIssuedCredential(serialNumber: string) {
+    return this.http.get<IssuedCredentialVerify>(`${this.baseUrl}/api/issued/verify/${encodeURIComponent(serialNumber)}`);
   }
 }

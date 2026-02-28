@@ -7,5 +7,6 @@ public record IssueGenerateResponse(
         String serialNumber,
         LocalDate issueDate,
         String qrPreview,
+        String qrImageUrl,
         String documentUrl
 ) {}

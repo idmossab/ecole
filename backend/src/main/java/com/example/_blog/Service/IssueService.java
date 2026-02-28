@@ -8,10 +8,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.example._blog.Dto.IssuedCredentialVerifyResponse;
 import com.example._blog.Dto.admin.IssueCertificateOptionResponse;
 import com.example._blog.Dto.admin.IssueDiplomaOptionResponse;
 import com.example._blog.Dto.admin.IssueGenerateRequest;
@@ -38,9 +41,16 @@ import com.example._blog.Repositories.DiplomeRepo;
 import com.example._blog.Repositories.IssuedCredentialRepo;
 import com.example._blog.Repositories.JoinRequestRepo;
 import com.example._blog.Repositories.UserRepo;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
 
 @Service
 public class IssueService {
+    private static final String VERIFY_BASE_URL = "http://localhost:4200/verify";
+    private static final String QR_IMAGE_BASE_URL = "http://localhost:8080/api/issued/qr";
     private final UserRepo userRepo;
     private final CertificateRepo certificateRepo;
     private final DiplomeRepo diplomeRepo;
@@ -263,7 +273,7 @@ public class IssueService {
             entity.setSerialNumber(generateSerial("DIP", diploma.getId(), user.getUserId()));
         }
 
-        String qrPayload = "ISSUE:" + entity.getSerialNumber() + ":" + entity.getIssueDate();
+        String qrPayload = VERIFY_BASE_URL + "/" + entity.getSerialNumber();
         entity.setQrPayload(qrPayload);
         entity.setDocumentUrl("/documents/issued/" + entity.getSerialNumber());
 
@@ -273,12 +283,59 @@ public class IssueService {
                 saved.getSerialNumber(),
                 saved.getIssueDate(),
                 saved.getQrPayload(),
+                QR_IMAGE_BASE_URL + "/" + saved.getSerialNumber(),
                 saved.getDocumentUrl()
+        );
+    }
+
+    public byte[] getQrImageBySerial(String serialNumber) {
+        IssuedCredential item = issuedCredentialRepo.findBySerialNumber(serialNumber)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Issued credential not found"));
+        return buildQrPng(item.getQrPayload());
+    }
+
+    public IssuedCredentialVerifyResponse verifyBySerial(String serialNumber) {
+        IssuedCredential item = issuedCredentialRepo.findBySerialNumber(serialNumber)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Issued credential not found"));
+
+        User user = item.getUser();
+        String fullName = ((user.getFirstName() == null ? "" : user.getFirstName()) + " "
+                + (user.getLastName() == null ? "" : user.getLastName())).trim();
+
+        String title = item.getType() == IssueType.CERTIFICATE
+                ? (item.getCertificate() == null ? "Certificate" : item.getCertificate().getTitle())
+                : (item.getDiploma() == null ? "Diploma" : item.getDiploma().getLabel());
+
+        return new IssuedCredentialVerifyResponse(
+                item.getSerialNumber(),
+                item.getType().name(),
+                title,
+                item.getIssueDate(),
+                user.getUserId(),
+                fullName,
+                user.getUserName(),
+                user.getEmail(),
+                user.getPhone(),
+                user.getCity()
         );
     }
 
     private String generateSerial(String prefix, Long itemId, Long userId) {
         String randomPart = UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase();
         return prefix + "-" + itemId + "-" + userId + "-" + randomPart;
+    }
+
+    private byte[] buildQrPng(String payload) {
+        try {
+            java.util.Map<EncodeHintType, Object> hints = java.util.Map.of(
+                    EncodeHintType.CHARACTER_SET, StandardCharsets.UTF_8.name()
+            );
+            BitMatrix matrix = new MultiFormatWriter().encode(payload, BarcodeFormat.QR_CODE, 320, 320, hints);
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            MatrixToImageWriter.writeToStream(matrix, "PNG", out);
+            return out.toByteArray();
+        } catch (Exception ex) {
+            throw new ResponseStatusException(BAD_REQUEST, "Failed to generate QR code");
+        }
     }
 }

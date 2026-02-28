@@ -19,6 +19,7 @@ import { AdminDiplomasComponent } from './pages/admin-diplomas/admin-diplomas.co
 import { AdminSpecializationsComponent } from './pages/admin-specializations/admin-specializations.component';
 import { AdminIssueComponent } from './pages/admin-issue/admin-issue.component';
 import { AdminIssueStatsComponent } from './pages/admin-issue-stats/admin-issue-stats.component';
+import { VerifyCredentialComponent } from './pages/verify-credential/verify-credential.component';
 
 export const routes: Routes = [
   {
@@ -105,6 +106,10 @@ export const routes: Routes = [
   {
     path: 'contact',
     component: ContactComponent
+  },
+  {
+    path: 'verify/:serial',
+    component: VerifyCredentialComponent
   },
   {
     path: '**',

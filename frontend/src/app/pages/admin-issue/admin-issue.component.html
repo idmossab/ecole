@@ -113,9 +113,11 @@
     <div><strong>Serial:</strong> {{ result.serialNumber }}</div>
     <div><strong>Issue Date:</strong> {{ result.issueDate | date:'M/d/yyyy' }}</div>
     <div class="qr-preview">
-      <strong>QR Preview:</strong>
-      <code>{{ result.qrPreview }}</code>
+      <strong>QR Code:</strong>
+      <img [src]="result.qrImageUrl" alt="Issued credential QR code" />
     </div>
+    <div class="small mt-2"><strong>Verify URL:</strong> {{ result.qrPreview }}</div>
+    <a class="btn btn-outline-primary btn-sm mt-2 me-2" [routerLink]="['/verify', result.serialNumber]">Open Verification Page</a>
     <a class="btn btn-outline-dark btn-sm mt-2" [attr.href]="result.documentUrl" target="_blank">View Document</a>
   </section>
 

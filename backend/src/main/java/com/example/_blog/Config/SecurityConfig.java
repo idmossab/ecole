@@ -37,7 +37,8 @@ public class SecurityConfig {
                     "/certificates/**",
                     "/diplomas/**",
                     "/courses/**",
-                    "/uploads/**"
+                    "/uploads/**",
+                    "/api/issued/**"
                 ).permitAll()
                 .requestMatchers("/admin/**", "/api/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()

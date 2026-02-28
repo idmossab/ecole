@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
 import {
   ApiService,
@@ -16,7 +17,7 @@ import {
 @Component({
   selector: 'app-admin-issue',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './admin-issue.component.html',
   styleUrl: './admin-issue.component.css'
 })
@@ -154,13 +155,8 @@ export class AdminIssueComponent {
         this.generating = false;
         this.result = res;
         this.success = this.issueType === 'CERTIFICATE' ? 'Certificate generated' : 'Diploma generated';
-        if (this.context) {
-          this.selectStudent({
-            userId: this.student!.userId,
-            name: this.student!.name,
-            userName: this.student!.userName,
-            email: this.student!.email
-          });
+        if (this.student) {
+          this.refreshStudentContext(this.student.userId);
         }
       },
       error: (err) => {
@@ -172,5 +168,15 @@ export class AdminIssueComponent {
 
   get recentItems(): IssueRecentItem[] {
     return this.context?.recentlyIssued || [];
+  }
+
+  private refreshStudentContext(userId: number): void {
+    this.api.getIssueStudentContext(userId).subscribe({
+      next: (ctx) => {
+        this.context = ctx;
+        this.student = ctx.student;
+      },
+      error: () => {}
+    });
   }
 }

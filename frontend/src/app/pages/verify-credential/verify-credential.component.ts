@@ -1,0 +1,38 @@
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+
+import { ApiService, IssuedCredentialVerify } from '../../core/api.service';
+
+@Component({
+  selector: 'app-verify-credential',
+  standalone: true,
+  imports: [CommonModule, RouterLink],
+  templateUrl: './verify-credential.component.html',
+  styleUrl: './verify-credential.component.css'
+})
+export class VerifyCredentialComponent {
+  loading = true;
+  error = '';
+  data: IssuedCredentialVerify | null = null;
+
+  constructor(route: ActivatedRoute, api: ApiService) {
+    const serial = route.snapshot.paramMap.get('serial');
+    if (!serial) {
+      this.loading = false;
+      this.error = 'Invalid verification link';
+      return;
+    }
+
+    api.verifyIssuedCredential(serial).subscribe({
+      next: (res) => {
+        this.data = res;
+        this.loading = false;
+      },
+      error: (err) => {
+        this.loading = false;
+        this.error = err?.error?.message || err?.error || 'Credential not found';
+      }
+    });
+  }
+}

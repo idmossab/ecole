@@ -81,9 +81,14 @@
   font-weight: 700;
 }
 
-.qr-preview code {
-  display: inline-block;
-  margin-top: 4px;
+.qr-preview img {
+  display: block;
+  width: min(280px, 100%);
+  margin-top: 6px;
+  border: 1px solid #d7deea;
+  border-radius: 10px;
+  background: #fff;
+  padding: 6px;
 }
 
 .recent-item {
