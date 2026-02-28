@@ -2,6 +2,7 @@
   <div class="profile-card" *ngIf="user">
     <h1 class="display-font">Profile</h1>
     <p class="text-muted">Welcome back, {{ user.firstName }} {{ user.lastName }}</p>
+    <p class="text-muted" *ngIf="isAdmin">Admin profile: personal account information only.</p>
 
     <div class="profile-meta" *ngIf="!editMode">
       <div><div class="label">Username</div><div class="value">@{{ user.userName }}</div></div>
@@ -33,7 +34,7 @@
     </div>
   </div>
 
-  <div class="profile-card my-certs" *ngIf="user">
+  <div class="profile-card my-certs" *ngIf="user && !isAdmin">
     <h2 class="display-font">My Certificates</h2>
     <p class="text-muted">Only certificates accepted by admin</p>
 
@@ -50,7 +51,7 @@
     </div>
   </div>
 
-  <div class="profile-card my-certs" *ngIf="user">
+  <div class="profile-card my-certs" *ngIf="user && !isAdmin">
     <h2 class="display-font">My Diplomas</h2>
     <p class="text-muted">Only diplomas accepted by admin</p>
 

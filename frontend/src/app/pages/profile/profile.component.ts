@@ -36,6 +36,10 @@ export class ProfileComponent implements OnInit {
 
   constructor(private api: ApiService, private auth: AuthService, private router: Router) {}
 
+  get isAdmin(): boolean {
+    return this.user?.role === 'ADMIN';
+  }
+
   ngOnInit(): void {
     if (!this.auth.isLoggedIn()) {
       this.router.navigateByUrl('/login');
@@ -53,30 +57,35 @@ export class ProfileComponent implements OnInit {
           phone: me.phone || ''
         };
         this.loading = false;
+        if (me.role === 'ADMIN') {
+          this.certificatesLoading = false;
+          this.diplomasLoading = false;
+          return;
+        }
+
+        this.api.getMyAcceptedCertificates().subscribe({
+          next: (items) => {
+            this.myCertificates = items || [];
+            this.certificatesLoading = false;
+          },
+          error: () => {
+            this.certificatesLoading = false;
+          }
+        });
+
+        this.api.getMyAcceptedDiplomas().subscribe({
+          next: (items) => {
+            this.myDiplomas = items || [];
+            this.diplomasLoading = false;
+          },
+          error: () => {
+            this.diplomasLoading = false;
+          }
+        });
       },
       error: (err: any) => {
         this.error = err?.error?.message || err?.error || 'Failed to load profile';
         this.loading = false;
-      }
-    });
-
-    this.api.getMyAcceptedCertificates().subscribe({
-      next: (items) => {
-        this.myCertificates = items || [];
-        this.certificatesLoading = false;
-      },
-      error: () => {
-        this.certificatesLoading = false;
-      }
-    });
-
-    this.api.getMyAcceptedDiplomas().subscribe({
-      next: (items) => {
-        this.myDiplomas = items || [];
-        this.diplomasLoading = false;
-      },
-      error: () => {
-        this.diplomasLoading = false;
       }
     });
   }
