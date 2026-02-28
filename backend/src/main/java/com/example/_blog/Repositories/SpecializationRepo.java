@@ -12,4 +12,5 @@ public interface SpecializationRepo extends JpaRepository<Specialization, Long> 
     List<Specialization> findByDiplomaIdOrderByCreatedAtDesc(Long diplomaId);
     boolean existsByDiplomaIdAndTitleIgnoreCase(Long diplomaId, String title);
     boolean existsByDiplomaIdAndTitleIgnoreCaseAndIdNot(Long diplomaId, String title, Long id);
+    void deleteByDiplomaId(Long diplomaId);
 }

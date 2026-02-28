@@ -8,7 +8,9 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example._blog.Dto.DiplomaCertificateStatusResponse;
@@ -26,6 +28,7 @@ import com.example._blog.Repositories.CertificateRepo;
 import com.example._blog.Repositories.DiplomaJoinRequestRepo;
 import com.example._blog.Repositories.DiplomeRepo;
 import com.example._blog.Repositories.IssuedCredentialRepo;
+import com.example._blog.Repositories.SpecializationRepo;
 import com.example._blog.Repositories.UserRepo;
 
 @Service
@@ -36,6 +39,7 @@ public class DiplomeService {
     private final NotificationService notificationService;
     private final IssuedCredentialRepo issuedCredentialRepo;
     private final DiplomaJoinRequestRepo diplomaJoinRequestRepo;
+    private final SpecializationRepo specializationRepo;
 
     public DiplomeService(
             DiplomeRepo diplomeRepo,
@@ -43,7 +47,8 @@ public class DiplomeService {
             UserRepo userRepo,
             NotificationService notificationService,
             IssuedCredentialRepo issuedCredentialRepo,
-            DiplomaJoinRequestRepo diplomaJoinRequestRepo
+            DiplomaJoinRequestRepo diplomaJoinRequestRepo,
+            SpecializationRepo specializationRepo
     ) {
         this.diplomeRepo = diplomeRepo;
         this.certificateRepo = certificateRepo;
@@ -51,6 +56,7 @@ public class DiplomeService {
         this.notificationService = notificationService;
         this.issuedCredentialRepo = issuedCredentialRepo;
         this.diplomaJoinRequestRepo = diplomaJoinRequestRepo;
+        this.specializationRepo = specializationRepo;
     }
 
     public Diplome createDiploma(String title, List<Long> certificateIds) {
@@ -134,11 +140,17 @@ public class DiplomeService {
         return toAdminResponse(diplomeRepo.save(diploma), requiredCount);
     }
 
+    @Transactional
     public void deleteAdmin(Long diplomaId) {
         Diplome diploma = ensureDiplomaExists(diplomaId);
-        diplomaJoinRequestRepo.deleteByDiplomaId(diplomaId);
-        issuedCredentialRepo.deleteByDiplomaId(diplomaId);
-        diplomeRepo.delete(diploma);
+        try {
+            diplomaJoinRequestRepo.deleteByDiplomaId(diplomaId);
+            issuedCredentialRepo.deleteByDiplomaId(diplomaId);
+            specializationRepo.deleteByDiplomaId(diplomaId);
+            diplomeRepo.delete(diploma);
+        } catch (DataIntegrityViolationException ex) {
+            throw new ResponseStatusException(CONFLICT, "Cannot delete diploma: linked records still exist");
+        }
     }
 
     public List<DiplomaCertificateStatusResponse> getDiplomaCertificates(Long diplomaId) {

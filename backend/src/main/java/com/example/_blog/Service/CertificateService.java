@@ -84,8 +84,8 @@ public class CertificateService {
     public void delete(Long id) {
         Certificate cert = getById(id);
         try {
-            courseRepo.deleteByCertificateId(id);
             joinRequestRepo.deleteByCertificateId(id);
+            courseRepo.deleteByCertificateId(id);
             issuedCredentialRepo.deleteByCertificateId(id);
             repo.deleteUserCertificateLinks(id);
             repo.delete(cert);
