@@ -65,12 +65,24 @@
 .summary {
   margin: 0.42rem 0 0.6rem;
   color: #4b5568;
-  min-height: 68px;
+  line-height: 1.45;
+  min-height: calc(1.45em * 3);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
 }
 
 .meta-line {
   color: #3f4a5d;
   margin-top: 0.35rem;
+}
+
+.clamp-3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
 }
 
 .program-btn {

@@ -2,10 +2,26 @@
   <a class="back-link" routerLink="/diplomas">&larr; Back to Diplomas</a>
   <div class="alert error" *ngIf="error">{{ error }}</div>
 
+  <section class="section-block specializations-section">
+    <h2 class="display-font">Specializations</h2>
+    <div class="spec-grid">
+      <button
+        type="button"
+        class="spec-item"
+        [class.active]="isSpecializationSelected(spec)"
+        *ngFor="let spec of specializations"
+        (click)="selectSpecialization(spec)"
+      >
+        {{ spec.title }}
+      </button>
+    </div>
+    <div class="text-muted" *ngIf="!specializations.length">No specializations added yet.</div>
+  </section>
+
   <section class="hero">
     <div class="hero-copy" [style.--hero-bg-image]="'url(' + diplomaImageUrl() + ')'">
       <span class="pill">{{ modeTag(diploma.mode) }}</span>
-      <h1 class="display-font">{{ diploma.title }}</h1>
+      <h1 class="display-font">{{ pageTitle() }}</h1>
       <p class="lead">{{ programOverview() }}</p>
 
       <div class="hero-meta">
@@ -35,7 +51,7 @@
           [routerLink]="['/login']"
           [queryParams]="{ returnTo: '/diplomas/' + diploma.id }"
         >
-          Request to Join Diploma
+          Request to Join Specialization
         </a>
       </div>
       <div class="text-muted small" *ngIf="message">{{ message }}</div>
@@ -56,24 +72,9 @@
         <ul>
           <li *ngFor="let feature of programFeatures()">{{ feature }}</li>
         </ul>
+        <div class="text-muted" *ngIf="!programFeatures().length">No feature details provided yet.</div>
       </section>
     </aside>
-  </section>
-
-  <section class="section-block">
-    <h2 class="display-font">Specializations</h2>
-    <div class="spec-grid">
-      <button
-        type="button"
-        class="spec-item"
-        [class.active]="isSpecializationSelected(spec)"
-        *ngFor="let spec of specializations"
-        (click)="selectSpecialization(spec)"
-      >
-        {{ spec.title }}
-      </button>
-    </div>
-    <div class="text-muted" *ngIf="!specializations.length">No specializations added yet.</div>
   </section>
 
   <section class="section-block">
@@ -90,6 +91,7 @@
       <ul>
         <li *ngFor="let item of admissionRequirements()">{{ item }}</li>
       </ul>
+      <div class="text-muted" *ngIf="!admissionRequirements().length">No admission requirements provided yet.</div>
     </section>
 
     <section class="section-block">

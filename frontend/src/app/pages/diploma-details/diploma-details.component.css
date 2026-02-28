@@ -113,6 +113,10 @@
   margin-top: 1.2rem;
 }
 
+.specializations-section {
+  margin-bottom: 1.35rem;
+}
+
 .section-block h2 {
   color: #26408b;
   margin-bottom: 0.6rem;
@@ -138,8 +142,10 @@ button.spec-item {
 }
 
 .spec-item.active {
-  border-color: #2f56d8;
-  box-shadow: 0 0 0 2px rgba(47, 86, 216, 0.18);
+  border-color: #1d4ed8;
+  background: #1d4ed8;
+  color: #fff;
+  box-shadow: 0 0 0 2px rgba(29, 78, 216, 0.22);
 }
 
 .overview-box {

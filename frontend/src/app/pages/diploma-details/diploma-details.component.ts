@@ -119,7 +119,7 @@ export class DiplomaDetailsComponent {
   joinButtonLabel(): string {
     if (this.joinStatus === 'PENDING') return 'Request Sent';
     if (this.joinStatus === 'ACCEPTED') return 'Accepted';
-    return 'Request to Join Diploma';
+    return 'Request to Join Specialization';
   }
 
   get displayCertificates(): DiplomaCertificateStatus[] {
@@ -137,6 +137,12 @@ export class DiplomaDetailsComponent {
 
   modeTag(mode: DiplomasMode): string {
     return `${this.modeLabel(mode).toUpperCase()} DIPLOMA`;
+  }
+
+  pageTitle(): string {
+    const specializationTitle = this.selectedSpecialization?.title?.trim();
+    if (specializationTitle) return specializationTitle;
+    return this.diploma?.title || 'Specialization';
   }
 
   selectSpecialization(item: SpecializationSummary): void {
@@ -159,61 +165,31 @@ export class DiplomaDetailsComponent {
   durationLabel(): string {
     const specializationDuration = this.selectedSpecialization?.durationText?.trim();
     if (specializationDuration) return specializationDuration;
-    if (!this.diploma) return '12-18 months';
-    if (this.diploma.mode === 'SPECIALIZED_TECHNICIAN') return '18-24 months';
-    if (this.diploma.mode === 'TECHNICIAN') return '12-18 months';
-    return '24-30 months';
+    return 'Duration not specified';
   }
 
   credentialLabel(): string {
     const awarded = this.selectedSpecialization?.certificateAwarded?.trim();
     if (awarded) return awarded;
-    if (!this.diploma) return 'Professional Diploma Certificate';
-    if (this.diploma.mode === 'SPECIALIZED_TECHNICIAN') return 'Specialized Software Developer';
-    if (this.diploma.mode === 'TECHNICIAN') return 'Certified IT Technician';
-    return 'Professional Qualification Certificate';
+    return 'Credential not specified';
   }
 
   admissionRequirements(): string[] {
     const dynamic = this.parseList(this.selectedSpecialization?.entryRequirements);
     if (dynamic.length) return dynamic;
-    if (!this.diploma) return [];
-    if (this.diploma.mode === 'SPECIALIZED_TECHNICIAN') {
-      return [
-        'High school diploma or equivalent',
-        'Strong computer literacy',
-        'Commitment to full-time study'
-      ];
-    }
-    if (this.diploma.mode === 'TECHNICIAN') {
-      return [
-        'High school diploma or equivalent',
-        'Basic computer literacy',
-        'Commitment to full-time study'
-      ];
-    }
-    return [
-      'Secondary school certificate',
-      'Basic academic readiness',
-      'Motivation to complete practical training'
-    ];
+    return [];
   }
 
   programFeatures(): string[] {
     const dynamic = this.parseList(this.selectedSpecialization?.programFeatures);
     if (dynamic.length) return dynamic;
-    return [
-      'Live instruction from expert teachers',
-      'Flexible online and in-person options',
-      'Official certification upon completion',
-      'Career guidance and support'
-    ];
+    return [];
   }
 
   programOverview(): string {
     return this.selectedSpecialization?.programOverview?.trim()
       || this.selectedSpecialization?.description?.trim()
-      || 'Choose your career path from our specialized tracks.';
+      || 'Program overview is not available yet.';
   }
 
   private parseList(value?: string | null): string[] {

@@ -16,16 +16,8 @@
 
       <div class="card-content">
         <h3>{{ diploma.title }}</h3>
-        <p class="summary">{{ modeLabel(diploma.mode) }} diploma program with practical training and certification.</p>
-
         <div class="meta-line">
-          <span>{{ durationLabel(diploma.mode) }}</span>
-        </div>
-        <div class="meta-line">
-          <span>{{ certificateLabel(diploma.mode) }}</span>
-        </div>
-        <div class="meta-line">
-          <span>{{ diploma.requiredCount }} Specializations</span>
+          <span>{{ specializationCount(diploma.id) }} Specializations</span>
         </div>
 
         <a class="program-btn" [routerLink]="['/diplomas', diploma.id]">View Program</a>

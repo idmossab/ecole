@@ -67,8 +67,10 @@ export class DashboardComponent implements OnInit {
   formVisible = false;
   editingId: number | null = null;
   submitting = false;
+  uploadingImage = false;
   deleteConfirmVisible = false;
   pendingDeleteItem: any = null;
+  pendingDeleteActionId: QuickActionId | null = null;
   pendingDeleteLabel = '';
 
   diplomaModes: DiplomasMode[] = ['SPECIALIZED_TECHNICIAN', 'TECHNICIAN', 'QUALIFICATION'];
@@ -152,8 +154,10 @@ export class DashboardComponent implements OnInit {
   selectAction(actionId: QuickActionId): void {
     this.selectedActionId = actionId;
     this.formVisible = false;
+    this.uploadingImage = false;
     this.deleteConfirmVisible = false;
     this.pendingDeleteItem = null;
+    this.pendingDeleteActionId = null;
     this.editingId = null;
     this.actionError = '';
     this.actionToast = '';
@@ -178,6 +182,7 @@ export class DashboardComponent implements OnInit {
     this.formVisible = false;
     this.editingId = null;
     this.submitting = false;
+    this.uploadingImage = false;
     this.resetCurrentForm();
   }
 
@@ -244,6 +249,7 @@ export class DashboardComponent implements OnInit {
     }
     this.deleteConfirmVisible = true;
     this.pendingDeleteItem = item;
+    this.pendingDeleteActionId = this.selectedActionId;
     this.pendingDeleteLabel = this.selectedActionId === 'students'
       ? `${item?.firstName || ''} ${item?.lastName || ''}`.trim() || item?.email || 'selected user'
       : item?.title || item?.id || 'selected item';
@@ -252,14 +258,16 @@ export class DashboardComponent implements OnInit {
   cancelDelete(): void {
     this.deleteConfirmVisible = false;
     this.pendingDeleteItem = null;
+    this.pendingDeleteActionId = null;
     this.pendingDeleteLabel = '';
   }
 
   confirmDelete(): void {
-    if (!this.pendingDeleteItem) return;
+    if (!this.pendingDeleteItem || !this.pendingDeleteActionId) return;
     const item = this.pendingDeleteItem;
+    const actionId = this.pendingDeleteActionId;
 
-    if (this.selectedActionId === 'students') {
+    if (actionId === 'students') {
       this.api.adminDeleteUser(item.userId).subscribe({
         next: () => {
           this.actionToast = 'User deleted';
@@ -273,7 +281,7 @@ export class DashboardComponent implements OnInit {
       return;
     }
 
-    if (this.selectedActionId === 'certificates') {
+    if (actionId === 'certificates') {
       this.api.deleteCertificate(item.id).subscribe({
         next: () => {
           this.actionToast = 'Certificate deleted';
@@ -287,7 +295,7 @@ export class DashboardComponent implements OnInit {
       return;
     }
 
-    if (this.selectedActionId === 'diplomas') {
+    if (actionId === 'diplomas') {
       this.api.deleteAdminDiploma(item.id).subscribe({
         next: () => {
           this.actionToast = 'Diploma deleted';
@@ -301,7 +309,7 @@ export class DashboardComponent implements OnInit {
       return;
     }
 
-    if (this.selectedActionId === 'courses') {
+    if (actionId === 'courses') {
       this.api.deleteCourse(item.id).subscribe({
         next: () => {
           this.actionToast = 'Course deleted';
@@ -315,7 +323,7 @@ export class DashboardComponent implements OnInit {
       return;
     }
 
-    if (this.selectedActionId === 'specializations') {
+    if (actionId === 'specializations') {
       this.api.deleteSpecialization(item.id).subscribe({
         next: () => {
           this.actionToast = 'Specialization deleted';
@@ -550,6 +558,54 @@ export class DashboardComponent implements OnInit {
     if (mode === 'SPECIALIZED_TECHNICIAN') return 'Specialized Technician';
     if (mode === 'TECHNICIAN') return 'Technician';
     return 'Qualification';
+  }
+
+  onImageSelected(target: 'certificate' | 'diploma', event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files && input.files[0];
+    if (!file) return;
+
+    this.actionError = '';
+    this.actionToast = '';
+
+    if (!file.type.startsWith('image/')) {
+      this.actionError = 'Please select an image file';
+      input.value = '';
+      return;
+    }
+
+    this.uploadingImage = true;
+    this.api.uploadAdminImage(file).subscribe({
+      next: (res) => {
+        const url = res.url || '';
+        if (target === 'certificate') {
+          this.certificateForm.imageUrl = url;
+        } else {
+          this.diplomaForm.imageUrl = url;
+        }
+        this.uploadingImage = false;
+        input.value = '';
+      },
+      error: (err) => {
+        this.actionError = err?.error?.message || err?.error || 'Failed to upload image';
+        this.uploadingImage = false;
+        input.value = '';
+      }
+    });
+  }
+
+  removeImage(target: 'certificate' | 'diploma'): void {
+    if (target === 'certificate') {
+      this.certificateForm.imageUrl = '';
+      return;
+    }
+    this.diplomaForm.imageUrl = '';
+  }
+
+  imagePreviewUrl(path?: string | null): string {
+    if (!path) return '';
+    if (path.startsWith('http://') || path.startsWith('https://')) return path;
+    return `http://localhost:8080${path}`;
   }
 
   private afterSubmit(message: string, actionId: QuickActionId): void {

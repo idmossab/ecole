@@ -73,8 +73,23 @@
         <input type="text" [(ngModel)]="certificateForm.title" name="certTitle" />
         <label>Description</label>
         <textarea rows="3" [(ngModel)]="certificateForm.description" name="certDescription"></textarea>
-        <label>Image URL</label>
-        <input type="text" [(ngModel)]="certificateForm.imageUrl" name="certImage" />
+        <label>Image</label>
+        <div class="image-upload-box">
+          <input #certificateImageInput type="file" accept="image/*" (change)="onImageSelected('certificate', $event)" hidden />
+          <button
+            class="upload-tile"
+            type="button"
+            (click)="certificateImageInput.click()"
+            [disabled]="uploadingImage || !!certificateForm.imageUrl"
+          >
+            <span class="plus">+</span>
+          </button>
+          <div class="preview-wrap" *ngIf="certificateForm.imageUrl">
+            <img [src]="imagePreviewUrl(certificateForm.imageUrl)" alt="Certificate image" />
+            <button class="btn btn-outline-dark" type="button" (click)="removeImage('certificate')">Remove</button>
+          </div>
+        </div>
+        <div class="text-muted" *ngIf="uploadingImage">Uploading image...</div>
         <div class="form-actions">
           <button class="btn btn-dark" type="submit" [disabled]="submitting">{{ editingId ? 'Update' : 'Create' }}</button>
           <button class="btn btn-outline-dark" type="button" (click)="cancelForm()">Cancel</button>
@@ -88,8 +103,23 @@
         <select [(ngModel)]="diplomaForm.mode" name="dipMode">
           <option *ngFor="let mode of diplomaModes" [ngValue]="mode">{{ modeLabel(mode) }}</option>
         </select>
-        <label>Image URL</label>
-        <input type="text" [(ngModel)]="diplomaForm.imageUrl" name="dipImage" />
+        <label>Image</label>
+        <div class="image-upload-box">
+          <input #diplomaImageInput type="file" accept="image/*" (change)="onImageSelected('diploma', $event)" hidden />
+          <button
+            class="upload-tile"
+            type="button"
+            (click)="diplomaImageInput.click()"
+            [disabled]="uploadingImage || !!diplomaForm.imageUrl"
+          >
+            <span class="plus">+</span>
+          </button>
+          <div class="preview-wrap" *ngIf="diplomaForm.imageUrl">
+            <img [src]="imagePreviewUrl(diplomaForm.imageUrl)" alt="Diploma image" />
+            <button class="btn btn-outline-dark" type="button" (click)="removeImage('diploma')">Remove</button>
+          </div>
+        </div>
+        <div class="text-muted" *ngIf="uploadingImage">Uploading image...</div>
         <div class="form-actions">
           <button class="btn btn-dark" type="submit" [disabled]="submitting">{{ editingId ? 'Update' : 'Create' }}</button>
           <button class="btn btn-outline-dark" type="button" (click)="cancelForm()">Cancel</button>

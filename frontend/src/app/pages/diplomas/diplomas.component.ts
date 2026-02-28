@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { forkJoin } from 'rxjs';
 
 import { ApiService } from '../../core/api.service';
-import { DiplomasMode, DiplomaSummary } from '../../core/models';
+import { DiplomasMode, DiplomaSummary, SpecializationSummary } from '../../core/models';
 
 @Component({
   selector: 'app-diplomas',
@@ -14,6 +15,7 @@ import { DiplomasMode, DiplomaSummary } from '../../core/models';
 })
 export class DiplomasComponent implements OnInit {
   diplomas: DiplomaSummary[] = [];
+  specializationsByDiplomaId: Record<number, SpecializationSummary[]> = {};
   error = '';
   loading = true;
   private readonly fallbackImages = [
@@ -28,7 +30,25 @@ export class DiplomasComponent implements OnInit {
     this.api.getDiplomas().subscribe({
       next: (data) => {
         this.diplomas = data || [];
-        this.loading = false;
+        if (!this.diplomas.length) {
+          this.loading = false;
+          return;
+        }
+
+        forkJoin(
+          this.diplomas.map((diploma) => this.api.getDiplomaSpecializations(diploma.id))
+        ).subscribe({
+          next: (allSpecs) => {
+            this.specializationsByDiplomaId = {};
+            this.diplomas.forEach((diploma, index) => {
+              this.specializationsByDiplomaId[diploma.id] = allSpecs[index] || [];
+            });
+            this.loading = false;
+          },
+          error: () => {
+            this.loading = false;
+          }
+        });
       },
       error: (err) => {
         this.error = err?.error?.message || err?.error || 'Failed to load diplomas';
@@ -44,9 +64,7 @@ export class DiplomasComponent implements OnInit {
   }
 
   modeBadge(mode: DiplomasMode): string {
-    if (mode === 'SPECIALIZED_TECHNICIAN') return 'Specialized';
-    if (mode === 'TECHNICIAN') return 'Technician';
-    return 'Qualification';
+    return this.modeLabel(mode);
   }
 
   cardImage(item: DiplomaSummary, index: number): string {
@@ -56,15 +74,27 @@ export class DiplomasComponent implements OnInit {
     return `http://localhost:8080${source}`;
   }
 
-  durationLabel(mode: DiplomasMode): string {
-    if (mode === 'SPECIALIZED_TECHNICIAN') return '18-24 months';
-    if (mode === 'TECHNICIAN') return '12-18 months';
-    return '24-30 months';
+  specializationCount(diplomaId: number): number {
+    return (this.specializationsByDiplomaId[diplomaId] || []).length;
   }
 
-  certificateLabel(mode: DiplomasMode): string {
-    if (mode === 'SPECIALIZED_TECHNICIAN') return 'Specialized Software Developer';
-    if (mode === 'TECHNICIAN') return 'Certified IT Technician';
-    return 'Professional Qualification Certificate';
+  firstSpecialization(diplomaId: number): SpecializationSummary | null {
+    const list = this.specializationsByDiplomaId[diplomaId] || [];
+    return list.length ? list[0] : null;
+  }
+
+  summaryText(diploma: DiplomaSummary): string {
+    const spec = this.firstSpecialization(diploma.id);
+    return spec?.description?.trim()
+      || spec?.programOverview?.trim()
+      || 'Specialization details are not available yet.';
+  }
+
+  durationText(diplomaId: number): string {
+    return this.firstSpecialization(diplomaId)?.durationText?.trim() || 'Duration not specified';
+  }
+
+  credentialText(diplomaId: number): string {
+    return this.firstSpecialization(diplomaId)?.certificateAwarded?.trim() || 'Credential not specified';
   }
 }
