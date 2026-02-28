@@ -19,6 +19,7 @@ import com.example._blog.Dto.admin.IssueCertificateOptionResponse;
 import com.example._blog.Dto.admin.IssueDiplomaOptionResponse;
 import com.example._blog.Dto.admin.IssueGenerateRequest;
 import com.example._blog.Dto.admin.IssueGenerateResponse;
+import com.example._blog.Dto.admin.IssueIssuedStudentResponse;
 import com.example._blog.Dto.admin.IssueRecentResponse;
 import com.example._blog.Dto.admin.IssueStatsResponse;
 import com.example._blog.Dto.admin.IssueStudentContextResponse;
@@ -92,6 +93,62 @@ public class IssueService {
                         (u.getFirstName() + " " + u.getLastName()).trim(),
                         u.getUserName(),
                         u.getEmail()
+                ))
+                .toList();
+    }
+
+    public List<IssueIssuedStudentResponse> getStudentsWithIssued() {
+        record Bucket(
+                Long userId,
+                String name,
+                String userName,
+                String email,
+                long issuedCertificates,
+                long issuedDiplomas,
+                java.time.LocalDate lastIssueDate
+        ) {}
+
+        java.util.Map<Long, Bucket> grouped = new java.util.LinkedHashMap<>();
+        for (IssuedCredential item : issuedCredentialRepo.findAll()) {
+            User user = item.getUser();
+            if (user == null || user.getUserId() == null) continue;
+
+            Long userId = user.getUserId();
+            Bucket current = grouped.get(userId);
+            String fullName = ((user.getFirstName() == null ? "" : user.getFirstName()) + " "
+                    + (user.getLastName() == null ? "" : user.getLastName())).trim();
+            long certCount = current == null ? 0 : current.issuedCertificates();
+            long dipCount = current == null ? 0 : current.issuedDiplomas();
+            if (item.getType() == IssueType.CERTIFICATE) certCount++;
+            if (item.getType() == IssueType.DIPLOMA) dipCount++;
+
+            java.time.LocalDate lastDate = item.getIssueDate();
+            if (current != null && current.lastIssueDate() != null
+                    && (lastDate == null || current.lastIssueDate().isAfter(lastDate))) {
+                lastDate = current.lastIssueDate();
+            }
+
+            grouped.put(userId, new Bucket(
+                    userId,
+                    fullName,
+                    user.getUserName(),
+                    user.getEmail(),
+                    certCount,
+                    dipCount,
+                    lastDate
+            ));
+        }
+
+        return grouped.values().stream()
+                .sorted(Comparator.comparing(Bucket::lastIssueDate, Comparator.nullsLast(Comparator.reverseOrder())))
+                .map(item -> new IssueIssuedStudentResponse(
+                        item.userId(),
+                        item.name(),
+                        item.userName(),
+                        item.email(),
+                        item.issuedCertificates(),
+                        item.issuedDiplomas(),
+                        item.lastIssueDate()
                 ))
                 .toList();
     }

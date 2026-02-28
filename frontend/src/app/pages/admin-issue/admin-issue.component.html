@@ -130,4 +130,42 @@
       <div>Issued: {{ item.issueDate | date:'M/d/yyyy' }}</div>
     </article>
   </section>
+
+  <section class="recent-card">
+    <h2 class="display-font">Students With Issued Credentials</h2>
+    <div class="text-muted" *ngIf="loadingIssuedStudents">Loading students...</div>
+    <div class="table-wrap" *ngIf="!loadingIssuedStudents">
+      <table class="issued-table" *ngIf="issuedStudents.length; else noIssuedStudents">
+        <thead>
+          <tr>
+            <th>Student</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Certificates</th>
+            <th>Diplomas</th>
+            <th>Last Issued</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of issuedStudents">
+            <td>{{ row.name }}</td>
+            <td>{{ row.userName }}</td>
+            <td>{{ row.email }}</td>
+            <td>{{ row.issuedCertificates }}</td>
+            <td>{{ row.issuedDiplomas }}</td>
+            <td>{{ row.lastIssueDate | date:'M/d/yyyy' }}</td>
+            <td>
+              <button type="button" class="btn btn-sm btn-outline-primary" (click)="selectIssuedStudent(row)">
+                Select
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <ng-template #noIssuedStudents>
+        <div class="text-muted">No issued credentials yet.</div>
+      </ng-template>
+    </div>
+  </section>
 </div>

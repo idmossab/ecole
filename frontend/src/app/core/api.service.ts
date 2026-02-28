@@ -98,6 +98,16 @@ export type IssueStudentSearchItem = {
   email: string;
 };
 
+export type IssueIssuedStudent = {
+  userId: number;
+  name: string;
+  userName: string;
+  email: string;
+  issuedCertificates: number;
+  issuedDiplomas: number;
+  lastIssueDate: string;
+};
+
 export type IssueStudentInfo = {
   userId: number;
   name: string;
@@ -455,6 +465,10 @@ export class ApiService {
     return this.http.get<IssueStudentSearchItem[]>(`${this.baseUrl}/api/admin/issue/students/search`, {
       params: { q: query }
     });
+  }
+
+  getIssueStudentsWithIssued() {
+    return this.http.get<IssueIssuedStudent[]>(`${this.baseUrl}/api/admin/issue/students/with-issued`);
   }
 
   getIssueStudentContext(userId: number) {

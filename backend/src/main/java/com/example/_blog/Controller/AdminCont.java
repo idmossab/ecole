@@ -32,6 +32,7 @@ import com.example._blog.Dto.admin.AdminUserRoleRequest;
 import com.example._blog.Dto.admin.AdminJoinRequestResponse;
 import com.example._blog.Dto.admin.IssueGenerateRequest;
 import com.example._blog.Dto.admin.IssueGenerateResponse;
+import com.example._blog.Dto.admin.IssueIssuedStudentResponse;
 import com.example._blog.Dto.admin.IssueStatsResponse;
 import com.example._blog.Dto.admin.IssueStudentContextResponse;
 import com.example._blog.Dto.admin.IssueStudentSearchResponse;
@@ -291,6 +292,11 @@ public class AdminCont {
     @GetMapping("/issue/students/search")
     public List<IssueStudentSearchResponse> searchIssueStudents(@RequestParam("q") String q) {
         return issueService.searchStudents(q);
+    }
+
+    @GetMapping("/issue/students/with-issued")
+    public List<IssueIssuedStudentResponse> getIssueStudentsWithIssued() {
+        return issueService.getStudentsWithIssued();
     }
 
     @GetMapping("/issue/students/{userId}/context")

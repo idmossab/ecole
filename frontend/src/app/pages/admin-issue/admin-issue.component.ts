@@ -8,6 +8,7 @@ import {
   IssueCertificateOption,
   IssueDiplomaOption,
   IssueGenerateResponse,
+  IssueIssuedStudent,
   IssueRecentItem,
   IssueStudentContext,
   IssueStudentInfo,
@@ -25,6 +26,8 @@ export class AdminIssueComponent {
   query = '';
   searching = false;
   searchResults: IssueStudentSearchItem[] = [];
+  issuedStudents: IssueIssuedStudent[] = [];
+  loadingIssuedStudents = false;
   student: IssueStudentInfo | null = null;
   context: IssueStudentContext | null = null;
 
@@ -38,7 +41,9 @@ export class AdminIssueComponent {
   success = '';
   result: IssueGenerateResponse | null = null;
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService) {
+    this.loadIssuedStudents();
+  }
 
   onQueryChange(): void {
     this.error = '';
@@ -75,6 +80,9 @@ export class AdminIssueComponent {
         const acceptedDiplomas = (ctx.diplomas || []).filter((entry) => entry.accepted);
         this.selectedCertificateId = acceptedCertificates.length ? acceptedCertificates[0].certificateId : null;
         this.selectedDiplomaId = acceptedDiplomas.length ? acceptedDiplomas[0].diplomaId : null;
+        if (ctx.recentlyIssued?.length) {
+          this.result = this.toResultFromRecent(ctx.recentlyIssued[0]);
+        }
       },
       error: () => {
         this.error = 'Failed to load student context';
@@ -158,6 +166,7 @@ export class AdminIssueComponent {
         if (this.student) {
           this.refreshStudentContext(this.student.userId);
         }
+        this.loadIssuedStudents();
       },
       error: (err) => {
         this.generating = false;
@@ -175,8 +184,44 @@ export class AdminIssueComponent {
       next: (ctx) => {
         this.context = ctx;
         this.student = ctx.student;
+        if (!this.result && ctx.recentlyIssued?.length) {
+          this.result = this.toResultFromRecent(ctx.recentlyIssued[0]);
+        }
       },
       error: () => {}
     });
+  }
+
+  selectIssuedStudent(item: IssueIssuedStudent): void {
+    this.selectStudent({
+      userId: item.userId,
+      name: item.name,
+      userName: item.userName,
+      email: item.email
+    });
+  }
+
+  private loadIssuedStudents(): void {
+    this.loadingIssuedStudents = true;
+    this.api.getIssueStudentsWithIssued().subscribe({
+      next: (list) => {
+        this.issuedStudents = list || [];
+        this.loadingIssuedStudents = false;
+      },
+      error: () => {
+        this.loadingIssuedStudents = false;
+      }
+    });
+  }
+
+  private toResultFromRecent(item: IssueRecentItem): IssueGenerateResponse {
+    return {
+      issuedId: item.id,
+      serialNumber: item.serialNumber,
+      issueDate: item.issueDate,
+      qrPreview: `http://localhost:4200/verify/${item.serialNumber}`,
+      qrImageUrl: `http://localhost:8080/api/issued/qr/${item.serialNumber}`,
+      documentUrl: '/documents/issued/' + item.serialNumber
+    };
   }
 }
