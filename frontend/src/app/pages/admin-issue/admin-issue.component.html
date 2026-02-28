@@ -139,6 +139,7 @@
             <th>Email</th>
             <th>Certificates</th>
             <th>Diplomas</th>
+            <th>Status</th>
             <th>Last Issued</th>
             <th>Action</th>
           </tr>
@@ -150,10 +151,17 @@
             <td>{{ row.email }}</td>
             <td>{{ row.issuedCertificates }}</td>
             <td>{{ row.issuedDiplomas }}</td>
+            <td>{{ row.status || '-' }}</td>
             <td>{{ row.lastIssueDate | date:'M/d/yyyy' }}</td>
             <td>
-              <button type="button" class="btn btn-sm btn-outline-primary" (click)="selectIssuedStudent(row)">
+              <button type="button" class="btn btn-sm btn-outline-primary me-1" (click)="selectIssuedStudent(row)">
                 Select
+              </button>
+              <button type="button" class="btn btn-sm btn-outline-danger me-1" (click)="deleteIssuedFromRow(row)">
+                Delete
+              </button>
+              <button type="button" class="btn btn-sm btn-danger" (click)="banStudentFromRow(row)">
+                {{ row.status === 'BANNED' ? 'Activate' : 'Ban' }}
               </button>
             </td>
           </tr>

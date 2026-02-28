@@ -3,6 +3,8 @@ package com.example._blog.Dto;
 import java.time.LocalDate;
 
 public record IssuedCredentialVerifyResponse(
+        boolean verified,
+        String statusMessage,
         String serialNumber,
         String type,
         String title,

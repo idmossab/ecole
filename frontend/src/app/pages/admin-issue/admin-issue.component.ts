@@ -216,6 +216,42 @@ export class AdminIssueComponent {
     });
   }
 
+  deleteIssuedFromRow(item: IssueIssuedStudent): void {
+    if (!item.latestIssuedId) {
+      this.error = 'No issued credential found to delete';
+      return;
+    }
+    this.error = '';
+    this.success = '';
+    this.api.deleteIssuedCredential(item.latestIssuedId).subscribe({
+      next: () => {
+        this.success = 'Issued credential deleted';
+        this.loadIssuedStudents();
+        if (this.student?.userId === item.userId) {
+          this.refreshStudentContext(item.userId);
+          this.selectedIssuedResult = null;
+        }
+      },
+      error: (err) => {
+        this.error = err?.error?.message || err?.error || 'Failed to delete issued credential';
+      }
+    });
+  }
+
+  banStudentFromRow(item: IssueIssuedStudent): void {
+    this.error = '';
+    this.success = '';
+    this.api.adminToggleUserStatus(item.userId).subscribe({
+      next: (updated) => {
+        this.success = updated.status === 'BANNED' ? 'Student banned' : 'Student activated';
+        this.loadIssuedStudents();
+      },
+      error: (err) => {
+        this.error = err?.error?.message || err?.error || 'Failed to update student status';
+      }
+    });
+  }
+
   private loadIssuedStudents(): void {
     this.loadingIssuedStudents = true;
     this.api.getIssueStudentsWithIssued().subscribe({

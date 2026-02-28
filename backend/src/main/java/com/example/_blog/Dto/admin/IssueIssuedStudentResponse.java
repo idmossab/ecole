@@ -7,7 +7,9 @@ public record IssueIssuedStudentResponse(
         String name,
         String userName,
         String email,
+        String status,
         long issuedCertificates,
         long issuedDiplomas,
+        Long latestIssuedId,
         LocalDate lastIssueDate
 ) {}

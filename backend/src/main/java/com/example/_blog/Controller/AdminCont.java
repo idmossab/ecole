@@ -299,6 +299,11 @@ public class AdminCont {
         return issueService.getStudentsWithIssued();
     }
 
+    @DeleteMapping("/issue/issued/{issuedId}")
+    public void deleteIssuedCredential(@PathVariable Long issuedId) {
+        issueService.deleteIssuedCredential(issuedId);
+    }
+
     @GetMapping("/issue/students/{userId}/context")
     public IssueStudentContextResponse getIssueStudentContext(@PathVariable Long userId) {
         return issueService.getStudentContext(userId);

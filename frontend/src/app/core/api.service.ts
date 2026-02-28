@@ -103,8 +103,10 @@ export type IssueIssuedStudent = {
   name: string;
   userName: string;
   email: string;
+  status?: 'ACTIVE' | 'BANNED' | 'DELETED' | string;
   issuedCertificates: number;
   issuedDiplomas: number;
+  latestIssuedId?: number | null;
   lastIssueDate: string;
 };
 
@@ -164,6 +166,8 @@ export type IssueGenerateResponse = {
 };
 
 export type IssuedCredentialVerify = {
+  verified: boolean;
+  statusMessage: string;
   serialNumber: string;
   type: 'CERTIFICATE' | 'DIPLOMA' | string;
   title: string;
@@ -469,6 +473,10 @@ export class ApiService {
 
   getIssueStudentsWithIssued() {
     return this.http.get<IssueIssuedStudent[]>(`${this.baseUrl}/api/admin/issue/students/with-issued`);
+  }
+
+  deleteIssuedCredential(issuedId: number) {
+    return this.http.delete<void>(`${this.baseUrl}/api/admin/issue/issued/${issuedId}`);
   }
 
   getIssueStudentContext(userId: number) {

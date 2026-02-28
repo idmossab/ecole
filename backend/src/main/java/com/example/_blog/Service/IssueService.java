@@ -35,6 +35,7 @@ import com.example._blog.Entity.Specialization;
 import com.example._blog.Entity.User;
 import com.example._blog.Entity.enums.IssueType;
 import com.example._blog.Entity.enums.JoinRequestStatus;
+import com.example._blog.Entity.enums.UserStatus;
 import com.example._blog.Repositories.CertificateRepo;
 import com.example._blog.Repositories.CourseRepo;
 import com.example._blog.Repositories.DiplomaJoinRequestRepo;
@@ -103,8 +104,10 @@ public class IssueService {
                 String name,
                 String userName,
                 String email,
+                String status,
                 long issuedCertificates,
                 long issuedDiplomas,
+                Long latestIssuedId,
                 java.time.LocalDate lastIssueDate
         ) {}
 
@@ -122,10 +125,11 @@ public class IssueService {
             if (item.getType() == IssueType.CERTIFICATE) certCount++;
             if (item.getType() == IssueType.DIPLOMA) dipCount++;
 
-            java.time.LocalDate lastDate = item.getIssueDate();
-            if (current != null && current.lastIssueDate() != null
-                    && (lastDate == null || current.lastIssueDate().isAfter(lastDate))) {
-                lastDate = current.lastIssueDate();
+            java.time.LocalDate lastDate = current == null ? null : current.lastIssueDate();
+            Long latestIssuedId = current == null ? null : current.latestIssuedId();
+            if (lastDate == null || (item.getIssueDate() != null && item.getIssueDate().isAfter(lastDate))) {
+                lastDate = item.getIssueDate();
+                latestIssuedId = item.getId();
             }
 
             grouped.put(userId, new Bucket(
@@ -133,8 +137,10 @@ public class IssueService {
                     fullName,
                     user.getUserName(),
                     user.getEmail(),
+                    user.getStatus() == null ? null : user.getStatus().name(),
                     certCount,
                     dipCount,
+                    latestIssuedId,
                     lastDate
             ));
         }
@@ -146,11 +152,19 @@ public class IssueService {
                         item.name(),
                         item.userName(),
                         item.email(),
+                        item.status(),
                         item.issuedCertificates(),
                         item.issuedDiplomas(),
+                        item.latestIssuedId(),
                         item.lastIssueDate()
                 ))
                 .toList();
+    }
+
+    public void deleteIssuedCredential(Long issuedId) {
+        IssuedCredential item = issuedCredentialRepo.findById(issuedId)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Issued credential not found"));
+        issuedCredentialRepo.delete(item);
     }
 
     public IssueStudentContextResponse getStudentContext(Long userId) {
@@ -356,6 +370,22 @@ public class IssueService {
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Issued credential not found"));
 
         User user = item.getUser();
+        if (user != null && user.getStatus() == UserStatus.BANNED) {
+            return new IssuedCredentialVerifyResponse(
+                    false,
+                    "Contact school administration",
+                    item.getSerialNumber(),
+                    null,
+                    null,
+                    item.getIssueDate(),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+            );
+        }
         String fullName = ((user.getFirstName() == null ? "" : user.getFirstName()) + " "
                 + (user.getLastName() == null ? "" : user.getLastName())).trim();
 
@@ -364,6 +394,8 @@ public class IssueService {
                 : (item.getDiploma() == null ? "Diploma" : item.getDiploma().getLabel());
 
         return new IssuedCredentialVerifyResponse(
+                true,
+                "Verified",
                 item.getSerialNumber(),
                 item.getType().name(),
                 title,
