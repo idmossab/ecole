@@ -310,8 +310,16 @@ export class ApiService {
     return this.http.get<MyCertificateProgress[]>(`${this.baseUrl}/api/certificates/my-progress`);
   }
 
+  getMyAcceptedCertificates() {
+    return this.http.get<AdminJoinRequest[]>(`${this.baseUrl}/api/certificates/accepted-me`);
+  }
+
   getDiplomasProgress() {
     return this.http.get<DiplomaProgress[]>(`${this.baseUrl}/api/diplomas/progress`);
+  }
+
+  getMyAcceptedDiplomas() {
+    return this.http.get<AdminJoinRequest[]>(`${this.baseUrl}/api/diplomas/accepted-me`);
   }
 
   getDiplomaProgress(diplomaId: number) {
@@ -499,5 +507,16 @@ export class ApiService {
 
   verifyIssuedCredential(serialNumber: string) {
     return this.http.get<IssuedCredentialVerify>(`${this.baseUrl}/api/issued/verify/${encodeURIComponent(serialNumber)}`);
+  }
+
+  updateMeProfile(payload: {
+    firstName: string;
+    lastName: string;
+    userName: string;
+    email: string;
+    city: string;
+    phone: string;
+  }) {
+    return this.http.put<UserResponse>(`${this.baseUrl}/api/users/me`, payload);
   }
 }

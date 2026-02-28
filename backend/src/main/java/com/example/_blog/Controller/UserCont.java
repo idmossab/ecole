@@ -17,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.example._blog.Dto.AuthResponse;
 import com.example._blog.Dto.UserLoginRequest;
+import com.example._blog.Dto.UserProfileUpdateRequest;
 import com.example._blog.Dto.UserRegisterRequest;
 import com.example._blog.Dto.UserResponse;
 import com.example._blog.Security.UserPrincipal;
@@ -68,5 +69,16 @@ public class UserCont {
             throw new ResponseStatusException(UNAUTHORIZED, "Unauthorized");
         }
         return userService.getById(principal.getUser().getUserId());
+    }
+
+    @PutMapping("/api/users/me")
+    public UserResponse updateMe(
+            @AuthenticationPrincipal UserPrincipal principal,
+            @Valid @RequestBody UserProfileUpdateRequest request
+    ) {
+        if (principal == null || principal.getUser() == null) {
+            throw new ResponseStatusException(UNAUTHORIZED, "Unauthorized");
+        }
+        return userService.updateProfile(principal.getUser().getUserId(), request);
     }
 }

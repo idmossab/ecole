@@ -15,6 +15,16 @@
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
 
+.edit-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.profile-actions {
+  display: flex;
+  gap: 8px;
+}
+
 .label {
   font-size: 0.8rem;
   color: var(--text-secondary);

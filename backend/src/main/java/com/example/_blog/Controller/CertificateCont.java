@@ -75,6 +75,13 @@ public class CertificateCont {
         return joinRequestService.getCertificateJoinStatus(requireUserId(principal), certificateId);
     }
 
+    @GetMapping("/api/certificates/accepted-me")
+    public List<AdminJoinRequestResponse> getMyAcceptedCertificates(
+            @AuthenticationPrincipal UserPrincipal principal
+    ) {
+        return joinRequestService.getMyAcceptedCertificates(requireUserId(principal));
+    }
+
     private Long requireUserId(UserPrincipal principal) {
         if (principal == null || principal.getUser() == null) {
             throw new ResponseStatusException(UNAUTHORIZED, "Unauthorized");

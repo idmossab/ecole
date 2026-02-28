@@ -201,6 +201,36 @@ public class JoinRequestService {
                 .orElse(null);
     }
 
+    public List<AdminJoinRequestResponse> getMyAcceptedCertificates(Long userId) {
+        return joinRequestRepo.findByUserIdAndStatusOrderByCreatedAtDesc(userId, JoinRequestStatus.ACCEPTED).stream()
+                .filter(r -> r.getCertificateId() != null)
+                .collect(java.util.stream.Collectors.toMap(
+                        JoinRequest::getCertificateId,
+                        r -> r,
+                        (a, b) -> a,
+                        java.util.LinkedHashMap::new
+                ))
+                .values()
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    public List<AdminJoinRequestResponse> getMyAcceptedDiplomas(Long userId) {
+        return diplomaJoinRequestRepo.findByUserIdAndStatusOrderByCreatedAtDesc(userId, JoinRequestStatus.ACCEPTED).stream()
+                .filter(r -> r.getDiplomaId() != null)
+                .collect(java.util.stream.Collectors.toMap(
+                        DiplomaJoinRequest::getDiplomaId,
+                        r -> r,
+                        (a, b) -> a,
+                        java.util.LinkedHashMap::new
+                ))
+                .values()
+                .stream()
+                .map(this::toDiplomaResponse)
+                .toList();
+    }
+
     private void notifyCertificateJoinResult(JoinRequest request, boolean accepted) {
         User student = request.getUser();
         if (student == null) {

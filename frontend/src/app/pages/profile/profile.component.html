@@ -2,40 +2,49 @@
   <div class="profile-card" *ngIf="user">
     <h1 class="display-font">Profile</h1>
     <p class="text-muted">Welcome back, {{ user.firstName }} {{ user.lastName }}</p>
-    <div class="profile-meta">
-      <div>
-        <div class="label">Username</div>
-        <div class="value">@{{ user.userName }}</div>
-      </div>
-      <div>
-        <div class="label">Email</div>
-        <div class="value">{{ user.email }}</div>
-      </div>
-      <div>
-        <div class="label">Role</div>
-        <div class="value">{{ user.role }}</div>
-      </div>
+
+    <div class="profile-meta" *ngIf="!editMode">
+      <div><div class="label">Username</div><div class="value">@{{ user.userName }}</div></div>
+      <div><div class="label">Email</div><div class="value">{{ user.email }}</div></div>
+      <div><div class="label">Phone</div><div class="value">{{ user.phone || '-' }}</div></div>
+      <div><div class="label">City</div><div class="value">{{ user.city || '-' }}</div></div>
+      <div><div class="label">Role</div><div class="value">{{ user.role }}</div></div>
+    </div>
+
+    <form class="edit-grid" *ngIf="editMode">
+      <label>First Name</label>
+      <input class="form-control" type="text" [(ngModel)]="profileForm.firstName" name="firstName" />
+      <label>Last Name</label>
+      <input class="form-control" type="text" [(ngModel)]="profileForm.lastName" name="lastName" />
+      <label>Username</label>
+      <input class="form-control" type="text" [(ngModel)]="profileForm.userName" name="userName" />
+      <label>Email</label>
+      <input class="form-control" type="email" [(ngModel)]="profileForm.email" name="email" />
+      <label>Phone</label>
+      <input class="form-control" type="text" [(ngModel)]="profileForm.phone" name="phone" />
+      <label>City</label>
+      <input class="form-control" type="text" [(ngModel)]="profileForm.city" name="city" />
+    </form>
+
+    <div class="profile-actions">
+      <button class="btn btn-outline-dark btn-sm" type="button" *ngIf="!editMode" (click)="startEdit()">Edit Profile</button>
+      <button class="btn btn-dark btn-sm" type="button" *ngIf="editMode" [disabled]="savingProfile" (click)="saveProfile()">Save</button>
+      <button class="btn btn-outline-dark btn-sm" type="button" *ngIf="editMode" (click)="cancelEdit()">Cancel</button>
     </div>
   </div>
 
   <div class="profile-card my-certs" *ngIf="user">
     <h2 class="display-font">My Certificates</h2>
-    <p class="text-muted">Started or claimed certificates</p>
+    <p class="text-muted">Only certificates accepted by admin</p>
 
     <div class="text-muted" *ngIf="certificatesLoading">Loading certificates...</div>
-    <div class="text-muted" *ngIf="!certificatesLoading && !myCertificates.length">No certificate progress yet.</div>
+    <div class="text-muted" *ngIf="!certificatesLoading && !myCertificates.length">No accepted certificates yet.</div>
 
     <div class="cert-grid" *ngIf="myCertificates.length">
       <article class="cert-card" *ngFor="let item of myCertificates">
-        <h3>{{ item.title }}</h3>
-        <div class="status">{{ item.status }}</div>
-        <div class="progress-row">
-          <span>{{ item.percentage }}%</span>
-          <span>{{ item.remainingVideos }} remaining</span>
-        </div>
-        <div class="progress-track">
-          <div class="progress-fill" [style.width.%]="item.percentage"></div>
-        </div>
+        <h3>{{ item.certificateTitle || 'Certificate' }}</h3>
+        <div class="status">Accepted by admin</div>
+        <div class="text-muted" *ngIf="item.courseTitle">Course: {{ item.courseTitle }}</div>
         <a class="btn btn-dark btn-sm" [routerLink]="continueLink(item)">Continue</a>
       </article>
     </div>
@@ -43,23 +52,16 @@
 
   <div class="profile-card my-certs" *ngIf="user">
     <h2 class="display-font">My Diplomas</h2>
-    <p class="text-muted">Track diploma completion and claim status</p>
+    <p class="text-muted">Only diplomas accepted by admin</p>
 
     <div class="text-muted" *ngIf="diplomasLoading">Loading diplomas...</div>
-    <div class="text-muted" *ngIf="!diplomasLoading && !myDiplomas.length">No diploma progress yet.</div>
+    <div class="text-muted" *ngIf="!diplomasLoading && !myDiplomas.length">No accepted diplomas yet.</div>
 
     <div class="cert-grid" *ngIf="myDiplomas.length">
       <article class="cert-card" *ngFor="let item of myDiplomas">
-        <h3>{{ item.title }}</h3>
-        <div class="status">{{ item.isClaimed ? 'Claimed' : (item.isCompleted ? 'Completed' : 'In progress') }}</div>
-        <div class="progress-row">
-          <span>{{ item.percentage }}%</span>
-          <span>{{ item.completedCount }}/{{ item.requiredCount }} certificates</span>
-        </div>
-        <div class="progress-track">
-          <div class="progress-fill" [style.width.%]="item.percentage"></div>
-        </div>
-        <div class="text-muted" *ngIf="item.isClaimed">Serial: {{ item.serialNumber || '-' }}</div>
+        <h3>{{ item.diplomaTitle || 'Diploma' }}</h3>
+        <div class="status">Accepted by admin</div>
+        <div class="text-muted" *ngIf="item.specializationTitle">Specialization: {{ item.specializationTitle }}</div>
         <a class="btn btn-dark btn-sm" [routerLink]="diplomaLink(item)">{{ diplomaActionLabel(item) }}</a>
       </article>
     </div>

@@ -14,6 +14,7 @@ import java.util.List;
 
 import com.example._blog.Dto.AuthResponse;
 import com.example._blog.Dto.UserLoginRequest;
+import com.example._blog.Dto.UserProfileUpdateRequest;
 import com.example._blog.Dto.UserRegisterRequest;
 import com.example._blog.Dto.UserResponse;
 import com.example._blog.Entity.User;
@@ -126,6 +127,30 @@ public class UserService {
         existing.setUserName(req.userName());
         existing.setEmail(req.email());
         existing.setPassword(encoder.encode(req.password()));
+
+        return toResponse(repo.save(existing));
+    }
+
+    public UserResponse updateProfile(Long userId, UserProfileUpdateRequest req) {
+        User existing = repo.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "User not found"));
+
+        String nextEmail = req.email().trim();
+        String nextUserName = req.userName().trim();
+
+        if (!existing.getEmail().equalsIgnoreCase(nextEmail) && repo.existsByEmail(nextEmail)) {
+            throw new ResponseStatusException(CONFLICT, "Email already used");
+        }
+        if (!existing.getUserName().equalsIgnoreCase(nextUserName) && repo.existsByUserName(nextUserName)) {
+            throw new ResponseStatusException(CONFLICT, "Username already used");
+        }
+
+        existing.setFirstName(req.firstName().trim());
+        existing.setLastName(req.lastName().trim());
+        existing.setUserName(nextUserName);
+        existing.setEmail(nextEmail);
+        existing.setCity(req.city() == null ? null : req.city().trim());
+        existing.setPhone(req.phone() == null ? null : req.phone().trim());
 
         return toResponse(repo.save(existing));
     }

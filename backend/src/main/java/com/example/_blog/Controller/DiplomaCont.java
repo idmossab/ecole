@@ -99,6 +99,13 @@ public class DiplomaCont {
         return joinRequestService.getDiplomaJoinStatus(requireUserId(principal), diplomaId);
     }
 
+    @GetMapping("/api/diplomas/accepted-me")
+    public List<AdminJoinRequestResponse> getMyAcceptedDiplomas(
+            @AuthenticationPrincipal UserPrincipal principal
+    ) {
+        return joinRequestService.getMyAcceptedDiplomas(requireUserId(principal));
+    }
+
     private Long requireUserId(UserPrincipal principal) {
         if (principal == null || principal.getUser() == null) {
             throw new ResponseStatusException(UNAUTHORIZED, "Unauthorized");
