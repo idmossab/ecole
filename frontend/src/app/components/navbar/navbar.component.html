@@ -1,74 +1,61 @@
-<nav class="navbar navbar-expand-lg bg-white border-bottom shadow-sm px-3">
-  <span class="navbar-brand fw-bold">courseonline</span>
-  <div class="ms-auto d-flex align-items-center gap-3 flex-wrap">
-    <button class="nav-link-btn" type="button" routerLink="/home">Home</button>
-    <button class="nav-link-btn" type="button" routerLink="/certificates">Certificates</button>
-    <button class="nav-link-btn" type="button" routerLink="/diplomas">Diplomas</button>
-    <button class="nav-link-btn" type="button" routerLink="/contact">Contact</button>
-
-    <div class="notif-wrap" *ngIf="loggedIn">
-      <button class="notif-btn" type="button" (click)="toggleNotifications()">
-        Notifications
-        <span class="notif-badge" *ngIf="unreadCount">{{ unreadCount }}</span>
-      </button>
-      <div class="notif-menu" *ngIf="showNotifications">
-        <div class="notif-empty" *ngIf="!notifications.length">No notifications</div>
-        <button
-          class="notif-item"
-          type="button"
-          *ngFor="let item of notifications"
-          [class.unread]="!item.isRead"
-          (click)="markRead(item)"
-        >
-          <div class="notif-title">{{ item.title }}</div>
-          <div class="notif-message">{{ item.message }}</div>
-        </button>
-      </div>
+<nav class="top-header">
+  <div class="header-wrap">
+    <div class="brand" routerLink="/home">
+      <span class="brand-icon">🎓</span>
+      <span class="brand-text">LearnSphere</span>
     </div>
 
-    <button
-      class="btn btn-outline-secondary btn-sm"
-      type="button"
-      routerLink="/dashboard"
-      *ngIf="isAdmin"
-    >
-      Dashboard
-    </button>
+    <div class="center-links">
+      <button class="nav-link-btn" type="button" routerLink="/home">Home</button>
+      <button class="nav-link-btn" type="button" routerLink="/courses">Programs</button>
+      <button class="nav-link-btn" type="button" routerLink="/diplomas">Diplomas</button>
+      <button class="nav-link-btn" type="button" routerLink="/certificates">Certificates</button>
+      <button class="nav-link-btn" type="button" routerLink="/contact">About</button>
+    </div>
 
-    <button
-      class="btn btn-outline-secondary btn-sm"
-      type="button"
-      routerLink="/admin/profile"
-      *ngIf="isAdmin"
-    >
-      Profile
-    </button>
+    <div class="right-actions">
+      <button class="nav-link-btn login-btn" type="button" routerLink="/login" *ngIf="!loggedIn">
+        Login
+      </button>
+      <button class="nav-link-btn login-btn" type="button" (click)="logout()" *ngIf="loggedIn">
+        Logout
+      </button>
 
-    <button
-      class="btn btn-outline-secondary btn-sm"
-      type="button"
-      routerLink="/profile"
-      *ngIf="isUser"
-    >
-      Profile
-    </button>
+      <button class="apply-btn" type="button" routerLink="/register" *ngIf="!isAdmin">
+        Apply Now
+      </button>
 
-    <button
-      class="btn btn-dark btn-sm"
-      type="button"
-      routerLink="/login"
-      *ngIf="!loggedIn"
-    >
-      Login
-    </button>
+      <button class="apply-btn" type="button" routerLink="/dashboard" *ngIf="isAdmin">
+        Dashboard
+      </button>
 
-    <button
-      class="btn btn-outline-secondary btn-sm"
-      type="button"
-      (click)="logout()"
-      *ngIf="loggedIn"
-    >
-      Logout
-    </button>
+      <button class="nav-link-btn small-link" type="button" routerLink="/profile" *ngIf="isUser">
+        Profile
+      </button>
+
+      <button class="nav-link-btn small-link" type="button" routerLink="/admin/profile" *ngIf="isAdmin">
+        Profile
+      </button>
+
+      <div class="notif-wrap" *ngIf="loggedIn">
+        <button class="notif-btn" type="button" (click)="toggleNotifications()">
+          🔔
+          <span class="notif-badge" *ngIf="unreadCount">{{ unreadCount }}</span>
+        </button>
+        <div class="notif-menu" *ngIf="showNotifications">
+          <div class="notif-empty" *ngIf="!notifications.length">No notifications</div>
+          <button
+            class="notif-item"
+            type="button"
+            *ngFor="let item of notifications"
+            [class.unread]="!item.isRead"
+            (click)="markRead(item)"
+          >
+            <div class="notif-title">{{ item.title }}</div>
+            <div class="notif-message">{{ item.message }}</div>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </nav>

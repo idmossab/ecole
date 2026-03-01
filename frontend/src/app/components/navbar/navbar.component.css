@@ -1,27 +1,105 @@
-.navbar {
+.top-header {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1000;
-  border-radius: 0;
-  min-height: 72px;
+  z-index: 1200;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
 }
 
-.navbar .btn {
+.header-wrap {
+  width: min(1200px, calc(100% - 26px));
+  margin-inline: auto;
+  min-height: 72px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 20px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.brand-icon {
+  width: 40px;
+  height: 40px;
   border-radius: 999px;
+  background: linear-gradient(145deg, #4f46e5, #9b26f0);
+  display: grid;
+  place-items: center;
+  color: #fff;
+}
+
+.brand-text {
+  font-size: 1.85rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(100deg, #1f2937, #7c3aed);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.center-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+
+.right-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
 }
 
 .nav-link-btn {
   background: transparent;
   border: none;
   color: #0f172a;
-  font-weight: 500;
-  padding: 6px 8px;
+  font-weight: 600;
+  font-size: 1.03rem;
+  border-radius: 999px;
+  padding: 8px 10px;
+  transition: color 0.2s ease, background 0.2s ease;
 }
 
 .nav-link-btn:hover {
-  color: #111827;
+  color: #4f46e5;
+  background: #f3f4f6;
+}
+
+.login-btn {
+  min-width: 70px;
+}
+
+.small-link {
+  font-size: 0.92rem;
+  padding: 7px 10px;
+}
+
+.apply-btn {
+  background: linear-gradient(95deg, #4f46e5, #a21caf);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 11px 24px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  box-shadow: 0 10px 20px rgba(79, 70, 229, 0.28);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.apply-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 24px rgba(79, 70, 229, 0.32);
 }
 
 .notif-wrap {
@@ -29,19 +107,26 @@
 }
 
 .notif-btn {
-  border: 1px solid var(--border);
+  width: 36px;
+  height: 36px;
+  border: 1px solid #d1d5db;
   background: #fff;
-  border-radius: 999px;
-  padding: 6px 10px;
-  font-size: 0.85rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  position: relative;
 }
 
 .notif-badge {
-  margin-left: 6px;
-  background: #111827;
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #dc2626;
   color: #fff;
   border-radius: 999px;
-  padding: 1px 7px;
+  padding: 0 6px;
+  line-height: 18px;
+  min-width: 18px;
   font-size: 0.72rem;
 }
 
@@ -53,15 +138,15 @@
   max-height: 360px;
   overflow: auto;
   background: #fff;
-  border: 1px solid var(--border);
+  border: 1px solid #e2e8f0;
   border-radius: 12px;
-  box-shadow: var(--shadow-soft);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.16);
   padding: 8px;
   z-index: 1200;
 }
 
 .notif-empty {
-  color: var(--text-secondary);
+  color: #64748b;
   font-size: 0.88rem;
   padding: 8px;
 }
@@ -89,6 +174,24 @@
 }
 
 .notif-message {
-  color: var(--text-secondary);
+  color: #64748b;
   font-size: 0.8rem;
+}
+
+@media (max-width: 1080px) {
+  .header-wrap {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 10px 0;
+  }
+
+  .brand,
+  .center-links,
+  .right-actions {
+    justify-content: center;
+  }
+
+  .center-links {
+    gap: 8px;
+  }
 }
