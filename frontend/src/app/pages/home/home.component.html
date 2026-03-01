@@ -1,39 +1,187 @@
-<div class="container py-4">
-  <section class="hero">
-    <div class="hero-content text-center">
-      <h1 class="display-font">{{ hero.title }}</h1>
-      <p class="lead">{{ hero.subtitle }}</p>
-      <a class="btn btn-dark btn-lg mt-2" routerLink="/login">{{ hero.cta }}</a>
-    </div>
-    <div class="stats-row">
-      <div class="stat-card" *ngFor="let stat of stats">
-        <div class="stat-icon"></div>
-        <div class="stat-value">{{ stat.value }}</div>
-        <div class="stat-label">{{ stat.label }}</div>
+<div class="home-page">
+  <div class="hero-section">
+    <div class="container hero-grid">
+      <div class="hero-content">
+        <div class="hero-badge">✦ {{ hero.badge }}</div>
+        <h1>
+          {{ hero.title }}
+          <span>{{ hero.highlight }}</span>
+        </h1>
+        <p>{{ hero.subtitle }}</p>
+
+        <div class="hero-actions">
+          <a class="cta-primary" routerLink="/diplomas">Explore Programs</a>
+          <a class="cta-ghost" routerLink="/certificates">Watch Demo</a>
+        </div>
+
+        <div class="hero-stats">
+          <div class="hero-stat" *ngFor="let stat of heroStats">
+            <div class="stat-value">{{ stat.value }}</div>
+            <div class="stat-label">{{ stat.label }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <img
+          src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=80"
+          alt="Students learning"
+        />
+
+        <div class="float-card top-card">
+          <div class="mini-icon">📘</div>
+          <div>
+            <div class="mini-title">Web Development</div>
+            <div class="mini-sub">12 weeks • Beginner</div>
+          </div>
+        </div>
+
+        <div class="float-card mid-card">
+          <div class="mini-title">Course Progress</div>
+          <div class="mini-progress-row">
+            <span>78%</span>
+          </div>
+          <div class="mini-progress">
+            <div class="mini-progress-fill"></div>
+          </div>
+        </div>
+
+        <div class="float-card bottom-card">
+          <div class="mini-icon">🏅</div>
+          <div>
+            <div class="mini-title">Certificate</div>
+            <div class="mini-sub">Recognized</div>
+          </div>
+        </div>
       </div>
     </div>
-  </section>
-
-  <section class="featured">
-    <div class="text-center mb-4">
-      <h2 class="display-font mb-1">Featured Diploma</h2>
-      <p class="text-muted mb-0">Choose from our comprehensive diploma programs and start building your future.</p>
-    </div>
-    <div class="featured-grid">
-      <div class="featured-card">
-        <h3>{{ featured.title }}</h3>
-        <p>{{ featured.description }}</p>
-        <div class="meta">{{ featured.meta }}</div>
-        <a class="btn btn-dark w-100" routerLink="/diploma">View Diploma</a>
-      </div>
-    </div>
-  </section>
-</div>
-
-<section class="cta-band">
-  <div class="container">
-    <h2 class="display-font">Ready to Transform Your Career?</h2>
-    <p>Join thousands of students already learning on our platform.</p>
-    <a class="btn btn-light btn-lg" routerLink="/login">Start Learning Now</a>
   </div>
-</section>
+
+  <div class="programs-section">
+    <div class="container">
+      <div class="section-head">
+        <h2>Choose Your Path</h2>
+        <p>Flexible learning options designed for your success</p>
+      </div>
+
+      <div class="program-grid">
+        <div class="program-card" *ngFor="let program of programs; let i = index" [class.alt]="i === 1" [class.alt2]="i === 2">
+          <div class="program-icon">{{ program.icon }}</div>
+          <h3>{{ program.title }}</h3>
+          <p>{{ program.description }}</p>
+          <a [routerLink]="program.link">{{ program.cta }} →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="why-section">
+    <div class="container why-grid">
+      <div class="why-left">
+        <div class="why-badge">Why Choose Us</div>
+        <h2>Learn From The Best, Become The Best</h2>
+        <p class="why-lead">
+          We provide world-class education with unmatched support and industry-recognized certifications.
+        </p>
+
+        <div class="feature-list">
+          <div class="feature-card" *ngFor="let feature of features">
+            <div class="feature-icon">{{ feature.icon }}</div>
+            <div>
+              <h3>{{ feature.title }}</h3>
+              <p>{{ feature.description }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="why-right">
+        <img
+          src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1300&q=80"
+          alt="School students"
+        />
+        <div class="why-stats">
+          <div>
+            <strong>95%</strong>
+            <span>Success Rate</span>
+          </div>
+          <div>
+            <strong>5,200+</strong>
+            <span>Graduates</span>
+          </div>
+          <div>
+            <strong>98%</strong>
+            <span>Satisfaction</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="testimonials-section">
+    <div class="container">
+      <div class="section-head">
+        <h2>What Students Say</h2>
+        <p>Join thousands of graduates transforming their careers</p>
+      </div>
+
+      <div class="testimonial-grid">
+        <div class="testimonial-card" *ngFor="let item of testimonials">
+          <div class="stars">★★★★★</div>
+          <p class="quote">"{{ item.quote }}"</p>
+          <div class="person-row">
+            <div class="avatar">{{ item.name.charAt(0) }}</div>
+            <div>
+              <h4>{{ item.name }}</h4>
+              <span>{{ item.role }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container cta-section">
+    <div class="cta-box">
+      <h2>Ready to Start Your Journey?</h2>
+      <p>
+        Join 10,000+ students already learning with us. Start today and transform your career.
+      </p>
+      <div class="cta-buttons">
+        <a class="cta-white" routerLink="/register">Get Started Now →</a>
+        <a class="cta-outline" routerLink="/contact">Schedule a Call</a>
+      </div>
+    </div>
+  </div>
+
+  <footer class="home-footer">
+    <div class="container footer-grid">
+      <div>
+        <h3>LearnSphere</h3>
+        <p>
+          Transforming education globally with diploma and certificate programs that build real careers.
+        </p>
+      </div>
+      <div>
+        <h4>Programs</h4>
+        <p>All Courses</p>
+        <p>Diploma Programs</p>
+        <p>Certificates</p>
+        <p>Corporate Training</p>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <p>About Us</p>
+        <p>Instructors</p>
+        <p>Success Stories</p>
+        <p>Help Center</p>
+      </div>
+      <div>
+        <h4>Get In Touch</h4>
+        <p>hello@learnsphere.com</p>
+        <p>+1 (555) 890-1234</p>
+        <p>San Francisco, CA</p>
+      </div>
+    </div>
+  </footer>
+</div>

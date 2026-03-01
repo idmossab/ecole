@@ -11,22 +11,79 @@ import { RouterLink } from '@angular/router';
 })
 export class HomeComponent {
   hero = {
-    title: 'Start Your Learning Journey Today',
+    badge: 'Transform Your Future Today',
+    title: 'Learn Without Limits',
+    highlight: 'Limits',
     subtitle:
-      'Access world-class education and earn recognized diplomas. Learn at your own pace with expert-led courses.',
-    cta: 'Get Started Free'
+      'Master in-demand skills with world-class diploma and certificate programs. Get certified, advance your career, and join successful graduates worldwide.'
   };
 
-  stats = [
-    { value: '50+', label: 'Professional Courses' },
+  heroStats = [
     { value: '10,000+', label: 'Active Students' },
-    { value: '5,000+', label: 'Diplomas Issued' }
+    { value: '4.9', label: 'Average Rating' },
+    { value: 'ISO', label: 'Accredited' }
   ];
 
-  featured = {
-    title: 'Bachelor in Computer Science',
-    description:
-      'Build strong foundations in software engineering, systems, and modern computing with an industry-aligned curriculum.',
-    meta: '2 Specialities • 4 Courses'
-  };
+  programs = [
+    {
+      title: 'Courses',
+      description: 'Short-term intensive programs designed to build practical skills in just weeks.',
+      link: '/certificates',
+      icon: '📘',
+      cta: 'Explore Courses'
+    },
+    {
+      title: 'Diplomas',
+      description: 'Comprehensive diploma tracks with hands-on projects and real career outcomes.',
+      link: '/diplomas',
+      icon: '🎓',
+      cta: 'View Diplomas'
+    },
+    {
+      title: 'Certificates',
+      description: 'Professional certificates that validate your expertise and increase credibility.',
+      link: '/certificates',
+      icon: '🏅',
+      cta: 'Get Certified'
+    }
+  ];
+
+  features = [
+    {
+      title: 'Expert Instructors',
+      description: 'Learn from industry leaders with real-world project experience.',
+      icon: '👥'
+    },
+    {
+      title: 'Lifetime Access',
+      description: 'Access course materials, updates, and support resources anytime.',
+      icon: '⚡'
+    },
+    {
+      title: 'Career Growth',
+      description: 'Receive mentorship and guidance for stronger job opportunities.',
+      icon: '📈'
+    }
+  ];
+
+  testimonials = [
+    {
+      name: 'Jessica Martinez',
+      role: 'Full-Stack Developer',
+      quote:
+        'This program transformed my career. The practical projects helped me get hired quickly.'
+    },
+    {
+      name: 'David Kim',
+      role: 'Product Manager',
+      quote:
+        'Flexible schedules and strong mentorship made it possible to learn while working full-time.'
+    },
+    {
+      name: 'Priya Sharma',
+      role: 'UX Designer',
+      quote:
+        'The curriculum was industry-ready. I immediately applied the skills in real projects.'
+    }
+  ];
 }
