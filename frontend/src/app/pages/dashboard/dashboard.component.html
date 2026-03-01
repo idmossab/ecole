@@ -143,14 +143,8 @@
           <option [ngValue]="'IN_PERSON'">IN_PERSON</option>
           <option [ngValue]="'HYBRID'">HYBRID</option>
         </select>
-        <label>Teacher Name</label>
-        <input type="text" [(ngModel)]="courseForm.teacherName" name="courseTeacherName" />
-        <label>Teacher Bio</label>
-        <textarea rows="2" [(ngModel)]="courseForm.teacherBio" name="courseTeacherBio"></textarea>
         <label>Duration Text</label>
         <input type="text" [(ngModel)]="courseForm.durationText" name="courseDuration" />
-        <label>Phone Contact</label>
-        <input type="text" [(ngModel)]="courseForm.phoneContact" name="coursePhone" />
         <div class="form-actions">
           <button class="btn btn-dark" type="submit" [disabled]="submitting">{{ editingId ? 'Update' : 'Create' }}</button>
           <button class="btn btn-outline-dark" type="button" (click)="cancelForm()">Cancel</button>

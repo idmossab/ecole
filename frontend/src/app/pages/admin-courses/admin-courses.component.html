@@ -28,17 +28,8 @@
       <option value="HYBRID">HYBRID</option>
     </select>
 
-    <label class="form-label">Teacher Name</label>
-    <input class="form-control" [(ngModel)]="form.teacherName" />
-
-    <label class="form-label">Teacher Bio</label>
-    <textarea class="form-control" rows="2" [(ngModel)]="form.teacherBio"></textarea>
-
     <label class="form-label">Duration Text</label>
     <input class="form-control" [(ngModel)]="form.durationText" placeholder="8 sessions" />
-
-    <label class="form-label">Phone Contact</label>
-    <input class="form-control" [(ngModel)]="form.phoneContact" />
 
     <div class="actions">
       <button class="btn btn-dark" type="button" (click)="submit()">{{ editingId ? 'Update' : 'Create' }}</button>

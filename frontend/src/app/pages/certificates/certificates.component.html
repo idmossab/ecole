@@ -16,11 +16,9 @@
 
       <div class="card-content">
         <h3>{{ cert.title }}</h3>
-        <p>{{ cert.description || 'Certificate description coming soon.' }}</p>
 
         <div class="meta-row">
           <span>{{ cert.courses?.length || 0 }} Courses</span>
-          <span>{{ durationLabel(cert) }}</span>
         </div>
 
         <a class="details-btn" [routerLink]="['/certificate', cert.id]">View Details</a>
