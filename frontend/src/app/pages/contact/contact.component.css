@@ -1,19 +1,252 @@
-.contact-tile {
-  flex: 1 1 180px;
-  border: 1px solid #e3e6ea;
-  border-radius: 12px;
-  padding: 14px 16px;
+.contact-page {
+  background: #f5f7fb;
+}
+
+.contact-hero {
+  position: relative;
+  min-height: 330px;
+  background-image:
+    linear-gradient(160deg, rgba(9, 26, 61, 0.86), rgba(9, 59, 154, 0.72)),
+    url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1800&q=80');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  color: #fff;
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.hero-inner h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+}
+
+.hero-inner p {
+  margin: 10px auto 0;
+  max-width: 680px;
+  font-size: 1.06rem;
+  color: #dbe7ff;
+}
+
+.contact-card-wrap {
+  margin-top: -60px;
+  position: relative;
+  z-index: 4;
+}
+
+.contact-card {
   background: #fff;
+  border-radius: 18px;
+  border: 1px solid #d7e0f0;
+  box-shadow: 0 16px 40px rgba(13, 37, 83, 0.12);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
 }
 
-.contact-tile .label {
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-  color: #6c757d;
+.left-panel,
+.right-panel {
+  padding: 30px;
 }
 
-.contact-tile .value {
+.left-panel {
+  border-right: 1px solid #e7edf6;
+}
+
+.left-panel h2,
+.right-panel h2 {
+  margin: 0 0 10px;
+  color: #15223a;
+}
+
+.muted {
+  margin: 0 0 16px;
+  color: #64748b;
+}
+
+.info-item {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.info-item .icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(140deg, #1d4ed8, #2563eb);
+  color: #fff;
+  font-size: 1.15rem;
+}
+
+.info-item h3 {
+  margin: 0 0 4px;
+  font-size: 1.1rem;
+}
+
+.info-item p {
+  margin: 0;
+  color: #475569;
+}
+
+.social {
+  margin-top: 18px;
+  border-top: 1px solid #e7edf6;
+  padding-top: 14px;
+}
+
+.social h4 {
+  margin: 0 0 8px;
+  color: #15223a;
+}
+
+.social-list {
+  display: flex;
+  gap: 8px;
+}
+
+.social-list a {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  text-decoration: none;
+  background: #1d4ed8;
+  color: #fff;
+  font-weight: 700;
+}
+
+.contact-form {
+  display: grid;
+  gap: 12px;
+}
+
+.row-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  border: 1px solid #d9e3f4;
+  border-radius: 12px;
+  padding: 10px 12px;
+  outline: none;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.send-btn {
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 16px;
+  color: #fff;
+  background: linear-gradient(120deg, #1d4ed8, #2563eb);
+  font-weight: 700;
+}
+
+.submit-ok {
+  color: #166534;
   font-weight: 600;
-  margin-top: 4px;
+  font-size: 0.95rem;
+}
+
+.map-section {
+  margin-top: 26px;
+}
+
+.map-section iframe {
+  width: 100%;
+  height: 360px;
+  border: 0;
+}
+
+.contact-footer {
+  background: #081936;
+  color: #d8e5ff;
+  padding: 34px 0;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.brand {
+  color: #fff;
+  margin: 0 0 8px;
+}
+
+.contact-footer h4 {
+  color: #fff;
+  margin: 0 0 8px;
+}
+
+.contact-footer p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.newsletter {
+  margin-top: 8px;
+  display: grid;
+  gap: 8px;
+}
+
+.newsletter input {
+  border: 1px solid #2a4b84;
+  background: #0d2246;
+  color: #eaf1ff;
+  border-radius: 999px;
+  padding: 8px 10px;
+}
+
+.newsletter button {
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 10px;
+  background: #2563eb;
+  color: #fff;
+  font-weight: 600;
+}
+
+@media (max-width: 980px) {
+  .contact-card {
+    grid-template-columns: 1fr;
+  }
+
+  .left-panel {
+    border-right: 0;
+    border-bottom: 1px solid #e7edf6;
+  }
+
+  .footer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .row-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
 }

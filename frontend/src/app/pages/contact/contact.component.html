@@ -1,23 +1,104 @@
-<div class="container py-4">
-  <div class="card shadow-sm">
-    <div class="card-body">
-      <h2 class="card-title mb-3">Contact</h2>
-      <p class="text-muted mb-2">We are still working about that.</p>
-      <p class="text-muted mb-4">Questions about diplomas or courses? Reach us below.</p>
-      <div class="d-grid gap-2 d-sm-flex">
-        <div class="contact-tile">
-          <div class="label">Email</div>
-          <div class="value">support@example.com</div>
+<section class="contact-page">
+  <header class="contact-hero">
+    <div class="overlay"></div>
+    <div class="hero-inner container">
+      <h1 class="display-font">Contact Us</h1>
+      <p>CourseOnline is ready to provide the right support for your learning journey.</p>
+    </div>
+  </header>
+
+  <div class="container contact-card-wrap">
+    <article class="contact-card">
+      <section class="left-panel">
+        <h2>Get in touch</h2>
+        <p class="muted">Reach our team for enrollment, technical support, and program information.</p>
+
+        <div class="info-item">
+          <div class="icon">📍</div>
+          <div>
+            <h3>Head Office</h3>
+            <p>Digital Learning Tower, 22 Main Campus Road, New York, USA</p>
+          </div>
         </div>
-        <div class="contact-tile">
-          <div class="label">Phone</div>
-          <div class="value">+1 (555) 010-0200</div>
+
+        <div class="info-item">
+          <div class="icon">✉</div>
+          <div>
+            <h3>Email Us</h3>
+            <p>support@courseonline.tld<br />admissions@courseonline.tld</p>
+          </div>
         </div>
-        <div class="contact-tile">
-          <div class="label">City</div>
-          <div class="value">New York, NY</div>
+
+        <div class="info-item">
+          <div class="icon">☎</div>
+          <div>
+            <h3>Call Us</h3>
+            <p>Phone: +1 (555) 201-2012<br />Fax: +1 (555) 201-2013</p>
+          </div>
+        </div>
+
+        <div class="social">
+          <h4>Follow our social media</h4>
+          <div class="social-list">
+            <a href="#" aria-label="Facebook">f</a>
+            <a href="#" aria-label="Instagram">i</a>
+            <a href="#" aria-label="Twitter">t</a>
+            <a href="#" aria-label="YouTube">y</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="right-panel">
+        <h2>Send us a message</h2>
+        <form class="contact-form" (ngSubmit)="submit()">
+          <div class="row-grid">
+            <input type="text" name="name" [(ngModel)]="form.name" placeholder="Name" required />
+            <input type="text" name="company" [(ngModel)]="form.company" placeholder="Company" />
+          </div>
+          <div class="row-grid">
+            <input type="text" name="phone" [(ngModel)]="form.phone" placeholder="Phone" />
+            <input type="email" name="email" [(ngModel)]="form.email" placeholder="Email" required />
+          </div>
+          <input type="text" name="subject" [(ngModel)]="form.subject" placeholder="Subject" />
+          <textarea name="message" [(ngModel)]="form.message" rows="5" placeholder="Message" required></textarea>
+          <button type="submit" class="send-btn">Send</button>
+          <div class="submit-ok" *ngIf="submitted">Message sent. Our team will contact you soon.</div>
+        </form>
+      </section>
+    </article>
+  </div>
+
+  <section class="map-section">
+    <iframe
+      title="CourseOnline map"
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+      src="https://www.google.com/maps?q=New+York,+NY&output=embed"
+    ></iframe>
+  </section>
+
+  <footer class="contact-footer">
+    <div class="container footer-grid">
+      <div>
+        <h3 class="brand">courseonline</h3>
+        <p>Head Office<br />22 Main Campus Road<br />New York, USA</p>
+      </div>
+      <div>
+        <h4>Get Started</h4>
+        <p>Certificates<br />Diplomas<br />Specializations</p>
+      </div>
+      <div>
+        <h4>Support</h4>
+        <p>Help Center<br />My Account<br />Contact us</p>
+      </div>
+      <div>
+        <h4>Newsletter</h4>
+        <p>Get updates about upcoming programs.</p>
+        <div class="newsletter">
+          <input type="email" placeholder="Email" />
+          <button type="button">Sign Up</button>
         </div>
       </div>
     </div>
-  </div>
-</div>
+  </footer>
+</section>
