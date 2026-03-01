@@ -41,7 +41,7 @@ export class AdminIssueComponent {
   error = '';
   success = '';
   result: IssueGenerateResponse | null = null;
-  selectedIssuedResult: IssueGenerateResponse | null = null;
+  selectedIssuedResults: IssueRecentItem[] = [];
   selectedIssuedStudentName = '';
 
   constructor(private api: ApiService) {
@@ -72,7 +72,7 @@ export class AdminIssueComponent {
     this.query = `${item.name} (${item.userName})`;
     this.searchResults = [];
     this.result = null;
-    this.selectedIssuedResult = null;
+    this.selectedIssuedResults = [];
     this.selectedIssuedStudentName = '';
     this.success = '';
     this.error = '';
@@ -92,10 +92,12 @@ export class AdminIssueComponent {
     this.success = '';
     this.error = '';
     if (this.issueType === 'CERTIFICATE' && this.selectedCertificateId == null && this.certificateOptions.length) {
-      this.selectedCertificateId = this.certificateOptions[0].certificateId;
+      const firstNotIssued = this.certificateOptions.find((entry) => !entry.alreadyIssued);
+      this.selectedCertificateId = (firstNotIssued || this.certificateOptions[0]).certificateId;
     }
     if (this.issueType === 'DIPLOMA' && this.selectedDiplomaId == null && this.diplomaOptions.length) {
-      this.selectedDiplomaId = this.diplomaOptions[0].diplomaId;
+      const firstNotIssued = this.diplomaOptions.find((entry) => !entry.alreadyIssued);
+      this.selectedDiplomaId = (firstNotIssued || this.diplomaOptions[0]).diplomaId;
     }
   }
 
@@ -206,9 +208,7 @@ export class AdminIssueComponent {
       next: (ctx) => {
         this.applyContext(ctx);
         this.selectedIssuedStudentName = item.name;
-        this.selectedIssuedResult = ctx.recentlyIssued?.length
-          ? this.toResultFromRecent(ctx.recentlyIssued[0])
-          : null;
+        this.selectedIssuedResults = ctx.recentlyIssued || [];
       },
       error: () => {
         this.error = 'Failed to load selected student details';
@@ -229,7 +229,7 @@ export class AdminIssueComponent {
         this.loadIssuedStudents();
         if (this.student?.userId === item.userId) {
           this.refreshStudentContext(item.userId);
-          this.selectedIssuedResult = null;
+          this.selectedIssuedResults = [];
         }
       },
       error: (err) => {
@@ -276,12 +276,26 @@ export class AdminIssueComponent {
     };
   }
 
+  qrImageUrlFor(item: IssueRecentItem): string {
+    return `http://localhost:8080/api/issued/qr/${item.serialNumber}`;
+  }
+
+  verifyUrlFor(item: IssueRecentItem): string {
+    return `http://localhost:4200/verify/${item.serialNumber}`;
+  }
+
   private applyContext(ctx: IssueStudentContext): void {
     this.context = ctx;
     this.student = ctx.student;
     const acceptedCertificates = (ctx.certificates || []).filter((entry) => entry.accepted);
     const acceptedDiplomas = (ctx.diplomas || []).filter((entry) => entry.accepted);
-    this.selectedCertificateId = acceptedCertificates.length ? acceptedCertificates[0].certificateId : null;
-    this.selectedDiplomaId = acceptedDiplomas.length ? acceptedDiplomas[0].diplomaId : null;
+    const firstCertificateNotIssued = acceptedCertificates.find((entry) => !entry.alreadyIssued);
+    const firstDiplomaNotIssued = acceptedDiplomas.find((entry) => !entry.alreadyIssued);
+    this.selectedCertificateId = acceptedCertificates.length
+      ? (firstCertificateNotIssued || acceptedCertificates[0]).certificateId
+      : null;
+    this.selectedDiplomaId = acceptedDiplomas.length
+      ? (firstDiplomaNotIssued || acceptedDiplomas[0]).diplomaId
+      : null;
   }
 }

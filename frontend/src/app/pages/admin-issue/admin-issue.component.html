@@ -172,28 +172,36 @@
       </ng-template>
     </div>
 
-    <div class="detail-panel mt-3" *ngIf="selectedIssuedResult">
+    <div class="detail-panel mt-3" *ngIf="selectedIssuedStudentName">
       <div class="detail-title">Selected Student Confirmation</div>
       <div><strong>Student:</strong> {{ selectedIssuedStudentName || '-' }}</div>
-      <div><strong>Serial:</strong> {{ selectedIssuedResult.serialNumber }}</div>
-      <div><strong>Issue Date:</strong> {{ selectedIssuedResult.issueDate | date:'M/d/yyyy' }}</div>
-      <div class="qr-preview">
-        <strong>QR Code:</strong>
-        <img [src]="selectedIssuedResult.qrImageUrl" alt="Selected issued credential QR code" />
+      <div class="text-muted mt-1" *ngIf="!selectedIssuedResults.length">No issued credentials for this student.</div>
+
+      <div class="issued-grid" *ngIf="selectedIssuedResults.length">
+        <article class="issued-card" *ngFor="let issued of selectedIssuedResults">
+          <div><strong>Title:</strong> {{ issued.title }}</div>
+          <div><strong>Type:</strong> {{ issued.type }}</div>
+          <div><strong>Serial:</strong> {{ issued.serialNumber }}</div>
+          <div><strong>Issue Date:</strong> {{ issued.issueDate | date:'M/d/yyyy' }}</div>
+          <div class="qr-preview">
+            <strong>QR Code:</strong>
+            <img [src]="qrImageUrlFor(issued)" alt="Selected issued credential QR code" />
+          </div>
+          <div class="small mt-2"><strong>Verify URL:</strong> {{ verifyUrlFor(issued) }}</div>
+          <a class="btn btn-outline-primary btn-sm mt-2 me-2" [routerLink]="['/verify', issued.serialNumber]">
+            Open Verification Page
+          </a>
+          <a
+            class="btn btn-outline-success btn-sm mt-2"
+            [attr.href]="qrImageUrlFor(issued)"
+            [attr.download]="'qr-' + issued.serialNumber + '.png'"
+            target="_blank"
+            rel="noopener"
+          >
+            Download QR PNG
+          </a>
+        </article>
       </div>
-      <div class="small mt-2"><strong>Verify URL:</strong> {{ selectedIssuedResult.qrPreview }}</div>
-      <a class="btn btn-outline-primary btn-sm mt-2 me-2" [routerLink]="['/verify', selectedIssuedResult.serialNumber]">
-        Open Verification Page
-      </a>
-      <a
-        class="btn btn-outline-success btn-sm mt-2 ms-2"
-        [attr.href]="selectedIssuedResult.qrImageUrl"
-        [attr.download]="'qr-' + selectedIssuedResult.serialNumber + '.png'"
-        target="_blank"
-        rel="noopener"
-      >
-        Download QR PNG
-      </a>
     </div>
   </section>
 </div>
