@@ -43,6 +43,8 @@ export class AdminIssueComponent {
   result: IssueGenerateResponse | null = null;
   selectedIssuedResults: IssueRecentItem[] = [];
   selectedIssuedStudentName = '';
+  selectedIssuedUserId: number | null = null;
+  selectedIssuedUserStatus: 'ACTIVE' | 'BANNED' | 'DELETED' | string = 'ACTIVE';
 
   constructor(private api: ApiService) {
     this.loadIssuedStudents();
@@ -74,6 +76,8 @@ export class AdminIssueComponent {
     this.result = null;
     this.selectedIssuedResults = [];
     this.selectedIssuedStudentName = '';
+    this.selectedIssuedUserId = null;
+    this.selectedIssuedUserStatus = 'ACTIVE';
     this.success = '';
     this.error = '';
 
@@ -209,6 +213,8 @@ export class AdminIssueComponent {
         this.applyContext(ctx);
         this.selectedIssuedStudentName = item.name;
         this.selectedIssuedResults = ctx.recentlyIssued || [];
+        this.selectedIssuedUserId = item.userId;
+        this.selectedIssuedUserStatus = item.status || 'ACTIVE';
       },
       error: () => {
         this.error = 'Failed to load selected student details';
@@ -216,20 +222,16 @@ export class AdminIssueComponent {
     });
   }
 
-  deleteIssuedFromRow(item: IssueIssuedStudent): void {
-    if (!item.latestIssuedId) {
-      this.error = 'No issued credential found to delete';
-      return;
-    }
+  deleteIssuedItem(item: IssueRecentItem): void {
     this.error = '';
     this.success = '';
-    this.api.deleteIssuedCredential(item.latestIssuedId).subscribe({
+    this.api.deleteIssuedCredential(item.id).subscribe({
       next: () => {
         this.success = 'Issued credential deleted';
+        this.selectedIssuedResults = this.selectedIssuedResults.filter((entry) => entry.id !== item.id);
         this.loadIssuedStudents();
-        if (this.student?.userId === item.userId) {
-          this.refreshStudentContext(item.userId);
-          this.selectedIssuedResults = [];
+        if (this.selectedIssuedUserId) {
+          this.refreshStudentContext(this.selectedIssuedUserId);
         }
       },
       error: (err) => {
@@ -238,11 +240,13 @@ export class AdminIssueComponent {
     });
   }
 
-  banStudentFromRow(item: IssueIssuedStudent): void {
+  toggleSelectedStudentStatus(): void {
+    if (!this.selectedIssuedUserId) return;
     this.error = '';
     this.success = '';
-    this.api.adminToggleUserStatus(item.userId).subscribe({
+    this.api.adminToggleUserStatus(this.selectedIssuedUserId).subscribe({
       next: (updated) => {
+        this.selectedIssuedUserStatus = updated.status;
         this.success = updated.status === 'BANNED' ? 'Student banned' : 'Student activated';
         this.loadIssuedStudents();
       },

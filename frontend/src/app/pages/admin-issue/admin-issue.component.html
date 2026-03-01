@@ -154,14 +154,8 @@
             <td>{{ row.status || '-' }}</td>
             <td>{{ row.lastIssueDate | date:'M/d/yyyy' }}</td>
             <td>
-              <button type="button" class="btn btn-sm btn-outline-primary me-1" (click)="selectIssuedStudent(row)">
+              <button type="button" class="btn btn-sm btn-outline-primary" (click)="selectIssuedStudent(row)">
                 Select
-              </button>
-              <button type="button" class="btn btn-sm btn-outline-danger me-1" (click)="deleteIssuedFromRow(row)">
-                Delete
-              </button>
-              <button type="button" class="btn btn-sm btn-danger" (click)="banStudentFromRow(row)">
-                {{ row.status === 'BANNED' ? 'Activate' : 'Ban' }}
               </button>
             </td>
           </tr>
@@ -200,6 +194,12 @@
           >
             Download QR PNG
           </a>
+          <button class="btn btn-outline-danger btn-sm mt-2 ms-2" type="button" (click)="deleteIssuedItem(issued)">
+            Delete
+          </button>
+          <button class="btn btn-danger btn-sm mt-2 ms-2" type="button" (click)="toggleSelectedStudentStatus()">
+            {{ selectedIssuedUserStatus === 'BANNED' ? 'Activate' : 'Ban' }}
+          </button>
         </article>
       </div>
     </div>
