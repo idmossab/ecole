@@ -8,28 +8,41 @@
     <div class="col-12 col-md-6 col-lg-5">
       <div class="card shadow-sm">
         <div class="card-body p-4">
-          <h2 class="h5 mb-3">Login</h2>
+          <h2 class="h5 mb-3">
+            <fa-icon class="me-2 text-muted" [icon]="faUser"></fa-icon>
+            Login
+          </h2>
           <form (ngSubmit)="submitLogin()">
             <div class="mb-3">
               <label class="form-label">Email or Username</label>
-              <input
-                type="text"
-                name="emailOrUsername"
-                class="form-control"
-                [(ngModel)]="loginEmailOrUsername"
-                required
-              />
+              <div class="field-with-icon">
+                <span class="field-icon" aria-hidden="true">
+                  <fa-icon [icon]="faUser"></fa-icon>
+                </span>
+                <input
+                  type="text"
+                  name="emailOrUsername"
+                  class="form-control"
+                  [(ngModel)]="loginEmailOrUsername"
+                  required
+                />
+              </div>
             </div>
 
             <div class="mb-3">
               <label class="form-label">Password</label>
-              <input
-                type="password"
-                name="loginPassword"
-                class="form-control"
-                [(ngModel)]="loginPassword"
-                required
-              />
+              <div class="field-with-icon">
+                <span class="field-icon" aria-hidden="true">
+                  <fa-icon [icon]="faLock"></fa-icon>
+                </span>
+                <input
+                  type="password"
+                  name="loginPassword"
+                  class="form-control"
+                  [(ngModel)]="loginPassword"
+                  required
+                />
+              </div>
             </div>
 
             <button class="btn btn-dark w-100" type="submit" [disabled]="loginLoading">
@@ -45,32 +58,72 @@
     <div class="col-12 col-md-6 col-lg-5">
       <div class="card shadow-sm">
         <div class="card-body p-4">
-          <h2 class="h5 mb-3">Register</h2>
+          <h2 class="h5 mb-3">
+            <fa-icon class="me-2 text-muted" [icon]="faUserPlus"></fa-icon>
+            Register
+          </h2>
           <form (ngSubmit)="submitRegister()">
             <div class="row g-2">
               <div class="col-6">
                 <label class="form-label">First name</label>
-                <input type="text" class="form-control" name="firstName" [(ngModel)]="firstName" required />
+                <div class="field-with-icon">
+                  <span class="field-icon" aria-hidden="true">
+                    <fa-icon [icon]="faUser"></fa-icon>
+                  </span>
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="firstName"
+                    [(ngModel)]="firstName"
+                    required
+                  />
+                </div>
               </div>
               <div class="col-6">
                 <label class="form-label">Last name</label>
-                <input type="text" class="form-control" name="lastName" [(ngModel)]="lastName" required />
+                <div class="field-with-icon">
+                  <span class="field-icon" aria-hidden="true">
+                    <fa-icon [icon]="faUser"></fa-icon>
+                  </span>
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="lastName"
+                    [(ngModel)]="lastName"
+                    required
+                  />
+                </div>
               </div>
             </div>
 
             <div class="mb-3 mt-2">
               <label class="form-label">Username</label>
-              <input type="text" class="form-control" name="userName" [(ngModel)]="userName" required />
+              <div class="field-with-icon">
+                <span class="field-icon" aria-hidden="true">
+                  <fa-icon [icon]="faUser"></fa-icon>
+                </span>
+                <input type="text" class="form-control" name="userName" [(ngModel)]="userName" required />
+              </div>
             </div>
 
             <div class="mb-3">
               <label class="form-label">Email</label>
-              <input type="email" class="form-control" name="email" [(ngModel)]="email" required />
+              <div class="field-with-icon">
+                <span class="field-icon" aria-hidden="true">
+                  <fa-icon [icon]="faEnvelope"></fa-icon>
+                </span>
+                <input type="email" class="form-control" name="email" [(ngModel)]="email" required />
+              </div>
             </div>
 
             <div class="mb-3">
               <label class="form-label">Password</label>
-              <input type="password" class="form-control" name="password" [(ngModel)]="password" required />
+              <div class="field-with-icon">
+                <span class="field-icon" aria-hidden="true">
+                  <fa-icon [icon]="faLock"></fa-icon>
+                </span>
+                <input type="password" class="form-control" name="password" [(ngModel)]="password" required />
+              </div>
             </div>
 
             <button class="btn btn-outline-dark w-100" type="submit" [disabled]="registerLoading">

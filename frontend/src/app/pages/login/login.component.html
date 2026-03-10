@@ -9,24 +9,34 @@
           <form (ngSubmit)="submit()">
             <div class="mb-3">
               <label class="form-label">Email or Username</label>
-              <input
-                type="text"
-                name="emailOrUsername"
-                class="form-control"
-                [(ngModel)]="emailOrUsername"
-                required
-              />
+              <div class="field-with-icon">
+                <span class="field-icon" aria-hidden="true">
+                  <fa-icon [icon]="faUser"></fa-icon>
+                </span>
+                <input
+                  type="text"
+                  name="emailOrUsername"
+                  class="form-control"
+                  [(ngModel)]="emailOrUsername"
+                  required
+                />
+              </div>
             </div>
 
             <div class="mb-3">
               <label class="form-label">Password</label>
-              <input
-                type="password"
-                name="password"
-                class="form-control"
-                [(ngModel)]="password"
-                required
-              />
+              <div class="field-with-icon">
+                <span class="field-icon" aria-hidden="true">
+                  <fa-icon [icon]="faLock"></fa-icon>
+                </span>
+                <input
+                  type="password"
+                  name="password"
+                  class="form-control"
+                  [(ngModel)]="password"
+                  required
+                />
+              </div>
             </div>
 
             <button class="btn btn-dark w-100" type="submit" [disabled]="loading">

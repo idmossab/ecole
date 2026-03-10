@@ -30,3 +30,23 @@ h1, h2, h3, .display-font {
   background: var(--brand-primary-dark);
   border-color: var(--brand-primary-dark);
 }
+
+.field-with-icon {
+  position: relative;
+}
+
+.field-with-icon .field-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+  pointer-events: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.field-with-icon .form-control {
+  padding-left: 2.5rem;
+}
