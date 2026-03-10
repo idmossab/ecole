@@ -9,7 +9,10 @@
       <div><div class="label">Email</div><div class="value">{{ user.email }}</div></div>
       <div><div class="label">Phone</div><div class="value">{{ user.phone || '-' }}</div></div>
       <div><div class="label">City</div><div class="value">{{ user.city || '-' }}</div></div>
-      <div><div class="label">Role</div><div class="value">{{ user.role }}</div></div>
+    </div>
+
+    <div class="profile-warning" *ngIf="isProfileIncomplete && !editMode">
+      Please complete your profile (add phone and city) before requesting to join a diploma or certificate.
     </div>
 
     <form class="edit-grid" *ngIf="editMode">

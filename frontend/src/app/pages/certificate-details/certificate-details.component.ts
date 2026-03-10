@@ -23,6 +23,7 @@ export class CertificateDetailsComponent {
   joinRequested = false;
   joinRequestMessage = '';
   joinStatus: JoinRequestStatus['status'] | null = null;
+  profileIncomplete = false;
   readonly fallbackPhone = '+1 (555) 123-4567';
   private readonly fallbackBanner =
     'https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=1400&q=80';
@@ -47,6 +48,7 @@ export class CertificateDetailsComponent {
       next: (cert) => {
         this.certificate = cert;
         if (this.isLoggedIn) {
+          this.loadProfileStatus();
           this.loadJoinRequestStatus(cert.id);
         }
         this.loadCourses(id);
@@ -120,6 +122,10 @@ export class CertificateDetailsComponent {
 
   requestJoinCertificate(): void {
     if (!this.certificate || this.isJoinDisabled()) return;
+    if (this.profileIncomplete) {
+      this.joinRequestMessage = 'Please complete your profile (phone and city) before requesting to join.';
+      return;
+    }
     if (!this.selectedCourse?.id) {
       this.joinRequestMessage = 'Please select a course first.';
       return;
@@ -138,7 +144,7 @@ export class CertificateDetailsComponent {
   }
 
   isJoinDisabled(): boolean {
-    return this.joinRequested || this.joinStatus === 'PENDING' || this.joinStatus === 'ACCEPTED';
+    return this.profileIncomplete || this.joinRequested || this.joinStatus === 'PENDING' || this.joinStatus === 'ACCEPTED';
   }
 
   joinButtonLabel(): string {
@@ -161,6 +167,17 @@ export class CertificateDetailsComponent {
         this.joinStatus = res.status;
         this.joinRequested = this.joinStatus === 'PENDING' || this.joinStatus === 'ACCEPTED';
         this.joinRequestMessage = this.statusMessage();
+      },
+      error: () => {}
+    });
+  }
+
+  private loadProfileStatus(): void {
+    this.api.getMe().subscribe({
+      next: (me) => {
+        const phone = me.phone?.trim() || '';
+        const city = me.city?.trim() || '';
+        this.profileIncomplete = phone.length === 0 || city.length === 0;
       },
       error: () => {}
     });

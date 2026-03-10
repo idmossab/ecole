@@ -246,6 +246,71 @@
   color: var(--text-primary);
 }
 
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 6px 0 12px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.search-bar .icon {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: #64748b;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.search-bar .form-control {
+  border: none;
+  background: transparent;
+  padding: 0;
+  box-shadow: none;
+}
+
+.search-bar .form-control:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.admin-table tbody tr:nth-child(even) {
+  background: #e2e8f0;
+}
+
+.admin-table tbody tr:hover {
+  background: #cbd5f5;
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  width: 36px;
+  height: 36px;
+}
+
+.icon-btn.btn-sm {
+  width: 32px;
+  height: 32px;
+}
+
+.icon-btn .icon {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .empty-cell {
   color: var(--text-secondary);
 }
@@ -259,6 +324,26 @@
   color: #1d4ed8;
   font-size: 0.72rem;
   font-weight: 700;
+}
+
+.role-pill {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: #e2e8f0;
+  color: #334155;
+}
+
+.role-pill.role-admin {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+.role-pill.role-user {
+  background: #dcfce7;
+  color: #166534;
 }
 
 .join-requests-list {
@@ -319,6 +404,16 @@
 }
 
 .status-pill.rejected {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.status-pill.active {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-pill.banned {
   background: #fee2e2;
   color: #991b1b;
 }

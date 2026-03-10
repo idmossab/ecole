@@ -151,11 +151,23 @@
             <td>{{ row.email }}</td>
             <td>{{ row.issuedCertificates }}</td>
             <td>{{ row.issuedDiplomas }}</td>
-            <td>{{ row.status || '-' }}</td>
+            <td>
+              <span class="status-pill" [class.active]="row.status === 'ACTIVE'" [class.banned]="row.status === 'BANNED'">
+                {{ row.status || '-' }}
+              </span>
+            </td>
             <td>{{ row.lastIssueDate | date:'M/d/yyyy' }}</td>
             <td>
-              <button type="button" class="btn btn-sm btn-outline-primary" (click)="selectIssuedStudent(row)">
-                Select
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-primary icon-btn"
+                (click)="selectIssuedStudent(row)"
+                aria-label="Select"
+                title="Select"
+              >
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M5 12h14M13 6l6 6-6 6" />
+                </svg>
               </button>
             </td>
           </tr>
@@ -182,24 +194,58 @@
             <img [src]="qrImageUrlFor(issued)" alt="Selected issued credential QR code" />
           </div>
           <div class="small mt-2"><strong>Verify URL:</strong> {{ verifyUrlFor(issued) }}</div>
-          <a class="btn btn-outline-primary btn-sm mt-2 me-2" [routerLink]="['/verify', issued.serialNumber]">
-            Open Verification Page
-          </a>
-          <a
-            class="btn btn-outline-success btn-sm mt-2"
-            [attr.href]="qrImageUrlFor(issued)"
-            [attr.download]="'qr-' + issued.serialNumber + '.png'"
-            target="_blank"
-            rel="noopener"
-          >
-            Download QR PNG
-          </a>
-          <button class="btn btn-outline-danger btn-sm mt-2 ms-2" type="button" (click)="deleteIssuedItem(issued)">
-            Delete
-          </button>
-          <button class="btn btn-danger btn-sm mt-2 ms-2" type="button" (click)="toggleSelectedStudentStatus()">
-            {{ selectedIssuedUserStatus === 'BANNED' ? 'Activate' : 'Ban' }}
-          </button>
+          <div class="issued-actions">
+            <a
+              class="btn btn-outline-primary btn-sm icon-btn"
+              [routerLink]="['/verify', issued.serialNumber]"
+              aria-label="Open verification page"
+              title="Open verification page"
+            >
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M10 4h10v10" />
+                <path d="M20 4l-9 9" />
+                <path d="M4 10v10h10" />
+              </svg>
+            </a>
+            <a
+              class="btn btn-outline-success btn-sm icon-btn"
+              [attr.href]="qrImageUrlFor(issued)"
+              [attr.download]="'qr-' + issued.serialNumber + '.png'"
+              target="_blank"
+              rel="noopener"
+              aria-label="Download QR PNG"
+              title="Download QR PNG"
+            >
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 3v12" />
+                <path d="M7 10l5 5 5-5" />
+                <path d="M5 21h14" />
+              </svg>
+            </a>
+            <button
+              class="btn btn-outline-danger btn-sm icon-btn"
+              type="button"
+              (click)="deleteIssuedItem(issued)"
+              aria-label="Delete"
+              title="Delete"
+            >
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 7h16M9 7V5h6v2M9 10v7M15 10v7M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12" />
+              </svg>
+            </button>
+            <button
+              class="btn btn-danger btn-sm icon-btn"
+              type="button"
+              (click)="toggleSelectedStudentStatus()"
+              aria-label="Toggle status"
+              title="Toggle status"
+            >
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2a10 10 0 1 0 10 10" />
+                <path d="M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
         </article>
       </div>
     </div>

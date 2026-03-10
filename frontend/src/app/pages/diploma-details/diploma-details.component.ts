@@ -26,6 +26,7 @@ export class DiplomaDetailsComponent {
   claimLoading = false;
   joinRequested = false;
   joinStatus: JoinRequestStatus['status'] | null = null;
+  profileIncomplete = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -45,6 +46,7 @@ export class DiplomaDetailsComponent {
         this.diploma = diploma;
         this.loadSupplementalData(diplomaId);
         if (this.isLoggedIn) {
+          this.loadProfileStatus();
           this.loadProgress(diplomaId);
           this.loadJoinRequestStatus(diplomaId);
         }
@@ -92,6 +94,10 @@ export class DiplomaDetailsComponent {
 
   requestJoinDiploma(): void {
     if (!this.diploma || this.isJoinDisabled()) return;
+    if (this.profileIncomplete) {
+      this.message = 'Please complete your profile (phone and city) before requesting to join.';
+      return;
+    }
     if (!this.selectedSpecialization?.id) {
       this.message = 'Please select a specialization first.';
       return;
@@ -113,7 +119,7 @@ export class DiplomaDetailsComponent {
   }
 
   isJoinDisabled(): boolean {
-    return this.claimLoading || !this.selectedSpecialization || this.joinStatus === 'PENDING' || this.joinStatus === 'ACCEPTED';
+    return this.profileIncomplete || this.claimLoading || !this.selectedSpecialization || this.joinStatus === 'PENDING' || this.joinStatus === 'ACCEPTED';
   }
 
   joinButtonLabel(): string {
@@ -214,6 +220,17 @@ export class DiplomaDetailsComponent {
         this.joinStatus = res.status;
         this.joinRequested = this.joinStatus === 'PENDING' || this.joinStatus === 'ACCEPTED';
         this.message = this.statusMessage();
+      },
+      error: () => {}
+    });
+  }
+
+  private loadProfileStatus(): void {
+    this.api.getMe().subscribe({
+      next: (me) => {
+        const phone = me.phone?.trim() || '';
+        const city = me.city?.trim() || '';
+        this.profileIncomplete = phone.length === 0 || city.length === 0;
       },
       error: () => {}
     });

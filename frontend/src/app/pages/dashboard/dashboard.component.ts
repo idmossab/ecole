@@ -57,6 +57,8 @@ export class DashboardComponent implements OnInit {
   loadedActionIds = new Set<QuickActionId>();
 
   students: UserResponse[] = [];
+  filteredStudents: UserResponse[] = [];
+  studentQuery = '';
   currentUserId: number | null = null;
   certificates: AdminCertificate[] = [];
   diplomas: AdminDiploma[] = [];
@@ -672,6 +674,7 @@ export class DashboardComponent implements OnInit {
       this.api.getAdminUsers().subscribe({
         next: (users) => {
           this.students = users || [];
+          this.filteredStudents = this.applyStudentFilter(this.students, this.studentQuery);
           this.loadedActionIds.add(actionId);
           this.loadingAction = false;
         },
@@ -811,5 +814,19 @@ export class DashboardComponent implements OnInit {
     }
 
     this.loadingAction = false;
+  }
+
+  onStudentQueryChange(): void {
+    this.filteredStudents = this.applyStudentFilter(this.students, this.studentQuery);
+  }
+
+  private applyStudentFilter(list: UserResponse[], query: string): UserResponse[] {
+    const q = query.trim().toLowerCase();
+    if (!q) return list;
+    return list.filter((item) => {
+      const haystack = `${item.firstName} ${item.lastName} ${item.userName} ${item.email}`
+        .toLowerCase();
+      return haystack.includes(q);
+    });
   }
 }

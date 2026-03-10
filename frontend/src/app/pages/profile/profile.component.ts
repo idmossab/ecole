@@ -42,6 +42,13 @@ export class ProfileComponent implements OnInit {
     return this.user?.role === 'ADMIN';
   }
 
+  get isProfileIncomplete(): boolean {
+    if (!this.user) return false;
+    const phone = this.user.phone?.trim() || '';
+    const city = this.user.city?.trim() || '';
+    return phone.length === 0 || city.length === 0;
+  }
+
   ngOnInit(): void {
     if (!this.auth.isLoggedIn()) {
       this.router.navigateByUrl('/login');

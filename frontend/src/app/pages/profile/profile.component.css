@@ -36,6 +36,15 @@
   font-weight: 600;
 }
 
+.profile-warning {
+  border: 1px solid #fecaca;
+  background: #fef2f2;
+  color: #b91c1c;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+}
+
 .my-certs {
   gap: 12px;
 }

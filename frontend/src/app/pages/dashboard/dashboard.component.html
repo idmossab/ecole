@@ -182,6 +182,19 @@
     <app-admin-issue-stats *ngIf="!loadingAction && selectedActionId === 'issue-stats'"></app-admin-issue-stats>
 
     <div class="table-wrap" *ngIf="!loadingAction && selectedActionId !== 'issue' && selectedActionId !== 'issue-stats'">
+      <div class="search-bar" *ngIf="selectedActionId === 'students'">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="11" cy="11" r="6" />
+          <path d="M20 20l-3.5-3.5" />
+        </svg>
+        <input
+          class="form-control"
+          type="text"
+          placeholder="Search users..."
+          [(ngModel)]="studentQuery"
+          (ngModelChange)="onStudentQueryChange()"
+        />
+      </div>
       <table class="admin-table" *ngIf="selectedActionId === 'students'">
         <thead>
           <tr>
@@ -197,45 +210,68 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of students">
-            <td>{{ item.role }} <span *ngIf="isSuperAdmin(item)" class="super-badge">SUPER</span></td>
+          <tr *ngFor="let item of filteredStudents">
+            <td>
+              <span class="role-pill" [class.role-admin]="item.role === 'ADMIN'" [class.role-user]="item.role === 'USER'">
+                {{ item.role }}
+              </span>
+              <span *ngIf="isSuperAdmin(item)" class="super-badge">SUPER</span>
+            </td>
             <td>{{ item.firstName }} {{ item.lastName }}</td>
             <td>{{ item.email }}</td>
-            <td>{{ item.status }}</td>
+            <td>
+              <span class="status-pill" [class.active]="item.status === 'ACTIVE'" [class.banned]="item.status === 'BANNED'">
+                {{ item.status }}
+              </span>
+            </td>
             <td>{{ item.phone || '-' }}</td>
             <td>{{ item.city || '-' }}</td>
             <td>
               <button
-                class="btn btn-sm btn-danger"
+                class="btn btn-sm btn-danger icon-btn"
                 type="button"
                 (click)="removeItem(item)"
                 [disabled]="!canManageStudentActions(item)"
+                aria-label="Delete user"
+                title="Delete"
               >
-                Delete
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M4 7h16M9 7V5h6v2M9 10v7M15 10v7M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12" />
+                </svg>
               </button>
             </td>
             <td>
               <button
-                class="btn btn-sm btn-outline-dark"
+                class="btn btn-sm btn-outline-dark icon-btn"
                 type="button"
                 (click)="changeStudentRole(item)"
                 [disabled]="!canManageStudentActions(item)"
+                aria-label="Change role"
+                title="Change role"
               >
-                Make {{ item.role === 'ADMIN' ? 'USER' : 'ADMIN' }}
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM4 20a6 6 0 0 1 12 0H4z" />
+                  <path d="M19 8h3m0 0-1.5-1.5M22 8l-1.5 1.5" />
+                </svg>
               </button>
             </td>
             <td>
               <button
-                class="btn btn-sm btn-outline-dark"
+                class="btn btn-sm btn-outline-dark icon-btn"
                 type="button"
                 (click)="toggleStudentStatus(item)"
                 [disabled]="!canManageStudentActions(item)"
+                aria-label="Toggle status"
+                title="Toggle status"
               >
-                Set {{ item.status === 'ACTIVE' ? 'BANNED' : 'ACTIVE' }}
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 2a10 10 0 1 0 10 10" />
+                  <path d="M6 6l12 12" />
+                </svg>
               </button>
             </td>
           </tr>
-          <tr *ngIf="!students.length">
+          <tr *ngIf="!filteredStudents.length">
             <td colspan="9" class="empty-cell">No users found.</td>
           </tr>
         </tbody>
@@ -254,8 +290,21 @@
           <tr *ngFor="let item of certificates">
             <td>{{ item.title }}</td>
             <td>{{ item.description || '-' }}</td>
-            <td><button class="btn btn-sm btn-outline-dark" type="button" (click)="editItem(item)">Edit</button></td>
-            <td><button class="btn btn-sm btn-danger" type="button" (click)="removeItem(item)">Delete</button></td>
+            <td>
+              <button class="btn btn-sm btn-outline-dark icon-btn" type="button" (click)="editItem(item)" aria-label="Edit" title="Edit">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M4 20h4l10-10-4-4L4 16v4z" />
+                  <path d="M13 6l4 4" />
+                </svg>
+              </button>
+            </td>
+            <td>
+              <button class="btn btn-sm btn-danger icon-btn" type="button" (click)="removeItem(item)" aria-label="Delete" title="Delete">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M4 7h16M9 7V5h6v2M9 10v7M15 10v7M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12" />
+                </svg>
+              </button>
+            </td>
           </tr>
           <tr *ngIf="!certificates.length">
             <td colspan="4" class="empty-cell">No certificates found.</td>
@@ -278,8 +327,21 @@
             <td>{{ item.title }}</td>
             <td>{{ modeLabel(item.mode) }}</td>
             <td>{{ item.requiredCount }}</td>
-            <td><button class="btn btn-sm btn-outline-dark" type="button" (click)="editItem(item)">Edit</button></td>
-            <td><button class="btn btn-sm btn-danger" type="button" (click)="removeItem(item)">Delete</button></td>
+            <td>
+              <button class="btn btn-sm btn-outline-dark icon-btn" type="button" (click)="editItem(item)" aria-label="Edit" title="Edit">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M4 20h4l10-10-4-4L4 16v4z" />
+                  <path d="M13 6l4 4" />
+                </svg>
+              </button>
+            </td>
+            <td>
+              <button class="btn btn-sm btn-danger icon-btn" type="button" (click)="removeItem(item)" aria-label="Delete" title="Delete">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M4 7h16M9 7V5h6v2M9 10v7M15 10v7M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12" />
+                </svg>
+              </button>
+            </td>
           </tr>
           <tr *ngIf="!diplomas.length">
             <td colspan="5" class="empty-cell">No diplomas found.</td>
@@ -302,8 +364,21 @@
             <td>{{ item.title }}</td>
             <td>{{ item.certificateTitle || '-' }}</td>
             <td>{{ item.mode }}</td>
-            <td><button class="btn btn-sm btn-outline-dark" type="button" (click)="editItem(item)">Edit</button></td>
-            <td><button class="btn btn-sm btn-danger" type="button" (click)="removeItem(item)">Delete</button></td>
+            <td>
+              <button class="btn btn-sm btn-outline-dark icon-btn" type="button" (click)="editItem(item)" aria-label="Edit" title="Edit">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M4 20h4l10-10-4-4L4 16v4z" />
+                  <path d="M13 6l4 4" />
+                </svg>
+              </button>
+            </td>
+            <td>
+              <button class="btn btn-sm btn-danger icon-btn" type="button" (click)="removeItem(item)" aria-label="Delete" title="Delete">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M4 7h16M9 7V5h6v2M9 10v7M15 10v7M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12" />
+                </svg>
+              </button>
+            </td>
           </tr>
           <tr *ngIf="!courses.length">
             <td colspan="5" class="empty-cell">No courses found.</td>
@@ -326,8 +401,21 @@
             <td>{{ item.title }}</td>
             <td>{{ item.diplomaTitle || '-' }}</td>
             <td>{{ item.durationText || '-' }}</td>
-            <td><button class="btn btn-sm btn-outline-dark" type="button" (click)="editItem(item)">Edit</button></td>
-            <td><button class="btn btn-sm btn-danger" type="button" (click)="removeItem(item)">Delete</button></td>
+            <td>
+              <button class="btn btn-sm btn-outline-dark icon-btn" type="button" (click)="editItem(item)" aria-label="Edit" title="Edit">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M4 20h4l10-10-4-4L4 16v4z" />
+                  <path d="M13 6l4 4" />
+                </svg>
+              </button>
+            </td>
+            <td>
+              <button class="btn btn-sm btn-danger icon-btn" type="button" (click)="removeItem(item)" aria-label="Delete" title="Delete">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M4 7h16M9 7V5h6v2M9 10v7M15 10v7M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12" />
+                </svg>
+              </button>
+            </td>
           </tr>
           <tr *ngIf="!specializations.length">
             <td colspan="5" class="empty-cell">No specializations found.</td>
@@ -353,8 +441,30 @@
             </span>
           </div>
           <div class="request-actions">
-            <button class="btn btn-success btn-sm" type="button" (click)="acceptJoinRequest(item)" [disabled]="item.status !== 'PENDING'">Accept</button>
-            <button class="btn btn-danger btn-sm" type="button" (click)="rejectJoinRequest(item)" [disabled]="item.status !== 'PENDING'">Reject</button>
+            <button
+              class="btn btn-success btn-sm icon-btn"
+              type="button"
+              (click)="acceptJoinRequest(item)"
+              [disabled]="item.status !== 'PENDING'"
+              aria-label="Accept"
+              title="Accept"
+            >
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 12l4 4L19 6" />
+              </svg>
+            </button>
+            <button
+              class="btn btn-danger btn-sm icon-btn"
+              type="button"
+              (click)="rejectJoinRequest(item)"
+              [disabled]="item.status !== 'PENDING'"
+              aria-label="Reject"
+              title="Reject"
+            >
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 6l12 12M18 6l-12 12" />
+              </svg>
+            </button>
           </div>
         </article>
         <div class="empty-cell" *ngIf="!joinRequests.length">No join requests found.</div>
