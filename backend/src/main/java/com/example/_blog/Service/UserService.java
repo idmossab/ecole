@@ -17,7 +17,10 @@ import com.example._blog.Dto.UserLoginRequest;
 import com.example._blog.Dto.UserProfileUpdateRequest;
 import com.example._blog.Dto.UserRegisterRequest;
 import com.example._blog.Dto.UserResponse;
+import com.example._blog.Dto.UserIssuedStatsResponse;
 import com.example._blog.Entity.User;
+import com.example._blog.Entity.IssuedCredential;
+import com.example._blog.Entity.enums.IssueType;
 import com.example._blog.Entity.enums.UserRole;
 import com.example._blog.Entity.enums.UserStatus;
 import com.example._blog.Repositories.DiplomaJoinRequestRepo;
@@ -206,6 +209,17 @@ public class UserService {
         diplomaJoinRequestRepo.deleteByUserId(userId);
         issuedCredentialRepo.deleteByUserId(userId);
         repo.delete(existing);
+    }
+
+    public UserIssuedStatsResponse getIssuedStats(Long userId) {
+        long issuedCertificates = issuedCredentialRepo.countByUserIdAndType(userId, IssueType.CERTIFICATE);
+        long issuedDiplomas = issuedCredentialRepo.countByUserIdAndType(userId, IssueType.DIPLOMA);
+        IssuedCredential latest = issuedCredentialRepo.findTop1ByUserIdOrderByCreatedAtDesc(userId).orElse(null);
+        return new UserIssuedStatsResponse(
+                issuedCertificates,
+                issuedDiplomas,
+                latest == null ? null : latest.getIssueDate()
+        );
     }
 
     private void enforceAdminManagementRules(User actor, User target) {

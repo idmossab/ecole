@@ -35,6 +35,20 @@
   </div>
 
   <div class="profile-card my-certs" *ngIf="user && !isAdmin">
+    <div class="issued-banner" *ngIf="issuedStats && (issuedStats.issuedCertificates || issuedStats.issuedDiplomas)">
+      <div class="issued-title">Congratulations!</div>
+      <div class="issued-text" *ngIf="issuedStats.issuedCertificates">
+        You have {{ issuedStats.issuedCertificates }} issued certificate{{ issuedStats.issuedCertificates === 1 ? '' : 's' }}.
+      </div>
+      <div class="issued-text" *ngIf="issuedStats.issuedDiplomas">
+        You have {{ issuedStats.issuedDiplomas }} issued diploma{{ issuedStats.issuedDiplomas === 1 ? '' : 's' }}.
+      </div>
+      <div class="issued-text" *ngIf="issuedStats.lastIssueDate">
+        Last issue date: {{ issuedStats.lastIssueDate | date:'MMM d, yyyy' }}.
+      </div>
+    </div>
+    <div class="text-muted" *ngIf="issuedStatsLoading">Checking issued credentials...</div>
+
     <h2 class="display-font">My Certificates</h2>
     <p class="text-muted">Only certificates accepted by admin</p>
 

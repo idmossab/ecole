@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
-import { AdminJoinRequest, ApiService } from '../../core/api.service';
+import { AdminJoinRequest, ApiService, UserIssuedStats } from '../../core/api.service';
 import { AuthService } from '../../core/auth.service';
 import { UserResponse } from '../../core/models';
 
@@ -18,6 +18,8 @@ export class ProfileComponent implements OnInit {
   user: UserResponse | null = null;
   myCertificates: AdminJoinRequest[] = [];
   myDiplomas: AdminJoinRequest[] = [];
+  issuedStats: UserIssuedStats | null = null;
+  issuedStatsLoading = true;
   loading = true;
   certificatesLoading = true;
   diplomasLoading = true;
@@ -60,6 +62,7 @@ export class ProfileComponent implements OnInit {
         if (me.role === 'ADMIN') {
           this.certificatesLoading = false;
           this.diplomasLoading = false;
+          this.issuedStatsLoading = false;
           return;
         }
 
@@ -80,6 +83,16 @@ export class ProfileComponent implements OnInit {
           },
           error: () => {
             this.diplomasLoading = false;
+          }
+        });
+
+        this.api.getMyIssuedStats().subscribe({
+          next: (stats) => {
+            this.issuedStats = stats;
+            this.issuedStatsLoading = false;
+          },
+          error: () => {
+            this.issuedStatsLoading = false;
           }
         });
       },

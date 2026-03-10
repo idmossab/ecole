@@ -20,6 +20,7 @@ import com.example._blog.Dto.UserLoginRequest;
 import com.example._blog.Dto.UserProfileUpdateRequest;
 import com.example._blog.Dto.UserRegisterRequest;
 import com.example._blog.Dto.UserResponse;
+import com.example._blog.Dto.UserIssuedStatsResponse;
 import com.example._blog.Security.UserPrincipal;
 import com.example._blog.Service.UserService;
 
@@ -80,5 +81,13 @@ public class UserCont {
             throw new ResponseStatusException(UNAUTHORIZED, "Unauthorized");
         }
         return userService.updateProfile(principal.getUser().getUserId(), request);
+    }
+
+    @GetMapping("/api/users/me/issued-stats")
+    public UserIssuedStatsResponse getMyIssuedStats(@AuthenticationPrincipal UserPrincipal principal) {
+        if (principal == null || principal.getUser() == null) {
+            throw new ResponseStatusException(UNAUTHORIZED, "Unauthorized");
+        }
+        return userService.getIssuedStats(principal.getUser().getUserId());
     }
 }

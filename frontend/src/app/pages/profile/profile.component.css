@@ -40,6 +40,25 @@
   gap: 12px;
 }
 
+.issued-banner {
+  border-radius: 16px;
+  padding: 16px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.14), rgba(34, 197, 94, 0.12));
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  display: grid;
+  gap: 6px;
+}
+
+.issued-title {
+  font-weight: 700;
+  color: #065f46;
+}
+
+.issued-text {
+  color: #047857;
+  font-size: 0.95rem;
+}
+
 .cert-grid {
   display: grid;
   gap: 14px;

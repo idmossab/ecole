@@ -187,6 +187,12 @@ export type IssueStats = {
   issuedCertificates: number;
 };
 
+export type UserIssuedStats = {
+  issuedCertificates: number;
+  issuedDiplomas: number;
+  lastIssueDate?: string | null;
+};
+
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private readonly baseUrl = 'http://localhost:8080';
@@ -217,6 +223,10 @@ export class ApiService {
 
   getMe() {
     return this.http.get<UserResponse>(`${this.baseUrl}/api/users/me`);
+  }
+
+  getMyIssuedStats() {
+    return this.http.get<UserIssuedStats>(`${this.baseUrl}/api/users/me/issued-stats`);
   }
 
   getUserById(userId: number) {

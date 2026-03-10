@@ -15,8 +15,10 @@ public interface IssuedCredentialRepo extends JpaRepository<IssuedCredential, Lo
     boolean existsByUserIdAndTypeAndDiplomaId(Long userId, IssueType type, Long diplomaId);
     Optional<IssuedCredential> findBySerialNumber(String serialNumber);
     List<IssuedCredential> findTop10ByUserIdOrderByCreatedAtDesc(Long userId);
+    Optional<IssuedCredential> findTop1ByUserIdOrderByCreatedAtDesc(Long userId);
     void deleteByUserId(Long userId);
     void deleteByCertificateId(Long certificateId);
     void deleteByDiplomaId(Long diplomaId);
     long countByType(IssueType type);
+    long countByUserIdAndType(Long userId, IssueType type);
 }
