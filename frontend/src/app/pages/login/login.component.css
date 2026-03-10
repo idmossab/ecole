@@ -1,14 +1,15 @@
 .login-page {
-  min-height: 100vh;
-  padding: 2.5rem 1.5rem 3.5rem;
+  min-height: calc(100vh - 88px);
+  padding: 1rem 1.5rem 1.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
   background: #e6e9f5;
+  overflow: hidden;
 }
 
 .login-shell {
-  width: min(1200px, 100%);
+  width: min(980px, 100%);
   display: grid;
   grid-template-columns: minmax(300px, 1fr) minmax(340px, 1fr);
   border-radius: 28px;
@@ -21,7 +22,7 @@
   position: relative;
   background: #9b92ff;
   color: #ffffff;
-  padding: 2.5rem 2.75rem;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -61,7 +62,7 @@
 }
 
 .hero-copy h2 {
-  font-size: 2rem;
+  font-size: 1.6rem;
   line-height: 1.2;
   font-weight: 600;
   max-width: 320px;
@@ -87,7 +88,7 @@
 }
 
 .alt-panel {
-  padding: 2.5rem 3.5rem 3rem;
+  padding: 2rem 2.5rem 2.5rem;
   background: #ffffff;
   display: flex;
   flex-direction: column;
@@ -101,14 +102,14 @@
 }
 
 .panel-body {
-  margin-top: 1.5rem;
+  margin-top: 1rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
 
 .panel-body h1 {
-  font-size: 1.6rem;
+  font-size: 1.3rem;
   font-weight: 600;
   color: #1f2540;
 }
@@ -116,7 +117,7 @@
 .panel-sub {
   margin: 0;
   color: #7c8498;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
 }
 
 .alt-form {
@@ -134,7 +135,7 @@
 
 .alt-form .form-control {
   border-radius: 999px;
-  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  padding: 0.6rem 1rem 0.6rem 2.5rem;
   background: #f5f6fb;
   border: 1px solid transparent;
   box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.06);
@@ -167,7 +168,7 @@
   border-radius: 999px;
   background: #5d49f5;
   color: #ffffff;
-  padding: 0.75rem 1rem;
+  padding: 0.6rem 1rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   border: none;
