@@ -1,19 +1,51 @@
-<div class="container py-5">
-  <div class="text-center mb-4">
-    <h1 class="h3 mb-1">courseonline</h1>
-    <p class="text-muted mb-0">Login or create an account to continue.</p>
-  </div>
+<div class="auth-page">
+  <div class="auth-shell">
+    <div class="auth-illustration">
+      <div class="brand-mini">
+        <div class="brand-mark">5</div>
+        <div class="brand-copy">
+          <span class="brand-name">Minute School</span>
+          <span class="brand-sub">Study Online, Learn Online</span>
+        </div>
+      </div>
+      <div class="hero-copy">
+        <h2>Learn From World's Best Instructors Around The World.</h2>
+      </div>
+      <div class="floating-icons" aria-hidden="true">
+        <span>🚀</span>
+        <span>📘</span>
+        <span>🧠</span>
+        <span>✨</span>
+      </div>
+      <div class="illustration-card">
+        <svg viewBox="0 0 520 420" role="img" aria-label="Student studying">
+          <defs>
+            <linearGradient id="deskAuth" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#3b2ab2" />
+              <stop offset="100%" stop-color="#6d47ff" />
+            </linearGradient>
+          </defs>
+          <rect x="50" y="60" width="420" height="260" rx="22" fill="#7b6dff" opacity="0.22" />
+          <circle cx="210" cy="160" r="40" fill="#ffd6a5" />
+          <rect x="180" y="200" width="80" height="70" rx="18" fill="#ffd6a5" />
+          <rect x="120" y="260" width="280" height="16" rx="8" fill="url(#deskAuth)" />
+          <rect x="150" y="276" width="220" height="12" rx="6" fill="#5b44d4" />
+          <rect x="120" y="120" width="120" height="70" rx="12" fill="#dbe4ff" />
+          <rect x="280" y="120" width="120" height="90" rx="12" fill="#5f4bf2" />
+        </svg>
+      </div>
+    </div>
 
-  <div class="row g-4 justify-content-center">
-    <div class="col-12 col-md-6 col-lg-5">
-      <div class="card shadow-sm">
-        <div class="card-body p-4">
-          <h2 class="h5 mb-3">
-            <fa-icon class="me-2 text-muted" [icon]="faUser"></fa-icon>
-            Login
-          </h2>
-          <form (ngSubmit)="submitLogin()">
-            <div class="mb-3">
+    <div class="auth-panel">
+      <div class="panel-top">
+        <span class="lang">English (USA)</span>
+      </div>
+      <div class="panel-body">
+        <div class="panel-section">
+          <h1>Login</h1>
+          <p class="panel-sub">Welcome back! Please sign in to continue.</p>
+          <form class="auth-form" (ngSubmit)="submitLogin()">
+            <div class="form-field">
               <label class="form-label">Email or Username</label>
               <div class="field-with-icon">
                 <span class="field-icon" aria-hidden="true">
@@ -29,7 +61,7 @@
               </div>
             </div>
 
-            <div class="mb-3">
+            <div class="form-field">
               <label class="form-label">Password</label>
               <div class="field-with-icon">
                 <span class="field-icon" aria-hidden="true">
@@ -43,26 +75,21 @@
                   required
                 />
               </div>
+              <a class="forgot-link" routerLink="/login-required">Forgot Password?</a>
             </div>
 
-            <button class="btn btn-dark w-100" type="submit" [disabled]="loginLoading">
-              {{ loginLoading ? 'Signing in...' : 'Login' }}
+            <button class="btn primary-btn" type="submit" [disabled]="loginLoading">
+              {{ loginLoading ? 'Signing in...' : 'Sign In' }}
             </button>
 
             <div class="alert alert-danger mt-3" *ngIf="loginError">{{ loginError }}</div>
           </form>
         </div>
-      </div>
-    </div>
 
-    <div class="col-12 col-md-6 col-lg-5">
-      <div class="card shadow-sm">
-        <div class="card-body p-4">
-          <h2 class="h5 mb-3">
-            <fa-icon class="me-2 text-muted" [icon]="faUserPlus"></fa-icon>
-            Register
-          </h2>
-          <form (ngSubmit)="submitRegister()">
+        <div class="panel-section">
+          <h1>Create Account</h1>
+          <p class="panel-sub">Join us and start learning today.</p>
+          <form class="auth-form" (ngSubmit)="submitRegister()">
             <div class="row g-2">
               <div class="col-6">
                 <label class="form-label">First name</label>
@@ -96,7 +123,7 @@
               </div>
             </div>
 
-            <div class="mb-3 mt-2">
+            <div class="form-field">
               <label class="form-label">Username</label>
               <div class="field-with-icon">
                 <span class="field-icon" aria-hidden="true">
@@ -106,7 +133,7 @@
               </div>
             </div>
 
-            <div class="mb-3">
+            <div class="form-field">
               <label class="form-label">Email</label>
               <div class="field-with-icon">
                 <span class="field-icon" aria-hidden="true">
@@ -116,7 +143,7 @@
               </div>
             </div>
 
-            <div class="mb-3">
+            <div class="form-field">
               <label class="form-label">Password</label>
               <div class="field-with-icon">
                 <span class="field-icon" aria-hidden="true">
@@ -126,11 +153,20 @@
               </div>
             </div>
 
-            <button class="btn btn-outline-dark w-100" type="submit" [disabled]="registerLoading">
-              {{ registerLoading ? 'Creating account...' : 'Register' }}
+            <button class="btn outline-btn" type="submit" [disabled]="registerLoading">
+              {{ registerLoading ? 'Creating account...' : 'Sign Up' }}
             </button>
 
             <div class="alert alert-danger mt-3" *ngIf="registerError">{{ registerError }}</div>
+
+            <div class="divider">
+              <span>Or Sign Up With</span>
+            </div>
+            <div class="social-row" aria-label="Social signup options">
+              <button class="social-btn" type="button">G</button>
+              <button class="social-btn" type="button">f</button>
+              <button class="social-btn" type="button">in</button>
+            </div>
           </form>
         </div>
       </div>

@@ -1,106 +1,152 @@
-<div class="container py-5">
-  <div class="row justify-content-center align-items-center min-vh-100">
-    <div class="col-12 col-lg-7">
-      <div class="card shadow-sm">
-        <div class="card-body p-4">
-          <h1 class="h3 mb-3 text-center">Create your courseonline</h1>
-          <p class="text-center text-muted mb-4">Start documenting your learning milestones.</p>
+<div class="register-page">
+  <div class="register-shell">
+    <div class="register-illustration">
+      <div class="brand-mini">
+        <div class="brand-mark">5</div>
+        <div class="brand-copy">
+          <span class="brand-name">Minute School</span>
+          <span class="brand-sub">Study Online, Learn Online</span>
+        </div>
+      </div>
+      <div class="hero-copy">
+        <h2>Learn From World's Best Instructors Around The World.</h2>
+      </div>
+      <div class="floating-icons" aria-hidden="true">
+        <span>🚀</span>
+        <span>📘</span>
+        <span>🧠</span>
+        <span>✨</span>
+      </div>
+      <div class="illustration-card">
+        <svg viewBox="0 0 520 420" role="img" aria-label="Student studying">
+          <defs>
+            <linearGradient id="deskReg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#3b2ab2" />
+              <stop offset="100%" stop-color="#6d47ff" />
+            </linearGradient>
+          </defs>
+          <rect x="50" y="60" width="420" height="260" rx="22" fill="#7b6dff" opacity="0.22" />
+          <circle cx="210" cy="160" r="40" fill="#ffd6a5" />
+          <rect x="180" y="200" width="80" height="70" rx="18" fill="#ffd6a5" />
+          <rect x="120" y="260" width="280" height="16" rx="8" fill="url(#deskReg)" />
+          <rect x="150" y="276" width="220" height="12" rx="6" fill="#5b44d4" />
+          <rect x="120" y="120" width="120" height="70" rx="12" fill="#dbe4ff" />
+          <rect x="280" y="120" width="120" height="90" rx="12" fill="#5f4bf2" />
+        </svg>
+      </div>
+    </div>
 
-          <form (ngSubmit)="submit()">
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <label class="form-label">First name</label>
-                <div class="field-with-icon">
-                  <span class="field-icon" aria-hidden="true">
-                    <fa-icon [icon]="faUser"></fa-icon>
-                  </span>
-                  <input
-                    type="text"
-                    name="firstName"
-                    class="form-control"
-                    [(ngModel)]="firstName"
-                    required
-                  />
-                </div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label class="form-label">Last name</label>
-                <div class="field-with-icon">
-                  <span class="field-icon" aria-hidden="true">
-                    <fa-icon [icon]="faUser"></fa-icon>
-                  </span>
-                  <input
-                    type="text"
-                    name="lastName"
-                    class="form-control"
-                    [(ngModel)]="lastName"
-                    required
-                  />
-                </div>
-              </div>
-            </div>
+    <div class="register-panel">
+      <div class="panel-top">
+        <span class="lang">English (USA)</span>
+      </div>
+      <div class="panel-body">
+        <h1>Create Account</h1>
+        <p class="panel-sub">Start documenting your learning milestones.</p>
 
-            <div class="mb-3">
-              <label class="form-label">Username</label>
+        <form class="register-form" (ngSubmit)="submit()">
+          <div class="row g-2">
+            <div class="col-md-6">
+              <label class="form-label">First name</label>
               <div class="field-with-icon">
                 <span class="field-icon" aria-hidden="true">
                   <fa-icon [icon]="faUser"></fa-icon>
                 </span>
                 <input
                   type="text"
-                  name="userName"
+                  name="firstName"
                   class="form-control"
-                  [(ngModel)]="userName"
+                  [(ngModel)]="firstName"
                   required
                 />
               </div>
             </div>
-
-            <div class="mb-3">
-              <label class="form-label">Email</label>
+            <div class="col-md-6">
+              <label class="form-label">Last name</label>
               <div class="field-with-icon">
                 <span class="field-icon" aria-hidden="true">
-                  <fa-icon [icon]="faEnvelope"></fa-icon>
+                  <fa-icon [icon]="faUser"></fa-icon>
                 </span>
                 <input
-                  type="email"
-                  name="email"
+                  type="text"
+                  name="lastName"
                   class="form-control"
-                  [(ngModel)]="email"
+                  [(ngModel)]="lastName"
                   required
                 />
               </div>
             </div>
+          </div>
 
-            <div class="mb-3">
-              <label class="form-label">Password</label>
-              <div class="field-with-icon">
-                <span class="field-icon" aria-hidden="true">
-                  <fa-icon [icon]="faLock"></fa-icon>
-                </span>
-                <input
-                  type="password"
-                  name="password"
-                  class="form-control"
-                  [(ngModel)]="password"
-                  minlength="6"
-                  required
-                />
-              </div>
+          <div class="form-field">
+            <label class="form-label">Username</label>
+            <div class="field-with-icon">
+              <span class="field-icon" aria-hidden="true">
+                <fa-icon [icon]="faUser"></fa-icon>
+              </span>
+              <input
+                type="text"
+                name="userName"
+                class="form-control"
+                [(ngModel)]="userName"
+                required
+              />
             </div>
+          </div>
 
-            <button class="btn btn-dark w-100" type="submit" [disabled]="loading">
-              {{ loading ? 'Creating...' : 'Register' }}
-            </button>
+          <div class="form-field">
+            <label class="form-label">Email</label>
+            <div class="field-with-icon">
+              <span class="field-icon" aria-hidden="true">
+                <fa-icon [icon]="faEnvelope"></fa-icon>
+              </span>
+              <input
+                type="email"
+                name="email"
+                class="form-control"
+                [(ngModel)]="email"
+                required
+              />
+            </div>
+          </div>
 
-            <div class="alert alert-danger mt-3" *ngIf="error">{{ error }}</div>
+          <div class="form-field">
+            <label class="form-label">Password</label>
+            <div class="field-with-icon">
+              <span class="field-icon" aria-hidden="true">
+                <fa-icon [icon]="faLock"></fa-icon>
+              </span>
+              <input
+                type="password"
+                name="password"
+                class="form-control"
+                [(ngModel)]="password"
+                minlength="6"
+                required
+              />
+            </div>
+          </div>
 
-            <p class="text-center mt-3 mb-0">
-              Already have an account?
-              <a routerLink="/login">Sign in</a>
-            </p>
-          </form>
-        </div>
+          <button class="btn primary-btn" type="submit" [disabled]="loading">
+            {{ loading ? 'Creating...' : 'Sign Up' }}
+          </button>
+
+          <div class="alert alert-danger mt-3" *ngIf="error">{{ error }}</div>
+
+          <div class="divider">
+            <span>Or Sign Up With</span>
+          </div>
+          <div class="social-row" aria-label="Social signup options">
+            <button class="social-btn" type="button">G</button>
+            <button class="social-btn" type="button">f</button>
+            <button class="social-btn" type="button">in</button>
+          </div>
+
+          <p class="signup-link">
+            Already have an account?
+            <a routerLink="/login">Sign in</a>
+          </p>
+        </form>
       </div>
     </div>
   </div>

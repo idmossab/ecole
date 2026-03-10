@@ -1,12 +1,12 @@
 import { Routes } from '@angular/router';
 
 import { HomeComponent } from './pages/home/home.component';
-import { AuthComponent } from './pages/auth/auth.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { ContactComponent } from './pages/contact/contact.component';
 import { DiplomaDetailsComponent } from './pages/diploma-details/diploma-details.component';
 import { CertificateDetailsComponent } from './pages/certificate-details/certificate-details.component';
 import { LoginRequiredComponent } from './pages/login-required/login-required.component';
+import { LoginComponent } from './pages/login/login.component';
 import { CertificatesComponent } from './pages/certificates/certificates.component';
 import { DiplomasComponent } from './pages/diplomas/diplomas.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
@@ -29,7 +29,7 @@ export const routes: Routes = [
   },
   {
     path: 'login',
-    component: AuthComponent
+    component: LoginComponent
   },
   {
     path: 'register',

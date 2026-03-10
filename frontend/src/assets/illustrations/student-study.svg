@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 900" role="img" aria-label="Student studying with laptop and books">
+  <defs>
+    <linearGradient id="bgGlow" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#c4b5fd"/>
+      <stop offset="100%" stop-color="#a5b4fc"/>
+    </linearGradient>
+    <linearGradient id="desk" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#8b5cf6"/>
+    </linearGradient>
+    <linearGradient id="screen" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#eef2ff"/>
+      <stop offset="100%" stop-color="#dbeafe"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="40" y="40" width="560" height="820" rx="40" fill="url(#bgGlow)" opacity="0.25"/>
+  <rect x="90" y="110" width="460" height="700" rx="36" fill="#ffffff"/>
+
+  <circle cx="150" cy="210" r="14" fill="#c7d2fe"/>
+  <circle cx="190" cy="210" r="8" fill="#e0e7ff"/>
+  <circle cx="230" cy="210" r="6" fill="#c7d2fe"/>
+
+  <g>
+    <rect x="150" y="560" width="340" height="18" rx="9" fill="url(#desk)"/>
+    <rect x="190" y="578" width="260" height="12" rx="6" fill="#7c3aed" opacity="0.6"/>
+  </g>
+
+  <g>
+    <rect x="230" y="470" width="180" height="100" rx="18" fill="url(#screen)"/>
+    <rect x="250" y="490" width="140" height="10" rx="5" fill="#c7d2fe"/>
+    <rect x="250" y="510" width="110" height="10" rx="5" fill="#c7d2fe"/>
+    <rect x="260" y="548" width="120" height="12" rx="6" fill="#a5b4fc"/>
+  </g>
+
+  <g>
+    <rect x="150" y="440" width="70" height="22" rx="8" fill="#93c5fd"/>
+    <rect x="150" y="458" width="70" height="22" rx="8" fill="#60a5fa"/>
+    <rect x="150" y="476" width="70" height="22" rx="8" fill="#3b82f6"/>
+  </g>
+
+  <g>
+    <circle cx="320" cy="360" r="58" fill="#f8d7b4"/>
+    <rect x="265" y="400" width="110" height="110" rx="34" fill="#f8d7b4"/>
+    <rect x="240" y="390" width="160" height="44" rx="22" fill="#c4b5fd"/>
+    <circle cx="300" cy="360" r="8" fill="#1f2937"/>
+    <circle cx="340" cy="360" r="8" fill="#1f2937"/>
+    <path d="M300 380c12 14 28 14 40 0" stroke="#1f2937" stroke-width="4" fill="none"/>
+    <path d="M270 330c20-28 80-28 100 0" fill="#4338ca"/>
+  </g>
+
+  <g>
+    <rect x="420" y="420" width="90" height="70" rx="12" fill="#a78bfa"/>
+    <rect x="430" y="432" width="70" height="8" rx="4" fill="#ede9fe"/>
+    <rect x="430" y="446" width="50" height="8" rx="4" fill="#ede9fe"/>
+  </g>
+
+  <g>
+    <circle cx="470" cy="250" r="18" fill="#ddd6fe"/>
+    <circle cx="495" cy="250" r="10" fill="#c7d2fe"/>
+    <circle cx="520" cy="250" r="6" fill="#ddd6fe"/>
+  </g>
+</svg>
