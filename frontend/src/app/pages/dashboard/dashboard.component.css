@@ -14,29 +14,126 @@
 }
 
 .stat-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 18px;
-  box-shadow: var(--shadow-soft);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 18px 18px 16px;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
   display: grid;
-  gap: 6px;
+  gap: 8px;
   text-align: left;
+  position: relative;
+  overflow: hidden;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
 }
 
 .stat-title {
   font-size: 0.9rem;
-  color: var(--text-secondary);
+  color: #64748b;
+  font-weight: 600;
 }
 
 .stat-value {
-  font-size: 1.6rem;
-  font-weight: 700;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #0f172a;
 }
 
 .stat-sub {
   font-size: 0.85rem;
-  color: var(--text-secondary);
+  color: #475569;
+}
+
+.stat-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.stat-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  color: #0f172a;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+.stat-icon svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.stat-trend {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: #0f172a;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 4px 8px;
+  border-radius: 999px;
+  width: fit-content;
+}
+
+.stat-trend .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #22c55e;
+}
+
+.stat-card::after {
+  content: "";
+  position: absolute;
+  inset: -50% -20% auto auto;
+  width: 160px;
+  height: 160px;
+  opacity: 0.18;
+  background: radial-gradient(circle at 30% 30%, #94a3b8, transparent 65%);
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 22px 50px rgba(15, 23, 42, 0.12);
+  border-color: #cbd5f5;
+}
+
+.accent-1 .stat-icon,
+.accent-1 .stat-trend .dot {
+  color: #1d4ed8;
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.accent-2 .stat-icon,
+.accent-2 .stat-trend .dot {
+  color: #0f766e;
+  background: #ecfeff;
+  border-color: #a5f3fc;
+}
+
+.accent-3 .stat-icon,
+.accent-3 .stat-trend .dot {
+  color: #b45309;
+  background: #fffbeb;
+  border-color: #fde68a;
+}
+
+.accent-4 .stat-icon,
+.accent-4 .stat-trend .dot {
+  color: #7c3aed;
+  background: #f5f3ff;
+  border-color: #ddd6fe;
 }
 
 .quick-actions-title {

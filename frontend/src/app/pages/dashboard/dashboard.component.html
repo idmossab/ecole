@@ -7,25 +7,84 @@
   </div>
 
   <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-title">Total Students</div>
-      <div class="stat-value">{{ stats.totalStudents }}</div>
+    <div class="stat-card accent-1">
+      <div class="stat-top">
+        <div>
+          <div class="stat-title">Total Students</div>
+          <div class="stat-value">{{ stats.totalStudents }}</div>
+        </div>
+        <div class="stat-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4z" />
+            <path d="M4 20a8 8 0 0 1 16 0" />
+          </svg>
+        </div>
+      </div>
       <div class="stat-sub">Active students</div>
+      <div class="stat-trend">
+        <span class="dot"></span>
+        Engaged learners
+      </div>
     </div>
-    <div class="stat-card">
-      <div class="stat-title">Total Courses</div>
-      <div class="stat-value">{{ stats.totalCourses }}</div>
+    <div class="stat-card accent-2">
+      <div class="stat-top">
+        <div>
+          <div class="stat-title">Total Courses</div>
+          <div class="stat-value">{{ stats.totalCourses }}</div>
+        </div>
+        <div class="stat-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M4 5h16v12H4z" />
+            <path d="M7 9h10" />
+            <path d="M7 13h6" />
+          </svg>
+        </div>
+      </div>
       <div class="stat-sub">Across certificates</div>
+      <div class="stat-trend">
+        <span class="dot"></span>
+        Updated curriculum
+      </div>
     </div>
-    <div class="stat-card">
-      <div class="stat-title">Certificates</div>
-      <div class="stat-value">{{ stats.totalCertificates }}</div>
+    <div class="stat-card accent-3">
+      <div class="stat-top">
+        <div>
+          <div class="stat-title">Certificates</div>
+          <div class="stat-value">{{ stats.totalCertificates }}</div>
+        </div>
+        <div class="stat-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M5 6h14v12H5z" />
+            <path d="M8 3h8v3H8z" />
+            <path d="M7 18h10" />
+          </svg>
+        </div>
+      </div>
       <div class="stat-sub">Available programs</div>
+      <div class="stat-trend">
+        <span class="dot"></span>
+        Verified tracks
+      </div>
     </div>
-    <div class="stat-card">
-      <div class="stat-title">Diplomas</div>
-      <div class="stat-value">{{ stats.totalDiplomas }}</div>
+    <div class="stat-card accent-4">
+      <div class="stat-top">
+        <div>
+          <div class="stat-title">Diplomas</div>
+          <div class="stat-value">{{ stats.totalDiplomas }}</div>
+        </div>
+        <div class="stat-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M6 4h12v4H6z" />
+            <path d="M6 8h12v12H6z" />
+            <path d="M9 12h6" />
+          </svg>
+        </div>
+      </div>
       <div class="stat-sub">Total diploma programs</div>
+      <div class="stat-trend">
+        <span class="dot"></span>
+        Career outcomes
+      </div>
     </div>
   </div>
 
