@@ -84,22 +84,73 @@
 
       <div class="lang-switch">
         <button class="lang-trigger" type="button" (click)="toggleLanguage()" aria-label="Language">
-          <span class="flag" aria-hidden="true">
-            {{ selectedLanguage === 'EN' ? '🇺🇸' : selectedLanguage === 'FR' ? '🇫🇷' : '🇲🇦' }}
-          </span>
-          {{ selectedLanguage }}
+          <svg class="flag" *ngIf="selectedLanguage === 'EN'" viewBox="0 0 24 24" aria-hidden="true">
+            <rect width="24" height="24" fill="#b91c1c" />
+            <rect y="4" width="24" height="2" fill="#ffffff" />
+            <rect y="8" width="24" height="2" fill="#ffffff" />
+            <rect y="12" width="24" height="2" fill="#ffffff" />
+            <rect y="16" width="24" height="2" fill="#ffffff" />
+            <rect y="20" width="24" height="2" fill="#ffffff" />
+            <rect width="11" height="12" fill="#1e3a8a" />
+            <circle cx="3" cy="3" r="0.8" fill="#ffffff" />
+            <circle cx="6" cy="3" r="0.8" fill="#ffffff" />
+            <circle cx="9" cy="3" r="0.8" fill="#ffffff" />
+            <circle cx="3" cy="6" r="0.8" fill="#ffffff" />
+            <circle cx="6" cy="6" r="0.8" fill="#ffffff" />
+            <circle cx="9" cy="6" r="0.8" fill="#ffffff" />
+            <circle cx="3" cy="9" r="0.8" fill="#ffffff" />
+            <circle cx="6" cy="9" r="0.8" fill="#ffffff" />
+            <circle cx="9" cy="9" r="0.8" fill="#ffffff" />
+          </svg>
+          <svg class="flag" *ngIf="selectedLanguage === 'FR'" viewBox="0 0 24 24" aria-hidden="true">
+            <rect width="8" height="24" fill="#1d4ed8" />
+            <rect x="8" width="8" height="24" fill="#ffffff" />
+            <rect x="16" width="8" height="24" fill="#dc2626" />
+          </svg>
+          <svg class="flag" *ngIf="selectedLanguage === 'AR'" viewBox="0 0 24 24" aria-hidden="true">
+            <rect width="24" height="24" fill="#0f9d58" />
+            <rect x="3" y="11" width="18" height="2" fill="#ffffff" opacity="0.9" />
+            <path d="M7 9h10" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round" />
+            <path d="M8 15h8" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round" />
+          </svg>
         </button>
         <div class="lang-menu" *ngIf="showLanguage">
           <button class="lang-item" type="button" (click)="selectLanguage('EN')">
-            <span class="flag" aria-hidden="true">🇺🇸</span>
+            <svg class="flag" viewBox="0 0 24 24" aria-hidden="true">
+              <rect width="24" height="24" fill="#b91c1c" />
+              <rect y="4" width="24" height="2" fill="#ffffff" />
+              <rect y="8" width="24" height="2" fill="#ffffff" />
+              <rect y="12" width="24" height="2" fill="#ffffff" />
+              <rect y="16" width="24" height="2" fill="#ffffff" />
+              <rect y="20" width="24" height="2" fill="#ffffff" />
+              <rect width="11" height="12" fill="#1e3a8a" />
+              <circle cx="3" cy="3" r="0.8" fill="#ffffff" />
+              <circle cx="6" cy="3" r="0.8" fill="#ffffff" />
+              <circle cx="9" cy="3" r="0.8" fill="#ffffff" />
+              <circle cx="3" cy="6" r="0.8" fill="#ffffff" />
+              <circle cx="6" cy="6" r="0.8" fill="#ffffff" />
+              <circle cx="9" cy="6" r="0.8" fill="#ffffff" />
+              <circle cx="3" cy="9" r="0.8" fill="#ffffff" />
+              <circle cx="6" cy="9" r="0.8" fill="#ffffff" />
+              <circle cx="9" cy="9" r="0.8" fill="#ffffff" />
+            </svg>
             English
           </button>
           <button class="lang-item" type="button" (click)="selectLanguage('FR')">
-            <span class="flag" aria-hidden="true">🇫🇷</span>
+            <svg class="flag" viewBox="0 0 24 24" aria-hidden="true">
+              <rect width="8" height="24" fill="#1d4ed8" />
+              <rect x="8" width="8" height="24" fill="#ffffff" />
+              <rect x="16" width="8" height="24" fill="#dc2626" />
+            </svg>
             Francais
           </button>
           <button class="lang-item" type="button" (click)="selectLanguage('AR')">
-            <span class="flag" aria-hidden="true">🇲🇦</span>
+            <svg class="flag" viewBox="0 0 24 24" aria-hidden="true">
+              <rect width="24" height="24" fill="#0f9d58" />
+              <rect x="3" y="11" width="18" height="2" fill="#ffffff" opacity="0.9" />
+              <path d="M7 9h10" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round" />
+              <path d="M8 15h8" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round" />
+            </svg>
             العربية
           </button>
         </div>
