@@ -8,26 +8,18 @@
         <p class="text-muted">Welcome back, {{ user.firstName }} {{ user.lastName }}</p>
         <p class="text-muted" *ngIf="isAdmin">Admin profile: personal account information only.</p>
       </div>
-      <button class="btn btn-outline-dark btn-sm edit-cta" type="button" *ngIf="!editMode" (click)="startEdit()">Edit Profile</button>
-      <button class="btn btn-dark btn-sm edit-cta" type="button" *ngIf="editMode" [disabled]="savingProfile" (click)="saveProfile()">Save</button>
-      <button class="btn btn-outline-dark btn-sm edit-cta" type="button" *ngIf="editMode" (click)="cancelEdit()">Cancel</button>
+      <button class="btn btn-outline-dark btn-sm edit-cta" type="button" *ngIf="!editMode" (click)="startEdit()">
+        <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 20h4l10-10-4-4L4 16v4z" />
+          <path d="M13 6l4 4" />
+        </svg>
+        Edit Profile
+      </button>
     </div>
     <div class="profile-warning" *ngIf="joinRedirectMessage">{{ joinRedirectMessage }}</div>
     <div class="profile-success" *ngIf="joinCompleteMessage">{{ joinCompleteMessage }}</div>
 
     <div class="profile-meta" *ngIf="!editMode">
-      <div class="meta-item">
-        <span class="meta-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24">
-            <path d="M12 12c2.2 0 4-1.8 4-4s-1.8-4-4-4-4 1.8-4 4 1.8 4 4 4z" />
-            <path d="M4 20a8 8 0 0 1 16 0" />
-          </svg>
-        </span>
-        <div>
-          <div class="label">Username</div>
-          <div class="value">@{{ user.userName }}</div>
-        </div>
-      </div>
       <div class="meta-item">
         <span class="meta-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24">
@@ -69,22 +61,32 @@
       Please complete your profile (add phone and city) before requesting to join a diploma or certificate.
     </div>
 
-    <form class="edit-grid" *ngIf="editMode">
-      <label>First Name</label>
-      <input class="form-control" type="text" [(ngModel)]="profileForm.firstName" name="firstName" />
-      <label>Last Name</label>
-      <input class="form-control" type="text" [(ngModel)]="profileForm.lastName" name="lastName" />
-      <label>Username</label>
-      <input class="form-control" type="text" [(ngModel)]="profileForm.userName" name="userName" />
-      <label>Email</label>
-      <input class="form-control" type="email" [(ngModel)]="profileForm.email" name="email" />
-      <label>Phone</label>
-      <input class="form-control" type="text" [(ngModel)]="profileForm.phone" name="phone" />
-      <label>City</label>
-      <input class="form-control" type="text" [(ngModel)]="profileForm.city" name="city" />
-    </form>
-
     <div class="profile-actions" *ngIf="false"></div>
+  </div>
+
+  <div class="edit-modal" *ngIf="editMode">
+    <div class="edit-dialog">
+      <div class="edit-header">
+        <h3>Edit Profile</h3>
+        <button class="close-btn" type="button" (click)="cancelEdit()">×</button>
+      </div>
+      <form class="edit-grid" (ngSubmit)="saveProfile()">
+        <label>First Name</label>
+        <input class="form-control" type="text" [(ngModel)]="profileForm.firstName" name="firstName" />
+        <label>Last Name</label>
+        <input class="form-control" type="text" [(ngModel)]="profileForm.lastName" name="lastName" />
+        <label>Email</label>
+        <input class="form-control" type="email" [(ngModel)]="profileForm.email" name="email" />
+        <label>Phone</label>
+        <input class="form-control" type="text" [(ngModel)]="profileForm.phone" name="phone" />
+        <label>City</label>
+        <input class="form-control" type="text" [(ngModel)]="profileForm.city" name="city" />
+        <div class="modal-actions">
+          <button class="btn btn-dark btn-sm" type="submit" [disabled]="savingProfile">Save</button>
+          <button class="btn btn-outline-dark btn-sm" type="button" (click)="cancelEdit()">Cancel</button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <div class="profile-card my-certs" *ngIf="user && !isAdmin">
