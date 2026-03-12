@@ -28,9 +28,10 @@ export class AuthComponent {
 
   firstName = '';
   lastName = '';
-  userName = '';
   email = '';
   password = '';
+  phone = '';
+  city = '';
   registerError = '';
   registerLoading = false;
 
@@ -69,9 +70,10 @@ export class AuthComponent {
     this.api.register({
       firstName: this.firstName,
       lastName: this.lastName,
-      userName: this.userName,
       email: this.email,
-      password: this.password
+      password: this.password,
+      phone: this.phone,
+      city: this.city
     }).subscribe({
       next: (res) => {
         this.auth.setToken(res.token);

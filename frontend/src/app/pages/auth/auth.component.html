@@ -124,22 +124,33 @@
             </div>
 
             <div class="form-field">
-              <label class="form-label">Username</label>
-              <div class="field-with-icon">
-                <span class="field-icon" aria-hidden="true">
-                  <fa-icon [icon]="faUser"></fa-icon>
-                </span>
-                <input type="text" class="form-control" name="userName" [(ngModel)]="userName" required />
-              </div>
-            </div>
-
-            <div class="form-field">
               <label class="form-label">Email</label>
               <div class="field-with-icon">
                 <span class="field-icon" aria-hidden="true">
                   <fa-icon [icon]="faEnvelope"></fa-icon>
                 </span>
                 <input type="email" class="form-control" name="email" [(ngModel)]="email" required />
+              </div>
+            </div>
+
+            <div class="row g-2">
+              <div class="col-6">
+                <label class="form-label">Phone</label>
+                <div class="field-with-icon">
+                  <span class="field-icon" aria-hidden="true">
+                    <fa-icon [icon]="faUser"></fa-icon>
+                  </span>
+                  <input type="text" class="form-control" name="phone" [(ngModel)]="phone" required />
+                </div>
+              </div>
+              <div class="col-6">
+                <label class="form-label">City</label>
+                <div class="field-with-icon">
+                  <span class="field-icon" aria-hidden="true">
+                    <fa-icon [icon]="faUser"></fa-icon>
+                  </span>
+                  <input type="text" class="form-control" name="city" [(ngModel)]="city" required />
+                </div>
               </div>
             </div>
 

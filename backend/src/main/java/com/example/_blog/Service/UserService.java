@@ -61,7 +61,11 @@ public class UserService {
         if (repo.existsByEmail(req.email())) {
             throw new ResponseStatusException(CONFLICT, "Email already used");
         }
-        if (repo.existsByUserName(req.userName())) {
+        String requestedUserName = req.userName() == null ? "" : req.userName().trim();
+        String userName = requestedUserName.isEmpty()
+                ? generateUniqueUserName(req.email())
+                : requestedUserName;
+        if (repo.existsByUserName(userName)) {
             throw new ResponseStatusException(CONFLICT, "Username already used");
         }
 
@@ -69,9 +73,11 @@ public class UserService {
         User user = User.builder()
                 .firstName(req.firstName())
                 .lastName(req.lastName())
-                .userName(req.userName())
+                .userName(userName)
                 .email(req.email())
                 .password(encoder.encode(req.password()))
+                .phone(req.phone() == null ? null : req.phone().trim())
+                .city(req.city() == null ? null : req.city().trim())
                 .role(isFirstUser ? UserRole.ADMIN : UserRole.USER)
                 .build();
 
@@ -121,17 +127,35 @@ public class UserService {
         if (!existing.getEmail().equals(req.email()) && repo.existsByEmail(req.email())) {
             throw new ResponseStatusException(CONFLICT, "Email already used");
         }
-        if (!existing.getUserName().equals(req.userName()) && repo.existsByUserName(req.userName())) {
+        String requestedUserName = req.userName() == null ? "" : req.userName().trim();
+        String nextUserName = requestedUserName.isEmpty() ? existing.getUserName() : requestedUserName;
+        if (!existing.getUserName().equals(nextUserName) && repo.existsByUserName(nextUserName)) {
             throw new ResponseStatusException(CONFLICT, "Username already used");
         }
 
         existing.setFirstName(req.firstName());
         existing.setLastName(req.lastName());
-        existing.setUserName(req.userName());
+        existing.setUserName(nextUserName);
         existing.setEmail(req.email());
         existing.setPassword(encoder.encode(req.password()));
+        existing.setPhone(req.phone() == null ? null : req.phone().trim());
+        existing.setCity(req.city() == null ? null : req.city().trim());
 
         return toResponse(repo.save(existing));
+    }
+
+    private String generateUniqueUserName(String email) {
+        String base = (email == null ? "user" : email.split("@")[0]).replaceAll("[^a-zA-Z0-9_]", "");
+        if (base.isBlank()) {
+            base = "user";
+        }
+        String candidate = base;
+        int counter = 1;
+        while (repo.existsByUserName(candidate)) {
+            candidate = base + counter;
+            counter++;
+        }
+        return candidate;
     }
 
     public UserResponse updateProfile(Long userId, UserProfileUpdateRequest req) {

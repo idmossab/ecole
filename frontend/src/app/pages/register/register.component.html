@@ -79,22 +79,6 @@
           </div>
 
           <div class="form-field">
-            <label class="form-label">Username</label>
-            <div class="field-with-icon">
-              <span class="field-icon" aria-hidden="true">
-                <fa-icon [icon]="faUser"></fa-icon>
-              </span>
-              <input
-                type="text"
-                name="userName"
-                class="form-control"
-                [(ngModel)]="userName"
-                required
-              />
-            </div>
-          </div>
-
-          <div class="form-field">
             <label class="form-label">Email</label>
             <div class="field-with-icon">
               <span class="field-icon" aria-hidden="true">
@@ -107,6 +91,39 @@
                 [(ngModel)]="email"
                 required
               />
+            </div>
+          </div>
+
+          <div class="row g-2">
+            <div class="col-md-6">
+              <label class="form-label">Phone</label>
+              <div class="field-with-icon">
+                <span class="field-icon" aria-hidden="true">
+                  <fa-icon [icon]="faPhone"></fa-icon>
+                </span>
+                <input
+                  type="text"
+                  name="phone"
+                  class="form-control"
+                  [(ngModel)]="phone"
+                  required
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">City</label>
+              <div class="field-with-icon">
+                <span class="field-icon" aria-hidden="true">
+                  <fa-icon [icon]="faCity"></fa-icon>
+                </span>
+                <input
+                  type="text"
+                  name="city"
+                  class="form-control"
+                  [(ngModel)]="city"
+                  required
+                />
+              </div>
             </div>
           </div>
 

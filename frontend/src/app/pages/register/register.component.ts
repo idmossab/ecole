@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faEnvelope, faLock, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faCity, faEnvelope, faLock, faPhone, faUser } from '@fortawesome/free-solid-svg-icons';
 
 import { ApiService } from '../../core/api.service';
 import { AuthService } from '../../core/auth.service';
@@ -19,12 +19,15 @@ export class RegisterComponent {
   faUser = faUser;
   faEnvelope = faEnvelope;
   faLock = faLock;
+  faPhone = faPhone;
+  faCity = faCity;
 
   firstName = '';
   lastName = '';
-  userName = '';
   email = '';
   password = '';
+  phone = '';
+  city = '';
   error = '';
   loading = false;
 
@@ -36,9 +39,10 @@ export class RegisterComponent {
     this.api.register({
       firstName: this.firstName,
       lastName: this.lastName,
-      userName: this.userName,
       email: this.email,
-      password: this.password
+      password: this.password,
+      phone: this.phone,
+      city: this.city
     }).subscribe({
       next: (res) => {
         this.auth.setToken(res.token);

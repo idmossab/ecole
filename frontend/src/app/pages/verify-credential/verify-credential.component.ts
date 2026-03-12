@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 import { ApiService, IssuedCredentialVerify } from '../../core/api.service';
 
 @Component({
   selector: 'app-verify-credential',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './verify-credential.component.html',
   styleUrl: './verify-credential.component.css'
 })

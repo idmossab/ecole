@@ -202,9 +202,10 @@ export class ApiService {
   register(payload: {
     firstName: string;
     lastName: string;
-    userName: string;
     email: string;
     password: string;
+    phone?: string;
+    city?: string;
   }) {
     return this.http.post<AuthResponse>(`${this.baseUrl}/users/register`, payload);
   }
