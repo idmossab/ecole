@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { forkJoin } from 'rxjs';
 
 import { ApiService } from '../../core/api.service';
@@ -31,7 +31,8 @@ export class DiplomaDetailsComponent {
   constructor(
     private route: ActivatedRoute,
     private api: ApiService,
-    private auth: AuthService
+    private auth: AuthService,
+    private router: Router
   ) {
     const idParam = this.route.snapshot.paramMap.get('id');
     const diplomaId = Number(idParam);
@@ -96,6 +97,7 @@ export class DiplomaDetailsComponent {
     if (!this.diploma || this.isJoinDisabled()) return;
     if (this.profileIncomplete) {
       this.message = 'Please complete your profile (phone and city) before requesting to join.';
+      this.router.navigate(['/profile'], { queryParams: { edit: '1', from: 'join' } });
       return;
     }
     if (!this.selectedSpecialization?.id) {
@@ -119,7 +121,7 @@ export class DiplomaDetailsComponent {
   }
 
   isJoinDisabled(): boolean {
-    return this.profileIncomplete || this.claimLoading || !this.selectedSpecialization || this.joinStatus === 'PENDING' || this.joinStatus === 'ACCEPTED';
+    return this.claimLoading || !this.selectedSpecialization || this.joinStatus === 'PENDING' || this.joinStatus === 'ACCEPTED';
   }
 
   joinButtonLabel(): string {

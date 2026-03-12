@@ -45,6 +45,15 @@
   font-size: 0.9rem;
 }
 
+.profile-success {
+  border: 1px solid #bbf7d0;
+  background: #ecfdf3;
+  color: #166534;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+}
+
 .my-certs {
   gap: 12px;
 }

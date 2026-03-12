@@ -40,7 +40,14 @@
               Request to Join Certificate
             </a>
           </div>
-          <div class="text-muted small cta-note" *ngIf="joinRequestMessage">
+          <div
+            class="cta-note small"
+            [class.note-pending]="joinStatus === 'PENDING'"
+            [class.note-accepted]="joinStatus === 'ACCEPTED'"
+            [class.note-rejected]="joinStatus === 'REJECTED'"
+            [class.note-error]="joinStatus === null && joinRequestMessage"
+            *ngIf="joinRequestMessage"
+          >
             {{ joinRequestMessage }}
           </div>
         </div>

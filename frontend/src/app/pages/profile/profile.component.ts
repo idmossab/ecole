@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { AdminJoinRequest, ApiService, UserIssuedStats } from '../../core/api.service';
 import { AuthService } from '../../core/auth.service';
@@ -36,7 +36,15 @@ export class ProfileComponent implements OnInit {
     phone: ''
   };
 
-  constructor(private api: ApiService, private auth: AuthService, private router: Router) {}
+  joinRedirectMessage = '';
+  joinCompleteMessage = '';
+
+  constructor(
+    private api: ApiService,
+    private auth: AuthService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   get isAdmin(): boolean {
     return this.user?.role === 'ADMIN';
@@ -71,6 +79,16 @@ export class ProfileComponent implements OnInit {
           this.diplomasLoading = false;
           this.issuedStatsLoading = false;
           return;
+        }
+
+        const editParam = this.route.snapshot.queryParamMap.get('edit');
+        const fromParam = this.route.snapshot.queryParamMap.get('from');
+        if (editParam === '1') {
+          this.editMode = true;
+          if (fromParam === 'join') {
+            this.joinRedirectMessage = 'Please complete your profile information to request a diploma or certificate.';
+            this.joinCompleteMessage = '';
+          }
         }
 
         this.api.getMyAcceptedCertificates().subscribe({
@@ -130,6 +148,8 @@ export class ProfileComponent implements OnInit {
     this.editMode = true;
     this.success = '';
     this.error = '';
+    this.joinRedirectMessage = '';
+    this.joinCompleteMessage = '';
   }
 
   cancelEdit(): void {
@@ -173,6 +193,10 @@ export class ProfileComponent implements OnInit {
         this.savingProfile = false;
         this.editMode = false;
         this.success = 'Profile updated';
+        if (this.joinRedirectMessage) {
+          this.joinRedirectMessage = '';
+          this.joinCompleteMessage = 'Profile completed. You can now join any certificate or diploma.';
+        }
       },
       error: (err) => {
         this.savingProfile = false;

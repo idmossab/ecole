@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../core/auth.service';
 import { ApiService } from '../../core/api.service';
@@ -31,7 +31,8 @@ export class CertificateDetailsComponent {
   constructor(
     private route: ActivatedRoute,
     private auth: AuthService,
-    private api: ApiService
+    private api: ApiService,
+    private router: Router
   ) {
     const slug = this.route.snapshot.paramMap.get('slug');
     if (!slug) {
@@ -124,6 +125,7 @@ export class CertificateDetailsComponent {
     if (!this.certificate || this.isJoinDisabled()) return;
     if (this.profileIncomplete) {
       this.joinRequestMessage = 'Please complete your profile (phone and city) before requesting to join.';
+      this.router.navigate(['/profile'], { queryParams: { edit: '1', from: 'join' } });
       return;
     }
     if (!this.selectedCourse?.id) {
@@ -144,7 +146,7 @@ export class CertificateDetailsComponent {
   }
 
   isJoinDisabled(): boolean {
-    return this.profileIncomplete || this.joinRequested || this.joinStatus === 'PENDING' || this.joinStatus === 'ACCEPTED';
+    return this.joinRequested || this.joinStatus === 'PENDING' || this.joinStatus === 'ACCEPTED';
   }
 
   joinButtonLabel(): string {

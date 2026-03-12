@@ -54,7 +54,16 @@
           Request to Join Specialization
         </a>
       </div>
-      <div class="text-muted small" *ngIf="message">{{ message }}</div>
+      <div
+        class="cta-note small"
+        [class.note-pending]="joinStatus === 'PENDING'"
+        [class.note-accepted]="joinStatus === 'ACCEPTED'"
+        [class.note-rejected]="joinStatus === 'REJECTED'"
+        [class.note-error]="joinStatus === null && message"
+        *ngIf="message"
+      >
+        {{ message }}
+      </div>
     </div>
 
     <aside class="hero-side">

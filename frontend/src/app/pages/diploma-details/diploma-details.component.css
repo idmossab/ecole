@@ -99,6 +99,41 @@
   margin-top: 1rem;
 }
 
+.cta-note {
+  margin-top: 0.55rem;
+}
+
+.note-pending {
+  color: #15803d;
+  font-weight: 600;
+  background: #dcfce7;
+  border: 1px solid #bbf7d0;
+  padding: 6px 10px;
+  border-radius: 10px;
+  display: inline-block;
+}
+
+.note-accepted {
+  color: #15803d;
+  font-weight: 600;
+  background: #dcfce7;
+  border: 1px solid #bbf7d0;
+  padding: 6px 10px;
+  border-radius: 10px;
+  display: inline-block;
+}
+
+.note-rejected,
+.note-error {
+  color: #b91c1c;
+  font-weight: 600;
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  padding: 6px 10px;
+  border-radius: 10px;
+  display: inline-block;
+}
+
 .join-btn {
   min-width: 260px;
 }

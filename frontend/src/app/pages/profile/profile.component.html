@@ -3,6 +3,8 @@
     <h1 class="display-font">Profile</h1>
     <p class="text-muted">Welcome back, {{ user.firstName }} {{ user.lastName }}</p>
     <p class="text-muted" *ngIf="isAdmin">Admin profile: personal account information only.</p>
+    <div class="profile-warning" *ngIf="joinRedirectMessage">{{ joinRedirectMessage }}</div>
+    <div class="profile-success" *ngIf="joinCompleteMessage">{{ joinCompleteMessage }}</div>
 
     <div class="profile-meta" *ngIf="!editMode">
       <div><div class="label">Username</div><div class="value">@{{ user.userName }}</div></div>
