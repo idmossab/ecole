@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { AuthService } from '../../core/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -10,6 +11,12 @@ import { RouterLink } from '@angular/router';
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
+  constructor(private auth: AuthService) {}
+
+  get getStartedLink(): string {
+    return this.auth.isLoggedIn() ? '/diplomas' : '/register';
+  }
+
   hero = {
     badge: 'Transform Your Future Today',
     title: 'Learn Without Limits',
