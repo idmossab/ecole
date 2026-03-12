@@ -9,15 +9,120 @@
   margin-bottom: 20px;
 }
 
+.profile-hero {
+  padding: 0;
+  overflow: hidden;
+  background-image: url("../../../assets/images/covert.jpg");
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.profile-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+}
+
+.profile-hero.edit-mode {
+  background-image: none;
+  background-color: var(--surface);
+}
+
+.profile-hero.edit-mode::before {
+  display: none;
+}
+
+.profile-cover {
+  height: 160px;
+  background: transparent;
+}
+
+.profile-header {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 18px;
+  align-items: center;
+  padding: 0 28px 20px;
+  margin-top: -44px;
+  position: relative;
+  z-index: 1;
+}
+
+.avatar {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 4px solid #fff;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  color: #4f46e5;
+  font-size: 1.6rem;
+}
+
+.profile-title h1 {
+  margin: 0 0 4px;
+  color: #f8fafc;
+}
+
+.profile-title .text-muted {
+  color: #e2e8f0 !important;
+}
+
+.edit-cta {
+  align-self: start;
+  color: #0f172a;
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
 .profile-meta {
   display: grid;
   gap: 12px;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  position: relative;
+  z-index: 1;
+}
+
+.meta-item {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.meta-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  color: #4338ca;
+  display: grid;
+  place-items: center;
+}
+
+.meta-icon svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .edit-grid {
   display: grid;
   gap: 8px;
+  position: relative;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.92);
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(226, 232, 240, 0.9);
 }
 
 .profile-actions {
@@ -25,15 +130,27 @@
   gap: 8px;
 }
 
+@media (max-width: 900px) {
+  .profile-header {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .avatar {
+    margin-inline: auto;
+  }
+}
+
 .label {
   font-size: 0.8rem;
-  color: var(--text-secondary);
+  color: #e2e8f0;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .value {
   font-weight: 600;
+  color: #ffffff;
 }
 
 .profile-warning {
@@ -43,6 +160,8 @@
   border-radius: 12px;
   padding: 10px 14px;
   font-size: 0.9rem;
+  position: relative;
+  z-index: 1;
 }
 
 .profile-success {
@@ -52,6 +171,8 @@
   border-radius: 12px;
   padding: 10px 14px;
   font-size: 0.9rem;
+  position: relative;
+  z-index: 1;
 }
 
 .my-certs {

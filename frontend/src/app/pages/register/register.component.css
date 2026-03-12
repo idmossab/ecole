@@ -197,6 +197,21 @@
   font-weight: 600;
 }
 
+.social-btn:nth-child(1) {
+  color: #ea4335;
+  border-color: #f3b5af;
+}
+
+.social-btn:nth-child(2) {
+  color: #1877f2;
+  border-color: #a9c8fb;
+}
+
+.social-btn:nth-child(3) {
+  color: #0a66c2;
+  border-color: #9cc0ea;
+}
+
 .signup-link {
   margin: 0;
   text-align: center;

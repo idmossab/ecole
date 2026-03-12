@@ -1,16 +1,68 @@
 <div class="container py-4">
-  <div class="profile-card" *ngIf="user">
-    <h1 class="display-font">Profile</h1>
-    <p class="text-muted">Welcome back, {{ user.firstName }} {{ user.lastName }}</p>
-    <p class="text-muted" *ngIf="isAdmin">Admin profile: personal account information only.</p>
+  <div class="profile-card profile-hero" *ngIf="user" [class.edit-mode]="editMode">
+    <div class="profile-cover"></div>
+    <div class="profile-header">
+      <div class="avatar">{{ initials }}</div>
+      <div class="profile-title">
+        <h1 class="display-font">Profile</h1>
+        <p class="text-muted">Welcome back, {{ user.firstName }} {{ user.lastName }}</p>
+        <p class="text-muted" *ngIf="isAdmin">Admin profile: personal account information only.</p>
+      </div>
+      <button class="btn btn-outline-dark btn-sm edit-cta" type="button" *ngIf="!editMode" (click)="startEdit()">Edit Profile</button>
+      <button class="btn btn-dark btn-sm edit-cta" type="button" *ngIf="editMode" [disabled]="savingProfile" (click)="saveProfile()">Save</button>
+      <button class="btn btn-outline-dark btn-sm edit-cta" type="button" *ngIf="editMode" (click)="cancelEdit()">Cancel</button>
+    </div>
     <div class="profile-warning" *ngIf="joinRedirectMessage">{{ joinRedirectMessage }}</div>
     <div class="profile-success" *ngIf="joinCompleteMessage">{{ joinCompleteMessage }}</div>
 
     <div class="profile-meta" *ngIf="!editMode">
-      <div><div class="label">Username</div><div class="value">@{{ user.userName }}</div></div>
-      <div><div class="label">Email</div><div class="value">{{ user.email }}</div></div>
-      <div><div class="label">Phone</div><div class="value">{{ user.phone || '-' }}</div></div>
-      <div><div class="label">City</div><div class="value">{{ user.city || '-' }}</div></div>
+      <div class="meta-item">
+        <span class="meta-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 12c2.2 0 4-1.8 4-4s-1.8-4-4-4-4 1.8-4 4 1.8 4 4 4z" />
+            <path d="M4 20a8 8 0 0 1 16 0" />
+          </svg>
+        </span>
+        <div>
+          <div class="label">Username</div>
+          <div class="value">@{{ user.userName }}</div>
+        </div>
+      </div>
+      <div class="meta-item">
+        <span class="meta-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M4 6h16v12H4z" />
+            <path d="M4.5 7.5 12 12l7.5-4.5" />
+          </svg>
+        </span>
+        <div>
+          <div class="label">Email</div>
+          <div class="value">{{ user.email }}</div>
+        </div>
+      </div>
+      <div class="meta-item">
+        <span class="meta-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M5 4h4l2 5-2 1a12 12 0 0 0 6 6l1-2 5 2v4c0 1-1 2-2 2A18 18 0 0 1 4 6c0-1 1-2 2-2z" />
+          </svg>
+        </span>
+        <div>
+          <div class="label">Phone</div>
+          <div class="value">{{ user.phone || '-' }}</div>
+        </div>
+      </div>
+      <div class="meta-item">
+        <span class="meta-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 21s6-5.5 6-10a6 6 0 1 0-12 0c0 4.5 6 10 6 10z" />
+            <circle cx="12" cy="11" r="2.5" />
+          </svg>
+        </span>
+        <div>
+          <div class="label">City</div>
+          <div class="value">{{ user.city || '-' }}</div>
+        </div>
+      </div>
     </div>
 
     <div class="profile-warning" *ngIf="isProfileIncomplete && !editMode">
@@ -32,11 +84,7 @@
       <input class="form-control" type="text" [(ngModel)]="profileForm.city" name="city" />
     </form>
 
-    <div class="profile-actions">
-      <button class="btn btn-outline-dark btn-sm" type="button" *ngIf="!editMode" (click)="startEdit()">Edit Profile</button>
-      <button class="btn btn-dark btn-sm" type="button" *ngIf="editMode" [disabled]="savingProfile" (click)="saveProfile()">Save</button>
-      <button class="btn btn-outline-dark btn-sm" type="button" *ngIf="editMode" (click)="cancelEdit()">Cancel</button>
-    </div>
+    <div class="profile-actions" *ngIf="false"></div>
   </div>
 
   <div class="profile-card my-certs" *ngIf="user && !isAdmin">

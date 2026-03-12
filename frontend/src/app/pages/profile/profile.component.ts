@@ -57,6 +57,15 @@ export class ProfileComponent implements OnInit {
     return phone.length === 0 || city.length === 0;
   }
 
+  get initials(): string {
+    if (!this.user) return '';
+    const first = (this.user.firstName || '').trim();
+    const last = (this.user.lastName || '').trim();
+    const a = first ? first[0] : '';
+    const b = last ? last[0] : '';
+    return (a + b).toUpperCase() || 'U';
+  }
+
   ngOnInit(): void {
     if (!this.auth.isLoggedIn()) {
       this.router.navigateByUrl('/login');
