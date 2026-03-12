@@ -274,6 +274,15 @@
 
 .my-certs {
   gap: 12px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 22px;
+  background: linear-gradient(160deg, rgba(255, 247, 237, 0.85), rgba(240, 249, 255, 0.92));
+  border: 1px solid rgba(148, 163, 184, 0.35);
+}
+
+.issued-summary {
+  background: #ffffff;
 }
 
 .issued-banner {
@@ -302,16 +311,23 @@
 }
 
 .cert-card {
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 18px;
+  padding: 16px;
   display: grid;
-  gap: 10px;
+  gap: 12px;
+  background: #ffffff;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
+  position: relative;
+  overflow: hidden;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+  animation: card-in 420ms ease both;
 }
 
 .cert-card h3 {
   margin: 0;
   font-size: 1.1rem;
+  color: #0f172a;
 }
 
 .status {
@@ -338,4 +354,190 @@
 .progress-fill {
   height: 100%;
   background: #111827;
+}
+
+.section-head {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: center;
+}
+
+.section-head h2 {
+  margin: 0 0 2px;
+  color: #0f172a;
+}
+
+.section-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  background: linear-gradient(140deg, #0f172a, #1e293b);
+  color: #f8fafc;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.2);
+}
+
+.section-icon svg {
+  width: 26px;
+  height: 26px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.card-top {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+.card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #f1f5f9;
+  color: #0f172a;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+}
+
+.card-icon.diploma {
+  background: #fef3c7;
+  color: #92400e;
+  border-color: rgba(251, 191, 36, 0.6);
+}
+
+.card-icon svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(34, 197, 94, 0.12);
+  color: #15803d;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.status-pill .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #16a34a;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.18);
+}
+
+.card-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 12px;
+  background: #f8fafc;
+  color: #475569;
+  font-size: 0.9rem;
+}
+
+.meta-icon-sm {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  display: grid;
+  place-items: center;
+  color: #0f172a;
+}
+
+.meta-icon-sm svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.cta {
+  justify-self: start;
+  border-radius: 999px;
+  padding: 6px 16px;
+}
+
+.cert-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 44px rgba(15, 23, 42, 0.14);
+  border-color: rgba(71, 85, 105, 0.5);
+}
+
+.cert-card:nth-child(2) {
+  animation-delay: 60ms;
+}
+
+.cert-card:nth-child(3) {
+  animation-delay: 120ms;
+}
+
+.cert-card:nth-child(4) {
+  animation-delay: 180ms;
+}
+
+.cert-card:nth-child(5) {
+  animation-delay: 240ms;
+}
+
+.cert-card:nth-child(6) {
+  animation-delay: 300ms;
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 700px) {
+  .section-head {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .section-icon {
+    margin-inline: auto;
+  }
+
+  .card-top {
+    grid-template-columns: 1fr;
+  }
+
+  .card-icon {
+    margin-inline: 0;
+  }
+
+  .cta {
+    width: 100%;
+    text-align: center;
+  }
 }

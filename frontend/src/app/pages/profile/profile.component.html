@@ -89,7 +89,7 @@
     </div>
   </div>
 
-  <div class="profile-card my-certs" *ngIf="user && !isAdmin">
+  <div class="profile-card issued-summary" *ngIf="user && !isAdmin && (issuedStatsLoading || (issuedStats && (issuedStats.issuedCertificates || issuedStats.issuedDiplomas)))">
     <div class="issued-banner" *ngIf="issuedStats && (issuedStats.issuedCertificates || issuedStats.issuedDiplomas)">
       <div class="issued-title">Congratulations!</div>
       <div class="issued-text" *ngIf="issuedStats.issuedCertificates">
@@ -103,36 +103,107 @@
       </div>
     </div>
     <div class="text-muted" *ngIf="issuedStatsLoading">Checking issued credentials...</div>
+  </div>
 
-    <h2 class="display-font">My Certificates</h2>
-    <p class="text-muted">Only certificates accepted by admin</p>
+  <div class="profile-card my-certs" *ngIf="user && !isAdmin">
+
+    <div class="section-head">
+      <div class="section-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <path d="M4 7h16v10H4z" />
+          <path d="M7 4h10v3H7z" />
+          <path d="M8 17h8" />
+        </svg>
+      </div>
+      <div>
+        <h2 class="display-font">My Certificates</h2>
+        <p class="text-muted">Only certificates accepted by admin</p>
+      </div>
+    </div>
 
     <div class="text-muted" *ngIf="certificatesLoading">Loading certificates...</div>
     <div class="text-muted" *ngIf="!certificatesLoading && !myCertificates.length">No accepted certificates yet.</div>
 
     <div class="cert-grid" *ngIf="myCertificates.length">
       <article class="cert-card" *ngFor="let item of myCertificates">
-        <h3>{{ item.certificateTitle || 'Certificate' }}</h3>
-        <div class="status">Accepted by admin</div>
-        <div class="text-muted" *ngIf="item.courseTitle">Course: {{ item.courseTitle }}</div>
-        <a class="btn btn-dark btn-sm" [routerLink]="continueLink(item)">Continue</a>
+        <div class="card-top">
+          <div class="card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M5 6h14v12H5z" />
+              <path d="M8 3h8v3H8z" />
+              <path d="M7 18h10" />
+            </svg>
+          </div>
+          <div>
+            <h3>{{ item.certificateTitle || 'Certificate' }}</h3>
+            <div class="status-pill">
+              <span class="dot"></span>
+              Accepted by admin
+            </div>
+          </div>
+        </div>
+        <div class="card-meta" *ngIf="item.courseTitle">
+          <span class="meta-icon-sm" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M4 6h16v12H4z" />
+              <path d="M8 10h8" />
+              <path d="M8 14h6" />
+            </svg>
+          </span>
+          <span>Course: {{ item.courseTitle }}</span>
+        </div>
+        <a class="btn btn-dark btn-sm cta" [routerLink]="continueLink(item)">Continue</a>
       </article>
     </div>
   </div>
 
   <div class="profile-card my-certs" *ngIf="user && !isAdmin">
-    <h2 class="display-font">My Diplomas</h2>
-    <p class="text-muted">Only diplomas accepted by admin</p>
+    <div class="section-head">
+      <div class="section-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <path d="M5 5h14v14H5z" />
+          <path d="M8 8h8v2H8z" />
+          <path d="M8 12h6v2H8z" />
+        </svg>
+      </div>
+      <div>
+        <h2 class="display-font">My Diplomas</h2>
+        <p class="text-muted">Only diplomas accepted by admin</p>
+      </div>
+    </div>
 
     <div class="text-muted" *ngIf="diplomasLoading">Loading diplomas...</div>
     <div class="text-muted" *ngIf="!diplomasLoading && !myDiplomas.length">No accepted diplomas yet.</div>
 
     <div class="cert-grid" *ngIf="myDiplomas.length">
       <article class="cert-card" *ngFor="let item of myDiplomas">
-        <h3>{{ item.diplomaTitle || 'Diploma' }}</h3>
-        <div class="status">Accepted by admin</div>
-        <div class="text-muted" *ngIf="item.specializationTitle">Specialization: {{ item.specializationTitle }}</div>
-        <a class="btn btn-dark btn-sm" [routerLink]="diplomaLink(item)">{{ diplomaActionLabel(item) }}</a>
+        <div class="card-top">
+          <div class="card-icon diploma" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M4 7h16v10H4z" />
+              <path d="M7 9h10" />
+              <path d="M7 13h8" />
+            </svg>
+          </div>
+          <div>
+            <h3>{{ item.diplomaTitle || 'Diploma' }}</h3>
+            <div class="status-pill">
+              <span class="dot"></span>
+              Accepted by admin
+            </div>
+          </div>
+        </div>
+        <div class="card-meta" *ngIf="item.specializationTitle">
+          <span class="meta-icon-sm" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M6 5h12v4H6z" />
+              <path d="M6 9h12v10H6z" />
+              <path d="M9 13h6" />
+            </svg>
+          </span>
+          <span>Specialization: {{ item.specializationTitle }}</span>
+        </div>
+        <a class="btn btn-dark btn-sm cta" [routerLink]="diplomaLink(item)">{{ diplomaActionLabel(item) }}</a>
       </article>
     </div>
   </div>
