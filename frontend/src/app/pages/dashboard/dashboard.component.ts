@@ -673,7 +673,10 @@ export class DashboardComponent implements OnInit {
     if (actionId === 'students') {
       this.api.getAdminUsers().subscribe({
         next: (users) => {
-          this.students = users || [];
+          this.students = (users || []).slice().sort((a, b) => {
+            if (a.role === b.role) return 0;
+            return a.role === 'ADMIN' ? -1 : 1;
+          });
           this.filteredStudents = this.applyStudentFilter(this.students, this.studentQuery);
           this.loadedActionIds.add(actionId);
           this.loadingAction = false;

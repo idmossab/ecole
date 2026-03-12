@@ -50,6 +50,15 @@
   z-index: 1;
 }
 
+.profile-header {
+  background: rgba(15, 23, 42, 0.35);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 18px;
+  padding: 16px 20px;
+  margin: -44px 20px 6px;
+  backdrop-filter: blur(6px);
+}
+
 .edit-cta {
   position: absolute;
   top: 12px;
@@ -63,13 +72,19 @@
   height: 88px;
   border-radius: 50%;
   background: #ffffff;
-  border: 4px solid #fff;
+  border: 4px solid #0f172a;
   box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
   display: grid;
   place-items: center;
   font-weight: 800;
   color: #4f46e5;
   font-size: 1.6rem;
+}
+
+.avatar {
+  background: #ffffff;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.3);
+  outline: 3px solid rgba(255, 255, 255, 0.65);
 }
 
 .profile-title h1 {
@@ -106,7 +121,7 @@
 .profile-meta {
   display: grid;
   gap: 12px;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   position: relative;
   z-index: 1;
   justify-items: center;
@@ -118,6 +133,12 @@
   gap: 8px;
   align-items: center;
   flex-direction: column;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.35);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  width: 100%;
+  max-width: 260px;
 }
 
 .meta-icon {
@@ -221,6 +242,12 @@
 .value {
   font-weight: 600;
   color: #ffffff;
+}
+
+@media (max-width: 900px) {
+  .profile-meta {
+    grid-template-columns: 1fr;
+  }
 }
 
 .profile-warning {
