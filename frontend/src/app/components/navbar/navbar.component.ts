@@ -20,6 +20,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   notifications: NotificationItem[] = [];
   unreadCount = 0;
   showNotifications = false;
+  showLanguage = false;
+  selectedLanguage: 'EN' | 'FR' | 'AR' = 'EN';
   private navSub?: Subscription;
 
   constructor(private auth: AuthService, private router: Router, private api: ApiService) {}
@@ -65,6 +67,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
     if (this.showNotifications) {
       this.loadNotifications();
     }
+  }
+
+  toggleLanguage(): void {
+    this.showLanguage = !this.showLanguage;
+  }
+
+  selectLanguage(code: 'EN' | 'FR' | 'AR'): void {
+    this.selectedLanguage = code;
+    this.showLanguage = false;
   }
 
   markRead(item: NotificationItem): void {

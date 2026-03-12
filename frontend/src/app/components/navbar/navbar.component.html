@@ -82,6 +82,29 @@
         </div>
       </div>
 
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" (click)="toggleLanguage()" aria-label="Language">
+          <span class="flag" aria-hidden="true">
+            {{ selectedLanguage === 'EN' ? '🇺🇸' : selectedLanguage === 'FR' ? '🇫🇷' : '🇲🇦' }}
+          </span>
+          {{ selectedLanguage }}
+        </button>
+        <div class="lang-menu" *ngIf="showLanguage">
+          <button class="lang-item" type="button" (click)="selectLanguage('EN')">
+            <span class="flag" aria-hidden="true">🇺🇸</span>
+            English
+          </button>
+          <button class="lang-item" type="button" (click)="selectLanguage('FR')">
+            <span class="flag" aria-hidden="true">🇫🇷</span>
+            Francais
+          </button>
+          <button class="lang-item" type="button" (click)="selectLanguage('AR')">
+            <span class="flag" aria-hidden="true">🇲🇦</span>
+            العربية
+          </button>
+        </div>
+      </div>
+
       <button class="nav-link-btn login-btn" type="button" routerLink="/login" *ngIf="!loggedIn" aria-label="Login">
         <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
           <circle cx="9" cy="8" r="3.5" />
