@@ -1,5 +1,10 @@
 <div class="container py-4 cert-details-page" *ngIf="certificate; else notFound">
-  <a class="back-link" routerLink="/certificates">&larr; Back to Certificates</a>
+  <a class="back-link" routerLink="/certificates">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M14 6 8 12l6 6" />
+    </svg>
+    Back to Certificates
+  </a>
   <div class="alert error" *ngIf="error">{{ error }}</div>
 
   <div class="details-layout">

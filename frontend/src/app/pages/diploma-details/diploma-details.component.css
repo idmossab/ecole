@@ -4,9 +4,30 @@
 
 .back-link {
   text-decoration: none;
-  color: #1d4ed8;
-  display: inline-block;
+  color: #0f172a;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  font-weight: 600;
   margin-bottom: 1rem;
+}
+
+.back-link svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.back-link:hover {
+  background: #eef2f7;
 }
 
 .hero {
@@ -158,29 +179,41 @@
 }
 
 .spec-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.72rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  padding: 0.5rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
 }
 
 .spec-item {
-  background: #fff;
+  background: #ffffff;
   border: 1px solid #d8dfeb;
-  border-radius: 12px;
-  padding: 0.78rem 0.95rem;
+  border-radius: 999px;
+  padding: 0.6rem 1rem;
   text-align: left;
+  font-weight: 600;
+  color: #1f2937;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
 }
 
 button.spec-item {
-  width: 100%;
   cursor: pointer;
+}
+
+.spec-item:hover {
+  border-color: #c7d2fe;
+  background: #eef2ff;
+  color: #1e3a8a;
 }
 
 .spec-item.active {
   border-color: #1d4ed8;
   background: #1d4ed8;
   color: #fff;
-  box-shadow: 0 0 0 2px rgba(29, 78, 216, 0.22);
+  box-shadow: 0 10px 18px rgba(29, 78, 216, 0.22);
 }
 
 .overview-box {

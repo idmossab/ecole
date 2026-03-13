@@ -1,5 +1,10 @@
 <div class="container py-4" *ngIf="course; else notFound">
-  <a class="back-link" routerLink="/certificates">← Back to Certificates</a>
+  <a class="back-link" routerLink="/certificates">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M14 6 8 12l6 6" />
+    </svg>
+    Back to Certificates
+  </a>
 
   <div class="course-header">
     <h1 class="display-font">{{ course.title }}</h1>

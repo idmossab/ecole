@@ -1,5 +1,10 @@
 <div class="container py-5 admin-page">
-  <a class="back-link" routerLink="/dashboard">&larr; Back to Dashboard</a>
+  <a class="back-link" routerLink="/dashboard">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M14 6 8 12l6 6" />
+    </svg>
+    Back to Dashboard
+  </a>
   <h1 class="display-font">Diplomas</h1>
 
   <div class="alert" *ngIf="toast">{{ toast }}</div>

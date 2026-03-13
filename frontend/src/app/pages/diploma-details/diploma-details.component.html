@@ -1,5 +1,10 @@
 <div class="container py-4 diploma-page" *ngIf="diploma; else notFound">
-  <a class="back-link" routerLink="/diplomas">&larr; Back to Diplomas</a>
+  <a class="back-link" routerLink="/diplomas">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M14 6 8 12l6 6" />
+    </svg>
+    Back to Diplomas
+  </a>
   <div class="alert error" *ngIf="error">{{ error }}</div>
 
   <section class="section-block specializations-section">
