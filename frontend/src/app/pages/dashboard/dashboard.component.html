@@ -115,6 +115,20 @@
     <div class="alert-text error" *ngIf="actionError">{{ actionError }}</div>
     <div class="text-muted" *ngIf="loadingAction">Loading...</div>
 
+    <section class="change-confirm" *ngIf="changeConfirmVisible">
+      <h4>Confirm Change</h4>
+      <p>
+        Are you sure you want to change
+        <strong>{{ pendingChangeType }}</strong>
+        for
+        <strong>{{ pendingChangeItem?.firstName }} {{ pendingChangeItem?.lastName }}</strong>?
+      </p>
+      <div class="form-actions">
+        <button class="btn btn-dark" type="button" (click)="confirmChange()">Yes, Update</button>
+        <button class="btn btn-outline-dark" type="button" (click)="cancelChange()">Cancel</button>
+      </div>
+    </section>
+
     <section class="delete-confirm" *ngIf="deleteConfirmVisible">
       <h4>Confirm Delete</h4>
       <p>Are you sure you want to delete <strong>{{ pendingDeleteLabel }}</strong>?</p>

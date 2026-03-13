@@ -233,6 +233,21 @@
   background: #fff7f7;
 }
 
+.change-confirm {
+  border: 1px solid #c7d2fe;
+  border-radius: 14px;
+  padding: 14px 16px;
+  background: #eef2ff;
+}
+
+.change-confirm h4 {
+  margin: 0 0 6px;
+}
+
+.change-confirm p {
+  margin: 0;
+}
+
 .delete-confirm h4 {
   margin: 0 0 6px;
 }

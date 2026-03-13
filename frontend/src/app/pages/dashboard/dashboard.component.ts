@@ -74,6 +74,9 @@ export class DashboardComponent implements OnInit {
   pendingDeleteItem: any = null;
   pendingDeleteActionId: QuickActionId | null = null;
   pendingDeleteLabel = '';
+  changeConfirmVisible = false;
+  pendingChangeItem: UserResponse | null = null;
+  pendingChangeType: 'status' | 'role' | null = null;
 
   diplomaModes: DiplomasMode[] = ['SPECIALIZED_TECHNICIAN', 'TECHNICIAN', 'QUALIFICATION'];
 
@@ -341,28 +344,54 @@ export class DashboardComponent implements OnInit {
 
   toggleStudentStatus(item: UserResponse): void {
     if (!this.canManageStudentActions(item)) return;
-    this.actionError = '';
-    this.actionToast = '';
-    this.api.adminToggleUserStatus(item.userId).subscribe({
-      next: (updated) => {
-        this.students = this.students.map((user) => user.userId === item.userId ? updated : user);
-        this.actionToast = `User status changed to ${updated.status}`;
-      },
-      error: (err) => {
-        this.actionError = err?.error?.message || err?.error || 'Failed to change user status';
-      }
-    });
+    this.changeConfirmVisible = true;
+    this.pendingChangeItem = item;
+    this.pendingChangeType = 'status';
   }
 
   changeStudentRole(item: UserResponse): void {
     if (!this.canManageStudentActions(item)) return;
+    this.changeConfirmVisible = true;
+    this.pendingChangeItem = item;
+    this.pendingChangeType = 'role';
+  }
+
+  cancelChange(): void {
+    this.changeConfirmVisible = false;
+    this.pendingChangeItem = null;
+    this.pendingChangeType = null;
+  }
+
+  confirmChange(): void {
+    if (!this.pendingChangeItem || !this.pendingChangeType) return;
     this.actionError = '';
     this.actionToast = '';
+    const item = this.pendingChangeItem;
+    const type = this.pendingChangeType;
+    this.changeConfirmVisible = false;
+    if (type === 'status') {
+      this.api.adminToggleUserStatus(item.userId).subscribe({
+        next: (updated) => {
+          this.students = this.students.map((user) => user.userId === item.userId ? updated : user);
+          this.filteredStudents = this.applyStudentFilter(this.students, this.studentQuery);
+          this.actionToast = `User status changed to ${updated.status}`;
+          this.pendingChangeItem = null;
+          this.pendingChangeType = null;
+        },
+        error: (err) => {
+          this.actionError = err?.error?.message || err?.error || 'Failed to change user status';
+        }
+      });
+      return;
+    }
     const nextRole: 'ADMIN' | 'USER' = item.role === 'ADMIN' ? 'USER' : 'ADMIN';
     this.api.adminChangeUserRole(item.userId, nextRole).subscribe({
       next: (updated) => {
         this.students = this.students.map((user) => user.userId === item.userId ? updated : user);
+        this.filteredStudents = this.applyStudentFilter(this.students, this.studentQuery);
         this.actionToast = `User role changed to ${updated.role}`;
+        this.pendingChangeItem = null;
+        this.pendingChangeType = null;
       },
       error: (err) => {
         this.actionError = err?.error?.message || err?.error || 'Failed to change user role';
