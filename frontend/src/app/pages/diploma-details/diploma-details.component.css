@@ -262,10 +262,37 @@ button.spec-item {
 }
 
 .contact-box {
-  background: linear-gradient(160deg, #2f56d8, #6d28d9);
-  border-radius: 16px;
-  padding: 1rem 1.1rem;
+  background: linear-gradient(140deg, #1e293b, #334155);
+  border-radius: 18px;
+  padding: 1.1rem 1.15rem;
   color: #fff;
+  box-shadow: 0 16px 38px rgba(15, 23, 42, 0.25);
+}
+
+.contact-head {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+.contact-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.12);
+  display: grid;
+  place-items: center;
+}
+
+.contact-icon svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .contact-box h3 {
@@ -273,22 +300,59 @@ button.spec-item {
 }
 
 .contact-box p {
-  margin: 0.45rem 0 0.75rem;
-  color: #dfe6ff;
+  margin: 0.25rem 0 0;
+  color: #dbe2ff;
 }
 
-.contact-line {
-  margin-top: 0.42rem;
+.contact-grid {
+  display: grid;
+  gap: 10px;
+  margin-top: 0.85rem;
 }
 
-.contact-line strong {
-  display: inline-block;
-  min-width: 70px;
+.contact-item {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.contact-item .label {
+  font-size: 0.78rem;
+  color: #cbd5f5;
+}
+
+.contact-item .value {
+  font-weight: 700;
+}
+
+.item-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.12);
+  display: grid;
+  place-items: center;
+}
+
+.item-icon svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .contact-btn {
   width: 100%;
-  margin-top: 0.85rem;
+  margin-top: 0.9rem;
+  border-radius: 999px;
 }
 
 .features-box {

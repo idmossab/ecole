@@ -79,21 +79,58 @@
     </main>
 
     <aside class="contact-panel">
-      <h3>Ready to Start?</h3>
-      <p class="intro">Contact the school to learn about class schedules and enrollment.</p>
+      <div class="contact-head">
+        <div class="contact-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M4 6h16v12H4z" />
+            <path d="M8 10h8" />
+            <path d="M8 14h6" />
+          </svg>
+        </div>
+        <div>
+          <h3>Ready to Start?</h3>
+          <p class="intro">Contact the school to learn about class schedules and enrollment.</p>
+        </div>
+      </div>
 
       <ng-container *ngIf="selectedCourse; else noSelection">
-        <div class="contact-item">
-          <span class="label">Phone</span>
-          <span class="value">{{ phoneNumber(selectedCourse) }}</span>
-        </div>
-        <div class="contact-item">
-          <span class="label">Teacher</span>
-          <span class="value">{{ teacherName(selectedCourse) }}</span>
-        </div>
-        <div class="contact-item">
-          <span class="label">Mode</span>
-          <span class="value">{{ modeBadge(selectedCourse.mode) }} ({{ modeDescription(selectedCourse.mode) }})</span>
+        <div class="contact-grid">
+          <div class="contact-item">
+            <span class="item-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M5 4h4l2 5-2 1a12 12 0 0 0 6 6l1-2 5 2v4c0 1-1 2-2 2A18 18 0 0 1 4 6c0-1 1-2 2-2z" />
+              </svg>
+            </span>
+            <div>
+              <div class="label">Phone</div>
+              <div class="value">{{ phoneNumber(selectedCourse) }}</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <span class="item-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4z" />
+                <path d="M4 20a8 8 0 0 1 16 0" />
+              </svg>
+            </span>
+            <div>
+              <div class="label">Teacher</div>
+              <div class="value">{{ teacherName(selectedCourse) }}</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <span class="item-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M6 4h12v4H6z" />
+                <path d="M6 8h12v12H6z" />
+                <path d="M9 12h6" />
+              </svg>
+            </span>
+            <div>
+              <div class="label">Mode</div>
+              <div class="value">{{ modeBadge(selectedCourse.mode) }} ({{ modeDescription(selectedCourse.mode) }})</div>
+            </div>
+          </div>
         </div>
         <p class="contact-note">Contact the school to know when classes start.</p>
         <a class="btn btn-light contact-btn" [attr.href]="'tel:' + phoneHref(selectedCourse)">

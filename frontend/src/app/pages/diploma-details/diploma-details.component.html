@@ -68,11 +68,58 @@
 
     <aside class="hero-side">
       <section class="contact-box">
-        <h3>Ready to Start?</h3>
-        <p>Contact the school to learn about class schedules and enrollment.</p>
-        <div class="contact-line"><strong>Phone</strong> +1 (555) 123-4567</div>
-        <div class="contact-line"><strong>Specialization</strong> {{ selectedSpecialization?.title || '-' }}</div>
-        <div class="contact-line"><strong>Mode</strong> {{ modeLabel(diploma.mode) }}</div>
+        <div class="contact-head">
+          <div class="contact-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M4 6h16v12H4z" />
+              <path d="M8 10h8" />
+              <path d="M8 14h6" />
+            </svg>
+          </div>
+          <div>
+            <h3>Ready to Start?</h3>
+            <p>Contact the school to learn about class schedules and enrollment.</p>
+          </div>
+        </div>
+        <div class="contact-grid">
+          <div class="contact-item">
+            <span class="item-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M5 4h4l2 5-2 1a12 12 0 0 0 6 6l1-2 5 2v4c0 1-1 2-2 2A18 18 0 0 1 4 6c0-1 1-2 2-2z" />
+              </svg>
+            </span>
+            <div>
+              <div class="label">Phone</div>
+              <div class="value">+1 (555) 123-4567</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <span class="item-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M4 7h16v10H4z" />
+                <path d="M7 9h10" />
+                <path d="M7 13h8" />
+              </svg>
+            </span>
+            <div>
+              <div class="label">Specialization</div>
+              <div class="value">{{ selectedSpecialization?.title || '-' }}</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <span class="item-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M6 4h12v4H6z" />
+                <path d="M6 8h12v12H6z" />
+                <path d="M9 12h6" />
+              </svg>
+            </span>
+            <div>
+              <div class="label">Mode</div>
+              <div class="value">{{ modeLabel(diploma.mode) }}</div>
+            </div>
+          </div>
+        </div>
         <button class="btn btn-light contact-btn" type="button">Contact Administration</button>
       </section>
 
