@@ -17,12 +17,30 @@
 
           <div class="header-meta">
             <div class="meta-box">
-              <div class="meta-label">Courses</div>
-              <div class="meta-value">{{ courses.length }}</div>
+              <div class="meta-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M4 6h16v12H4z" />
+                  <path d="M7 10h10" />
+                  <path d="M7 14h6" />
+                </svg>
+              </div>
+              <div>
+                <div class="meta-label">Courses</div>
+                <div class="meta-value">{{ courses.length }}</div>
+              </div>
             </div>
             <div class="meta-box">
-              <div class="meta-label">Selected Mode</div>
-              <div class="meta-value">{{ modeBadge(selectedCourse?.mode) }}</div>
+              <div class="meta-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M6 4h12v4H6z" />
+                  <path d="M6 8h12v12H6z" />
+                  <path d="M9 12h6" />
+                </svg>
+              </div>
+              <div>
+                <div class="meta-label">Selected Mode</div>
+                <div class="meta-value">{{ modeBadge(selectedCourse?.mode) }}</div>
+              </div>
             </div>
           </div>
 
@@ -73,11 +91,29 @@
             tabindex="0"
           >
             <div class="course-head">
-              <h3>{{ course.title }}</h3>
+              <div class="course-title">
+                <div class="course-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M4 6h16v12H4z" />
+                    <path d="M7 9h10" />
+                    <path d="M7 13h8" />
+                  </svg>
+                </div>
+                <h3>{{ course.title }}</h3>
+              </div>
               <span class="mode-badge">{{ modeBadge(course.mode) }}</span>
             </div>
             <p>{{ course.description || 'Course description coming soon.' }}</p>
-            <div class="mode-note">{{ modeDescription(course.mode) }}</div>
+            <div class="mode-note">
+              <span class="note-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M6 4h12v4H6z" />
+                  <path d="M6 8h12v12H6z" />
+                  <path d="M9 12h6" />
+                </svg>
+              </span>
+              {{ modeDescription(course.mode) }}
+            </div>
           </article>
         </div>
       </section>
@@ -114,13 +150,13 @@
           <div class="contact-item">
             <span class="item-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24">
-                <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4z" />
-                <path d="M4 20a8 8 0 0 1 16 0" />
+                <circle cx="12" cy="12" r="7" />
+                <path d="M12 8v4l3 2" />
               </svg>
             </span>
             <div>
-              <div class="label">Teacher</div>
-              <div class="value">{{ teacherName(selectedCourse) }}</div>
+              <div class="label">Duration</div>
+              <div class="value">{{ selectedCourse?.durationText || 'Duration not specified' }}</div>
             </div>
           </div>
           <div class="contact-item">
